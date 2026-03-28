@@ -1,5 +1,5 @@
-import { expect, test } from "bun:test";
 import { Command } from "@cliffy/command";
+import { expect, test } from "bun:test";
 import { createProgram } from "./program.ts";
 
 test("createProgram includes the expected top-level commands", () => {

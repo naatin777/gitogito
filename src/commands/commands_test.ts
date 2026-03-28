@@ -1,25 +1,22 @@
-import { expect, test } from "bun:test";
 import { Command } from "@cliffy/command";
+import { CompletionsCommand } from "@cliffy/command/completions";
+import { expect, test } from "bun:test";
 import { flatSchema } from "../helpers/flat_schema.ts";
 import { ConfigSchema } from "../services/config/schema/config.ts";
 import { createCommitCommand } from "./commit.tsx";
-import { createConfigCommand } from "./config.tsx";
+import {
+  createConfigCommand,
+  type ConfigCommandOptions,
+} from "./config.tsx";
 import { createInitCommand } from "./init.tsx";
 import { createIssueCommand } from "./issue.tsx";
 import { createProgram } from "./program.ts";
-
-type ConfigOptions = {
-  set?: string;
-  project?: boolean;
-  local?: boolean;
-  global?: boolean;
-};
 
 interface TopLevelActions {
   init: (opts: { local?: boolean; global?: boolean }) => Promise<void>;
   commit: () => Promise<void>;
   issue: () => Promise<void>;
-  config: (opts: ConfigOptions) => Promise<void>;
+  config: (opts?: ConfigCommandOptions) => Promise<void>;
 }
 
 function createTestProgram(actions: TopLevelActions): Command {
@@ -30,22 +27,22 @@ function createTestProgram(actions: TopLevelActions): Command {
       init: createInitCommand({
         configFile: {
           exists: async () => false,
-          save: async () => {},
+          save: async () => { },
         },
-        writeInfo: (_message: string) => {},
-        writeError: (_message: string) => {},
+        writeInfo: (_message: string) => { },
+        writeError: (_message: string) => { },
       }).action(actions.init),
       config: createConfigCommand({
         openConfigTui: actions.config,
         getMergedConfig: async () => ConfigSchema.parse({}),
-        saveConfig: async () => {},
-        writeError: () => {},
-        writeInfo: () => {},
+        saveConfig: async () => { },
+        writeError: () => { },
+        writeInfo: () => { },
       }),
       issue: createIssueCommand(actions.issue),
       commit: createCommitCommand(actions.commit),
-      tui: new Command().description("Open interactive TUI home").action(async () => {}),
-      completions: new Command().description("completions").action(async () => {}),
+      tui: new Command().description("Open interactive TUI home").action(async () => { }),
+      completions: new CompletionsCommand(),
     },
   });
 }
@@ -54,7 +51,7 @@ function createSpies() {
   let initCalls = 0;
   let commitCalls = 0;
   let issueCalls = 0;
-  const configCalls: ConfigOptions[] = [];
+  const configCalls: ConfigCommandOptions[] = [];
 
   return {
     actions: {
@@ -67,8 +64,8 @@ function createSpies() {
       issue: async () => {
         issueCalls += 1;
       },
-      config: async (opts: ConfigOptions) => {
-        configCalls.push(opts);
+      config: async (opts) => {
+        configCalls.push(opts ?? {});
       },
     } satisfies TopLevelActions,
     counts: () => ({ initCalls, commitCalls, issueCalls, configCalls }),
