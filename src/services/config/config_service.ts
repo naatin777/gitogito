@@ -104,10 +104,13 @@ export class ConfigServiceImpl implements ConfigService {
     const { credentials: localCredentials } = await this.getLocalConfig();
     const aiApiKey = this.envService.getAiApiKey();
     const githubToken = this.envService.getGitHubToken();
-    const envCredentials: Partial<Credentials> = {
-      aiApiKey: aiApiKey,
-      githubToken: githubToken,
-    };
+    const envCredentials: Partial<Credentials> = {};
+    if (aiApiKey !== undefined) {
+      envCredentials.aiApiKey = aiApiKey;
+    }
+    if (githubToken !== undefined) {
+      envCredentials.githubToken = githubToken;
+    }
     return {
       ...globalCredentials,
       ...localCredentials,

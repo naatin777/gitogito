@@ -74,3 +74,18 @@ test("saveCredentials - writes nested credentials and preserves config", async (
     githubToken: "github-token",
   });
 });
+
+test("getMergedCredentials preserves file credentials when env values are undefined", async () => {
+  const file = new ConfigFileMock({
+    global: "credentials:\n  aiApiKey: saved-key\n",
+    local: "credentials:\n  githubToken: local-token\n",
+  });
+  const service = new ConfigServiceImpl(envServiceMock, file);
+
+  const merged = await service.getMergedCredentials();
+
+  expect(merged).toEqual({
+    aiApiKey: "saved-key",
+    githubToken: "local-token",
+  });
+});

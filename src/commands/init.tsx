@@ -46,6 +46,7 @@ export function createInitCommand(
 
       if (await commandConfigFile.exists(scope)) {
         writeError(`${scope} config already exists.`);
+        process.exitCode = 1;
         return;
       }
 

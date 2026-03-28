@@ -26,11 +26,19 @@ export function getCarouselPositionLabel(
   return `← ${choiceCount > 0 ? selectedIndex + 1 : 0}/${choiceCount} →`;
 }
 
+export function getSafeCarouselIndex(
+  selectedIndex: number,
+  choiceCount: number,
+) {
+  return choiceCount > 0 ? Math.max(0, Math.min(selectedIndex, choiceCount - 1)) : 0;
+}
+
 /* v8 ignore start */
 export function Carousel<T>({ message, choices, onSelect }: CarouselProps<T>) {
   const renderer = useRenderer();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const hasChoices = choices.length > 0;
+  const safeSelectedIndex = getSafeCarouselIndex(selectedIndex, choices.length);
 
   useKeyboard((event) => {
     if (event.name === "escape" || isCtrlC(event)) {
@@ -56,7 +64,7 @@ export function Carousel<T>({ message, choices, onSelect }: CarouselProps<T>) {
     }
 
     if (isEnter(event)) {
-      onSelect(choices[selectedIndex].value);
+      onSelect(choices[safeSelectedIndex].value);
     }
   });
 
@@ -67,7 +75,7 @@ export function Carousel<T>({ message, choices, onSelect }: CarouselProps<T>) {
       </box>
       <box>
         <text attributes={TextAttributes.DIM}>
-          {getCarouselPositionLabel(selectedIndex, choices.length)}
+          {getCarouselPositionLabel(safeSelectedIndex, choices.length)}
         </text>
         <text attributes={TextAttributes.DIM}>(Enter to Select)</text>
       </box>
@@ -83,11 +91,11 @@ export function Carousel<T>({ message, choices, onSelect }: CarouselProps<T>) {
             paddingRight={1}
           >
             <text attributes={TextAttributes.BOLD} fg="cyan" truncate>
-              {choices[selectedIndex].name}
+              {choices[safeSelectedIndex].name}
             </text>
-            {choices[selectedIndex].description && (
+            {choices[safeSelectedIndex].description && (
               <box marginTop={1}>
-                <text>{choices[selectedIndex].description}</text>
+                <text>{choices[safeSelectedIndex].description}</text>
               </box>
             )}
           </box>

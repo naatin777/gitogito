@@ -17,6 +17,7 @@ export type ConfigCommandOptions = {
   global?: boolean;
 };
 
+// TODO: Thread CLI scope/options into the TUI when config editing supports them.
 export async function openConfigTui(_options?: ConfigCommandOptions) {
   await runTuiWithRedux(<RouterUI initialPath="/config" />);
 }
@@ -42,12 +43,12 @@ export function buildSubcommands(
       .description(`Configure ${[...item.parents, item.key].join(".")}`);
 
     if (item.isLeaf) {
-      cmd.option("--set <value:string>", "Set value for this config key.")
-        .action(async (options: ConfigCommandOptions) => {
-          if (!options.set) {
-            await dependencies.openConfigTui(options);
-            return;
-          }
+        cmd.option("--set <value:string>", "Set value for this config key.")
+          .action(async (options: ConfigCommandOptions) => {
+            if (!options.set) {
+              await dependencies.openConfigTui(options);
+              return;
+            }
 
           const keyPath = [...item.parents, item.key].join(".");
           const parsedInput = parseCliConfigValue(options.set);

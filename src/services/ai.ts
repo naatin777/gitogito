@@ -7,7 +7,7 @@ import {
 } from "ai";
 import { ollama } from "ollama-ai-provider-v2";
 import { z } from "zod";
-import { AI_PROVIDER, type AI_PROVIDER_KEY } from "../constants/ai.ts";
+import type { AI_PROVIDER_KEY } from "../constants/ai.ts";
 import type { ConfigService } from "./config/config_service.ts";
 import { configService } from "./config/config_service.ts";
 import { AiConfigSchema } from "./config/schema/domain/ai.ts";
@@ -44,10 +44,6 @@ export class AIService {
     const mergedCredentials = await source.getMergedCredentials();
     const aiConfig = AiConfigSchema.parse(mergedConfig.ai);
 
-    if (!AI_PROVIDER.includes(aiConfig.provider)) {
-      throw new Error(`Unsupported AI provider: ${aiConfig.provider}`);
-    }
-
     if (aiConfig.provider === "OpenRouter" && !mergedCredentials.aiApiKey) {
       throw new Error(
         "Missing AI API key. Set credentials.aiApiKey or GITOGITO_AI_API_KEY.",
@@ -77,9 +73,13 @@ export class AIService {
         this.modelCache = openrouter(this.model);
         break;
       }
+      default: {
+        const provider: never = this.provider;
+        throw new Error(`Unsupported AI provider: ${provider}`);
+      }
     }
 
-    return this.modelCache!;
+    return this.modelCache;
   }
 
   getModelId(): string {

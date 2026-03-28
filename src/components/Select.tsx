@@ -21,11 +21,19 @@ export function getSelectPositionLabel(
   return `(${choiceCount > 0 ? selectedIndex + 1 : 0}/${choiceCount})`;
 }
 
+export function getSafeSelectIndex(selectedIndex: number, choiceCount: number) {
+  return choiceCount > 0 ? Math.max(0, Math.min(selectedIndex, choiceCount - 1)) : 0;
+}
+
 /* v8 ignore start */
 export function Select<T>(options: SelectOptions<T>) {
   const renderer = useRenderer();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const hasChoices = options.choices.length > 0;
+  const safeSelectedIndex = getSafeSelectIndex(
+    selectedIndex,
+    options.choices.length,
+  );
 
   useKeyboard((event) => {
     if (event.name === "escape" || isCtrlC(event)) {
@@ -53,7 +61,7 @@ export function Select<T>(options: SelectOptions<T>) {
     }
 
     if (isEnter(event)) {
-      options.onSelect(options.choices[selectedIndex].value);
+      options.onSelect(options.choices[safeSelectedIndex].value);
     }
   });
 
@@ -62,12 +70,12 @@ export function Select<T>(options: SelectOptions<T>) {
       <box>
         <text>{`${options.message} `}</text>
         <text attributes={TextAttributes.DIM}>
-          {getSelectPositionLabel(selectedIndex, options.choices.length)}
+          {getSelectPositionLabel(safeSelectedIndex, options.choices.length)}
         </text>
       </box>
       {hasChoices
         ? options.choices.map((value, index) => {
-          const isSelected = selectedIndex === index;
+          const isSelected = safeSelectedIndex === index;
           return (
             <box
               key={value.name}

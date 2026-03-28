@@ -46,12 +46,15 @@ export function useIssueFlow() {
   const dispatch = useAppDispatch();
   const state = useAppSelector((state) => state.issue);
   const renderer = useRenderer();
+  const { step } = state;
+  const selectedIssue = state.step === "edit_issue" ? state.selectedIssue : undefined;
+  const finalIssue = state.step === "creating" ? state.finalIssue : undefined;
 
   useEffect(() => {
-    if (shouldCloseIssueFlow(state.step)) {
+    if (shouldCloseIssueFlow(step)) {
       renderer.destroy();
     }
-  }, [state.step, renderer]);
+  }, [step, renderer]);
 
   const loadTemplatesHandler = useCallback(async () => {
     await dispatch(loadTemplates());
@@ -92,16 +95,16 @@ export function useIssueFlow() {
   }, [dispatch]);
 
   const editIssueHandler = useCallback(async () => {
-    if (state.step === "edit_issue") {
-      await dispatch(editIssue(state.selectedIssue));
+    if (step === "edit_issue" && selectedIssue) {
+      await dispatch(editIssue(selectedIssue));
     }
-  }, [dispatch, state]);
+  }, [dispatch, selectedIssue, step]);
 
   const createIssueHandler = useCallback(async () => {
-    if (state.step === "creating") {
-      await dispatch(createIssue(state.finalIssue));
+    if (step === "creating" && finalIssue) {
+      await dispatch(createIssue(finalIssue));
     }
-  }, [dispatch, state]);
+  }, [dispatch, finalIssue, step]);
 
   return {
     state,
