@@ -76,7 +76,7 @@ export function Issue() {
           <text fg="green">Issue created: {state.url}</text>
         </box>
       )}
-      {state.step === "error" && <text fg="red">Error occurred</text>}
+      {state.step === "error" && <text fg="red">Error: {state.message}</text>}
     </box>
   );
 }

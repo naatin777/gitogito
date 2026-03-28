@@ -19,11 +19,20 @@ interface CarouselProps<T> {
 export function Carousel<T>({ message, choices, onSelect }: CarouselProps<T>) {
   const renderer = useRenderer();
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const hasChoices = choices.length > 0;
 
   useKeyboard((event) => {
     if (event.name === "escape" || isCtrlC(event)) {
       onSelect(undefined);
       renderer.destroy();
+      return;
+    }
+
+    if (!hasChoices) {
+      if (isEnter(event)) {
+        onSelect(undefined);
+        renderer.destroy();
+      }
       return;
     }
 
@@ -40,8 +49,6 @@ export function Carousel<T>({ message, choices, onSelect }: CarouselProps<T>) {
     }
   });
 
-  const current = choices[selectedIndex];
-
   return (
     <box flexDirection="column" paddingLeft={1} paddingRight={1}>
       <box>
@@ -49,28 +56,36 @@ export function Carousel<T>({ message, choices, onSelect }: CarouselProps<T>) {
       </box>
       <box>
         <text attributes={TextAttributes.DIM}>
-          {`← ${selectedIndex + 1}/${choices.length} →`}
+          {`← ${hasChoices ? selectedIndex + 1 : 0}/${choices.length} →`}
         </text>
         <text attributes={TextAttributes.DIM}>(Enter to Select)</text>
       </box>
 
-      <box
-        flexDirection="column"
-        border
-        borderStyle="rounded"
-        borderColor="cyan"
-        paddingLeft={1}
-        paddingRight={1}
-      >
-        <text attributes={TextAttributes.BOLD} fg="cyan" truncate>
-          {current.name}
-        </text>
-        {current.description && (
-          <box marginTop={1}>
-            <text>{current.description}</text>
+      {hasChoices
+        ? (
+          <box
+            flexDirection="column"
+            border
+            borderStyle="rounded"
+            borderColor="cyan"
+            paddingLeft={1}
+            paddingRight={1}
+          >
+            <text attributes={TextAttributes.BOLD} fg="cyan" truncate>
+              {choices[selectedIndex].name}
+            </text>
+            {choices[selectedIndex].description && (
+              <box marginTop={1}>
+                <text>{choices[selectedIndex].description}</text>
+              </box>
+            )}
           </box>
+        )
+        : (
+          <text attributes={TextAttributes.DIM}>
+            No options available. Press Enter or Esc to go back.
+          </text>
         )}
-      </box>
     </box>
   );
 }

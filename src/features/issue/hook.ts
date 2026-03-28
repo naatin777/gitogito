@@ -1,5 +1,5 @@
 import { useRenderer } from "@opentui/react";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import type z from "zod";
 import { useAppDispatch, useAppSelector } from "../../app/hooks.ts";
 import type { IssueSchema } from "../../schema.ts";
@@ -26,44 +26,61 @@ export function useIssueFlow() {
     }
   }, [state.step, renderer]);
 
+  const loadTemplatesHandler = useCallback(async () => {
+    await dispatch(loadTemplates());
+  }, [dispatch]);
+
+  const selectTemplateHandler = useCallback((template: IssueTemplate | undefined) => {
+    if (template) {
+      dispatch(selectTemplate(template));
+      return;
+    }
+
+    dispatch(setError("Issue template selection was cancelled."));
+  }, [dispatch]);
+
+  const submitOverviewHandler = useCallback((overview: string) => {
+    dispatch(submitOverview(overview));
+  }, [dispatch]);
+
+  const handleAgentDone = useCallback((result: z.infer<typeof IssueSchema>) => {
+    if (result && result.issue.length > 0) {
+      dispatch(setGeneratedIssues(result));
+      return;
+    }
+
+    dispatch(setError("No issue candidates were generated."));
+  }, [dispatch]);
+
+  const selectIssueHandler = useCallback((issue: Issue | undefined) => {
+    if (issue) {
+      dispatch(selectIssue(issue));
+      return;
+    }
+
+    dispatch(setError("Issue selection was cancelled."));
+  }, [dispatch]);
+
+  const editIssueHandler = useCallback(async () => {
+    if (state.step === "edit_issue") {
+      await dispatch(editIssue(state.selectedIssue));
+    }
+  }, [dispatch, state]);
+
+  const createIssueHandler = useCallback(async () => {
+    if (state.step === "creating") {
+      await dispatch(createIssue(state.finalIssue));
+    }
+  }, [dispatch, state]);
+
   return {
     state,
-    loadTemplates: async () => {
-      await dispatch(loadTemplates());
-    },
-    selectTemplate: (template: IssueTemplate | undefined) => {
-      if (template) {
-        dispatch(selectTemplate(template));
-      } else {
-        dispatch(setError());
-      }
-    },
-    submitOverview: (overview: string) => {
-      dispatch(submitOverview(overview));
-    },
-    handleAgentDone: (result: z.infer<typeof IssueSchema>) => {
-      if (result && result.issue.length > 0) {
-        dispatch(setGeneratedIssues(result));
-      } else {
-        dispatch(setError());
-      }
-    },
-    selectIssue: (issue: Issue | undefined) => {
-      if (issue) {
-        dispatch(selectIssue(issue));
-      } else {
-        dispatch(setError());
-      }
-    },
-    editIssue: async () => {
-      if (state.step === "edit_issue") {
-        await dispatch(editIssue(state.selectedIssue));
-      }
-    },
-    createIssue: async () => {
-      if (state.step === "creating") {
-        await dispatch(createIssue(state.finalIssue));
-      }
-    },
+    loadTemplates: loadTemplatesHandler,
+    selectTemplate: selectTemplateHandler,
+    submitOverview: submitOverviewHandler,
+    handleAgentDone,
+    selectIssue: selectIssueHandler,
+    editIssue: editIssueHandler,
+    createIssue: createIssueHandler,
   };
 }

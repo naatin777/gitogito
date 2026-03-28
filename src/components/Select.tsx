@@ -14,11 +14,20 @@ type SelectOptions<T> = {
 export function Select<T>(options: SelectOptions<T>) {
   const renderer = useRenderer();
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const hasChoices = options.choices.length > 0;
 
   useKeyboard((event) => {
     if (event.name === "escape" || isCtrlC(event)) {
       options.onSelect(undefined);
       renderer.destroy();
+      return;
+    }
+
+    if (!hasChoices) {
+      if (isEnter(event)) {
+        options.onSelect(undefined);
+        renderer.destroy();
+      }
       return;
     }
 
@@ -42,38 +51,44 @@ export function Select<T>(options: SelectOptions<T>) {
       <box>
         <text>{`${options.message} `}</text>
         <text attributes={TextAttributes.DIM}>
-          {`(${selectedIndex + 1}/${options.choices.length})`}
+          {`(${hasChoices ? selectedIndex + 1 : 0}/${options.choices.length})`}
         </text>
       </box>
-      {options.choices.map((value, index) => {
-        const isSelected = selectedIndex === index;
-        return (
-          <box
-            key={value.name}
-            flexDirection="column"
-          >
-            <text
-              attributes={TextAttributes.BOLD}
-              truncate
-              fg={isSelected ? "blue" : undefined}
+      {hasChoices
+        ? options.choices.map((value, index) => {
+          const isSelected = selectedIndex === index;
+          return (
+            <box
+              key={value.name}
+              flexDirection="column"
             >
-              {`→ ${value.name}`}
-            </text>
-            {isSelected && (
-              <box
-                paddingLeft={1}
-                borderStyle="single"
-                border={[
-                  "left",
-                ]}
-                borderColor="gray"
+              <text
+                attributes={TextAttributes.BOLD}
+                truncate
+                fg={isSelected ? "blue" : undefined}
               >
-                <text attributes={TextAttributes.DIM}>{`${value.description}`}</text>
-              </box>
-            )}
-          </box>
-        );
-      })}
+                {`→ ${value.name}`}
+              </text>
+              {isSelected && (
+                <box
+                  paddingLeft={1}
+                  borderStyle="single"
+                  border={[
+                    "left",
+                  ]}
+                  borderColor="gray"
+                >
+                  <text attributes={TextAttributes.DIM}>{`${value.description}`}</text>
+                </box>
+              )}
+            </box>
+          );
+        })
+        : (
+          <text attributes={TextAttributes.DIM}>
+            No options available. Press Enter or Esc to go back.
+          </text>
+        )}
     </box>
   );
 }
