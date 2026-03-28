@@ -39,7 +39,7 @@ const envServiceMock: EnvService = {
 
 test("getMergedConfig - deeply merges nested config with defaults", async () => {
   const file = new ConfigFileMock({
-    global: "ai:\n  provider: Claude\n",
+    global: "ai:\n  provider: OpenRouter\n",
     project: "ai:\n  model: project-model\n",
     local: "commit:\n  rules:\n    requireScope: false\n",
   });
@@ -47,8 +47,30 @@ test("getMergedConfig - deeply merges nested config with defaults", async () => 
 
   const merged = await service.getMergedConfig();
 
-  expect(merged.ai.provider).toBe("Claude");
+  expect(merged.ai.provider).toBe("OpenRouter");
   expect(merged.ai.model).toBe("project-model");
   expect(merged.commit.rules.maxHeaderLength).toBe(72);
   expect(merged.commit.rules.requireScope).toBe(false);
+});
+
+test("saveCredentials - writes nested credentials and preserves config", async () => {
+  const file = new ConfigFileMock({
+    global: "ai:\n  provider: OpenRouter\naiApiKey: legacy-key\n",
+  });
+  const service = new ConfigServiceImpl(envServiceMock, file);
+
+  await service.saveCredentials("global", "githubToken", "github-token");
+
+  const saved = await file.load("global");
+  expect(saved).toContain("ai:");
+  expect(saved).toContain("provider: OpenRouter");
+  expect(saved).toContain("credentials:");
+  expect(saved).toContain("aiApiKey: legacy-key");
+  expect(saved).toContain("githubToken: github-token");
+
+  const globalConfig = await service.getGlobalConfig();
+  expect(globalConfig.credentials).toEqual({
+    aiApiKey: "legacy-key",
+    githubToken: "github-token",
+  });
 });
