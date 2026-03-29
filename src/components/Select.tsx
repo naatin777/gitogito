@@ -1,9 +1,12 @@
 import { TextAttributes } from "@opentui/core";
 import { useKeyboard, useRenderer } from "@opentui/react";
 import { useState } from "react";
+import { SELECT_EMPTY_MESSAGE } from "../constants/message.ts";
 import { isCtrlC, isEnter } from "../helpers/opentui/key.ts";
 import { renderTui } from "../lib/opentui_render.tsx";
 import type { Choice } from "../type.ts";
+
+export { SELECT_EMPTY_MESSAGE };
 
 type SelectOptions<T> = {
   message: string;
@@ -11,14 +14,39 @@ type SelectOptions<T> = {
   onSelect: (value?: T) => void;
 };
 
+export function getSelectPositionLabel(
+  selectedIndex: number,
+  choiceCount: number,
+) {
+  return `(${choiceCount > 0 ? selectedIndex + 1 : 0}/${choiceCount})`;
+}
+
+export function getSafeSelectIndex(selectedIndex: number, choiceCount: number) {
+  return choiceCount > 0 ? Math.max(0, Math.min(selectedIndex, choiceCount - 1)) : 0;
+}
+
+/* v8 ignore start */
 export function Select<T>(options: SelectOptions<T>) {
   const renderer = useRenderer();
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const hasChoices = options.choices.length > 0;
+  const safeSelectedIndex = getSafeSelectIndex(
+    selectedIndex,
+    options.choices.length,
+  );
 
   useKeyboard((event) => {
     if (event.name === "escape" || isCtrlC(event)) {
       options.onSelect(undefined);
       renderer.destroy();
+      return;
+    }
+
+    if (!hasChoices) {
+      if (isEnter(event)) {
+        options.onSelect(undefined);
+        renderer.destroy();
+      }
       return;
     }
 
@@ -33,7 +61,7 @@ export function Select<T>(options: SelectOptions<T>) {
     }
 
     if (isEnter(event)) {
-      options.onSelect(options.choices[selectedIndex].value);
+      options.onSelect(options.choices[safeSelectedIndex].value);
     }
   });
 
@@ -42,42 +70,50 @@ export function Select<T>(options: SelectOptions<T>) {
       <box>
         <text>{`${options.message} `}</text>
         <text attributes={TextAttributes.DIM}>
-          {`(${selectedIndex + 1}/${options.choices.length})`}
+          {getSelectPositionLabel(safeSelectedIndex, options.choices.length)}
         </text>
       </box>
-      {options.choices.map((value, index) => {
-        const isSelected = selectedIndex === index;
-        return (
-          <box
-            key={value.name}
-            flexDirection="column"
-          >
-            <text
-              attributes={TextAttributes.BOLD}
-              truncate
-              fg={isSelected ? "blue" : undefined}
+      {hasChoices
+        ? options.choices.map((value, index) => {
+          const isSelected = safeSelectedIndex === index;
+          return (
+            <box
+              key={value.name}
+              flexDirection="column"
             >
-              {`→ ${value.name}`}
-            </text>
-            {isSelected && (
-              <box
-                paddingLeft={1}
-                borderStyle="single"
-                border={[
-                  "left",
-                ]}
-                borderColor="gray"
+              <text
+                attributes={TextAttributes.BOLD}
+                truncate
+                fg={isSelected ? "blue" : undefined}
               >
-                <text attributes={TextAttributes.DIM}>{`${value.description}`}</text>
-              </box>
-            )}
-          </box>
-        );
-      })}
+                {`→ ${value.name}`}
+              </text>
+              {isSelected && (
+                <box
+                  paddingLeft={1}
+                  borderStyle="single"
+                  border={[
+                    "left",
+                  ]}
+                  borderColor="gray"
+                >
+                  <text attributes={TextAttributes.DIM}>{`${value.description}`}</text>
+                </box>
+              )}
+            </box>
+          );
+        })
+        : (
+          <text attributes={TextAttributes.DIM}>
+            {SELECT_EMPTY_MESSAGE}
+          </text>
+        )}
     </box>
   );
 }
+/* v8 ignore stop */
 
+/* v8 ignore start */
 if (import.meta.main) {
   const instance = renderTui(
     <Select
@@ -93,3 +129,4 @@ if (import.meta.main) {
 
   await instance.waitUntilExit();
 }
+/* v8 ignore stop */

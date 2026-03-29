@@ -58,10 +58,11 @@ export class ConfigServiceImpl implements ConfigService {
     credentials: Partial<Credentials> | undefined;
   }> {
     const globalConfigText = await this.configFile.load("global");
-    const { credentials, ...globalConfig } = (YAML.parse(
-      globalConfigText,
-    ) ?? {}) as Partial<AppContext>;
-    return { config: globalConfig, credentials: credentials };
+    const context = parseAppContext(globalConfigText);
+    return {
+      config: stripCredentialsFromContext(context),
+      credentials: extractCredentials(context),
+    };
   }
 
   async getProjectConfig(): Promise<Partial<Config> | undefined> {
@@ -77,10 +78,11 @@ export class ConfigServiceImpl implements ConfigService {
     credentials: Partial<Credentials> | undefined;
   }> {
     const localConfigText = await this.configFile.load("local");
-    const { credentials, ...localConfig } = (YAML.parse(
-      localConfigText,
-    ) ?? {}) as Partial<AppContext>;
-    return { config: localConfig, credentials: credentials };
+    const context = parseAppContext(localConfigText);
+    return {
+      config: stripCredentialsFromContext(context),
+      credentials: extractCredentials(context),
+    };
   }
 
   async getMergedConfig(): Promise<Config> {
@@ -102,10 +104,13 @@ export class ConfigServiceImpl implements ConfigService {
     const { credentials: localCredentials } = await this.getLocalConfig();
     const aiApiKey = this.envService.getAiApiKey();
     const githubToken = this.envService.getGitHubToken();
-    const envCredentials: Partial<Credentials> = {
-      aiApiKey: aiApiKey,
-      githubToken: githubToken,
-    };
+    const envCredentials: Partial<Credentials> = {};
+    if (aiApiKey !== undefined) {
+      envCredentials.aiApiKey = aiApiKey;
+    }
+    if (githubToken !== undefined) {
+      envCredentials.githubToken = githubToken;
+    }
     return {
       ...globalCredentials,
       ...localCredentials,
@@ -130,15 +135,64 @@ export class ConfigServiceImpl implements ConfigService {
     value: PathValue<Credentials, K>,
   ) {
     const credentialsText = await this.configFile.load(credentialsScope);
-    const credentials = (YAML.parse(credentialsText) ?? {}) as Partial<
-      Credentials
-    >;
-    _.set(credentials, key, value);
+    const context = normalizeCredentialContext(parseAppContext(credentialsText));
+    _.set(context, `credentials.${key}`, value);
     await this.configFile.save(
       credentialsScope,
-      YAML.stringify(credentials, null, 2),
+      YAML.stringify(context, null, 2),
     );
   }
 }
 
 export const configService = new ConfigServiceImpl();
+
+type ParsedAppContext = Partial<AppContext> & Partial<Credentials>;
+
+function parseAppContext(text: string): ParsedAppContext {
+  return (YAML.parse(text) ?? {}) as ParsedAppContext;
+}
+
+function stripCredentialsFromContext(
+  context: ParsedAppContext,
+): Partial<Config> {
+  const {
+    credentials: _credentials,
+    aiApiKey: _legacyAiApiKey,
+    githubToken: _legacyGithubToken,
+    ...config
+  } = context;
+  return config as Partial<Config>;
+}
+
+function extractCredentials(
+  context: ParsedAppContext,
+): Partial<Credentials> | undefined {
+  const credentials: Partial<Credentials> = {
+    ...context.credentials,
+  };
+
+  if (typeof context.aiApiKey === "string") {
+    credentials.aiApiKey = context.aiApiKey;
+  }
+
+  if (typeof context.githubToken === "string") {
+    credentials.githubToken = context.githubToken;
+  }
+
+  return Object.keys(credentials).length > 0 ? credentials : undefined;
+}
+
+function normalizeCredentialContext(
+  context: ParsedAppContext,
+): Partial<AppContext> {
+  const normalizedContext = {
+    ...stripCredentialsFromContext(context),
+  } as Partial<AppContext>;
+  const credentials = extractCredentials(context);
+
+  if (credentials) {
+    normalizedContext.credentials = credentials;
+  }
+
+  return normalizedContext;
+}

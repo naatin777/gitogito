@@ -5,9 +5,12 @@ import {
   type ModelMessage,
   streamObject,
 } from "ai";
+import { ollama } from "ollama-ai-provider-v2";
 import { z } from "zod";
 import type { AI_PROVIDER_KEY } from "../constants/ai.ts";
-// import { ConfigService } from "./config/index.ts";
+import type { ConfigService } from "./config/config_service.ts";
+import { configService } from "./config/config_service.ts";
+import { AiConfigSchema } from "./config/schema/domain/ai.ts";
 
 export interface TokenUsage {
   inputTokens: number;
@@ -33,13 +36,25 @@ export class AIService {
     this.aiApiKey = aiApiKey;
   }
 
-  static create() {
-    // const configService = new ConfigService(envService);
-    // const config = await configService.getMerged();
-    // const provider = config.provider;
-    // const model = config.model;
-    // const aiApiKey = await configService.getAiApiKey();
-    return new AIService("OpenRouter", "model", "aiApiKey");
+  static async create(
+    source: Pick<ConfigService, "getMergedConfig" | "getMergedCredentials"> =
+      configService,
+  ) {
+    const mergedConfig = await source.getMergedConfig();
+    const mergedCredentials = await source.getMergedCredentials();
+    const aiConfig = AiConfigSchema.parse(mergedConfig.ai);
+
+    if (aiConfig.provider === "OpenRouter" && !mergedCredentials.aiApiKey) {
+      throw new Error(
+        "Missing AI API key. Set credentials.aiApiKey or GITOGITO_AI_API_KEY.",
+      );
+    }
+
+    return new AIService(
+      aiConfig.provider,
+      aiConfig.model,
+      mergedCredentials.aiApiKey ?? "",
+    );
   }
 
   protected getModel(): LanguageModel {
@@ -48,6 +63,9 @@ export class AIService {
     }
 
     switch (this.provider) {
+      case "Ollama":
+        this.modelCache = ollama(this.model);
+        break;
       case "OpenRouter": {
         const openrouter = createOpenRouter({
           apiKey: this.aiApiKey,
@@ -55,13 +73,13 @@ export class AIService {
         this.modelCache = openrouter(this.model);
         break;
       }
-      case "ChatGPT":
-      case "Claude":
-      case "Google Gemini":
-        throw new Error(`Unknown provider: ${this.provider}`);
+      default: {
+        const provider: never = this.provider;
+        throw new Error(`Unsupported AI provider: ${provider}`);
+      }
     }
 
-    return this.modelCache!;
+    return this.modelCache;
   }
 
   getModelId(): string {

@@ -16,14 +16,42 @@ interface CarouselProps<T> {
   onSelect: (value: T | undefined) => void;
 }
 
+export const CAROUSEL_EMPTY_MESSAGE =
+  "No options available. Press Enter or Esc to go back.";
+
+export function getCarouselPositionLabel(
+  selectedIndex: number,
+  choiceCount: number,
+) {
+  return `← ${choiceCount > 0 ? selectedIndex + 1 : 0}/${choiceCount} →`;
+}
+
+export function getSafeCarouselIndex(
+  selectedIndex: number,
+  choiceCount: number,
+) {
+  return choiceCount > 0 ? Math.max(0, Math.min(selectedIndex, choiceCount - 1)) : 0;
+}
+
+/* v8 ignore start */
 export function Carousel<T>({ message, choices, onSelect }: CarouselProps<T>) {
   const renderer = useRenderer();
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const hasChoices = choices.length > 0;
+  const safeSelectedIndex = getSafeCarouselIndex(selectedIndex, choices.length);
 
   useKeyboard((event) => {
     if (event.name === "escape" || isCtrlC(event)) {
       onSelect(undefined);
       renderer.destroy();
+      return;
+    }
+
+    if (!hasChoices) {
+      if (isEnter(event)) {
+        onSelect(undefined);
+        renderer.destroy();
+      }
       return;
     }
 
@@ -36,11 +64,9 @@ export function Carousel<T>({ message, choices, onSelect }: CarouselProps<T>) {
     }
 
     if (isEnter(event)) {
-      onSelect(choices[selectedIndex].value);
+      onSelect(choices[safeSelectedIndex].value);
     }
   });
-
-  const current = choices[selectedIndex];
 
   return (
     <box flexDirection="column" paddingLeft={1} paddingRight={1}>
@@ -49,32 +75,42 @@ export function Carousel<T>({ message, choices, onSelect }: CarouselProps<T>) {
       </box>
       <box>
         <text attributes={TextAttributes.DIM}>
-          {`← ${selectedIndex + 1}/${choices.length} →`}
+          {getCarouselPositionLabel(safeSelectedIndex, choices.length)}
         </text>
         <text attributes={TextAttributes.DIM}>(Enter to Select)</text>
       </box>
 
-      <box
-        flexDirection="column"
-        border
-        borderStyle="rounded"
-        borderColor="cyan"
-        paddingLeft={1}
-        paddingRight={1}
-      >
-        <text attributes={TextAttributes.BOLD} fg="cyan" truncate>
-          {current.name}
-        </text>
-        {current.description && (
-          <box marginTop={1}>
-            <text>{current.description}</text>
+      {hasChoices
+        ? (
+          <box
+            flexDirection="column"
+            border
+            borderStyle="rounded"
+            borderColor="cyan"
+            paddingLeft={1}
+            paddingRight={1}
+          >
+            <text attributes={TextAttributes.BOLD} fg="cyan" truncate>
+              {choices[safeSelectedIndex].name}
+            </text>
+            {choices[safeSelectedIndex].description && (
+              <box marginTop={1}>
+                <text>{choices[safeSelectedIndex].description}</text>
+              </box>
+            )}
           </box>
+        )
+        : (
+          <text attributes={TextAttributes.DIM}>
+            {CAROUSEL_EMPTY_MESSAGE}
+          </text>
         )}
-      </box>
     </box>
   );
 }
+/* v8 ignore stop */
 
+/* v8 ignore start */
 if (import.meta.main) {
   const instance = renderTui(
     <Carousel
@@ -99,3 +135,4 @@ if (import.meta.main) {
 
   await instance.waitUntilExit();
 }
+/* v8 ignore stop */

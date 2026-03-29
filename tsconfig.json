@@ -15,5 +15,4 @@
     "types": ["bun-types", "react", "node"],
   },
   "include": ["src/**/*"],
-  "exclude": ["src/**/*_test.ts", "src/**/*_test.tsx", "src/test/**/*"],
 }
