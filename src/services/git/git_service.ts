@@ -1,4 +1,3 @@
-import { type SimpleGit, simpleGit } from "simple-git";
 import {
   type GitCommitRepository,
   GitCommitRepositoryCliImpl,
@@ -24,7 +23,6 @@ import {
  * GitService aggregates all git repository operations
  */
 export class GitService {
-  private readonly git: SimpleGit;
   public readonly diff: GitDiffRepository;
   public readonly commit: GitCommitRepository;
   public readonly rev_parse: GitRevParseRepository;
@@ -32,7 +30,6 @@ export class GitService {
   public readonly remote: GitRemoteRepository;
 
   constructor(
-    git: SimpleGit = simpleGit(),
     repos: {
       diff: GitDiffRepository;
       commit: GitCommitRepository;
@@ -40,14 +37,13 @@ export class GitService {
       status: GitStatusRepository;
       remote: GitRemoteRepository;
     } = {
-      diff: new GitDiffRepositoryCliImpl(git),
-      commit: new GitCommitRepositoryCliImpl(git),
-      rev_parse: new GitRevParseRepositoryCliImpl(git),
-      status: new GitStatusRepositoryCliImpl(git),
-      remote: new GitRemoteRepositoryCliImpl(git),
+      diff: new GitDiffRepositoryCliImpl(),
+      commit: new GitCommitRepositoryCliImpl(),
+      rev_parse: new GitRevParseRepositoryCliImpl(),
+      status: new GitStatusRepositoryCliImpl(),
+      remote: new GitRemoteRepositoryCliImpl(),
     },
   ) {
-    this.git = git;
     this.diff = repos.diff;
     this.commit = repos.commit;
     this.rev_parse = repos.rev_parse;

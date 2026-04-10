@@ -1,6 +1,6 @@
-import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { readFile } from "node:fs/promises";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type z from "zod";
+import { createAppAsyncThunk } from "../../app/hooks.ts";
 import {
   parseMarkdownIssueTemplate,
   stringifyMarkdownIssue,
@@ -49,7 +49,7 @@ function toErrorMessage(error: unknown): string {
 }
 
 // Async thunks
-export const loadTemplates = createAsyncThunk<
+export const loadTemplates = createAppAsyncThunk<
   IssueTemplate[],
   void,
   IssueThunkConfig
@@ -60,7 +60,7 @@ export const loadTemplates = createAsyncThunk<
       const issueTemplatePath = await getIssueTemplatePath();
       const issueTemplates = await Promise.all(
         issueTemplatePath.markdown.map(async (markdownPath) =>
-          parseMarkdownIssueTemplate(await readFile(markdownPath, "utf8"))
+          parseMarkdownIssueTemplate(await Bun.file(markdownPath).text())
         ),
       );
       if (issueTemplates.length === 0) {
@@ -73,7 +73,7 @@ export const loadTemplates = createAsyncThunk<
   },
 );
 
-export const editIssue = createAsyncThunk<Issue, Issue, IssueThunkConfig>(
+export const editIssue = createAppAsyncThunk<Issue, Issue, IssueThunkConfig>(
   "issue/edit",
   async (selectedIssue: Issue, { rejectWithValue }) => {
     try {
@@ -91,7 +91,7 @@ export const editIssue = createAsyncThunk<Issue, Issue, IssueThunkConfig>(
   },
 );
 
-export const createIssue = createAsyncThunk<string, Issue, IssueThunkConfig>(
+export const createIssue = createAppAsyncThunk<string, Issue, IssueThunkConfig>(
   "issue/create",
   async (finalIssue: Issue, { rejectWithValue }) => {
     try {

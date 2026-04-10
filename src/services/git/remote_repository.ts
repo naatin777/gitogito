@@ -1,4 +1,4 @@
-import { type SimpleGit, simpleGit } from "simple-git";
+import { simpleGit } from "simple-git";
 
 /**
  * Git remote operations interface
@@ -11,23 +11,14 @@ export interface GitRemoteRepository {
  * CLI implementation of GitRemoteRepository using simple-git
  */
 export class GitRemoteRepositoryCliImpl implements GitRemoteRepository {
-  private readonly git: SimpleGit;
-
-  constructor(git: SimpleGit = simpleGit()) {
-    this.git = git;
-  }
-
   async getOwnerAndRepo(): Promise<{ owner: string; repo: string }> {
-    const remotes = await this.git.getRemotes(true);
-    const origin = remotes.find((remote) => remote.name === "origin");
+    const remotes = await simpleGit().getRemotes(true);
+    const origin = remotes.find((r) => r.name === "origin");
+    const remoteUrl = origin?.refs?.fetch;
 
-    if (!origin || !origin.refs.fetch) {
-      throw new Error("Invalid remote URL");
-    }
+    if (!remoteUrl) throw new Error("Invalid remote URL");
 
-    const match = origin.refs.fetch.trim().match(
-      /[:/]([^/:]+)\/([^/]+?)(?:\.git)?$/,
-    );
+    const match = remoteUrl.trim().match(/[:/]([^/:]+)\/([^/]+?)(?:\.git)?$/);
     if (!match) throw new Error("Invalid remote URL");
     return { owner: match[1], repo: match[2] };
   }

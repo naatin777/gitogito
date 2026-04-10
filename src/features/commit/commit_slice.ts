@@ -1,10 +1,11 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import type z from "zod";
 import { COMMIT_SYSTEM_MESSAGE } from "../../constants/message.ts";
 import { CommitSchema } from "../../schema.ts";
 import { AIService } from "../../services/ai.ts";
 import { editText } from "../../services/editor.ts";
 import { GitService } from "../../services/git/git_service.ts";
+import { createAppAsyncThunk } from "../../app/hooks.ts";
 
 // State type preserved from current reducer
 export type CommitState =
@@ -21,7 +22,7 @@ export type CommitState =
 const initialState: CommitState = { step: "loading" } as CommitState;
 
 // Async thunks for side effects
-export const generateCommitMessages = createAsyncThunk(
+export const generateCommitMessages = createAppAsyncThunk(
   "commit/generate",
   async (_, { rejectWithValue, dispatch: _dispatch }) => {
     try {
@@ -54,7 +55,7 @@ export const generateCommitMessages = createAsyncThunk(
   },
 );
 
-export const editCommitMessage = createAsyncThunk(
+export const editCommitMessage = createAppAsyncThunk(
   "commit/edit",
   async (
     selectedMessage: z.infer<typeof CommitSchema>["commit_message"][number],
@@ -78,7 +79,7 @@ export const editCommitMessage = createAsyncThunk(
   },
 );
 
-export const commitMessage = createAsyncThunk(
+export const commitMessage = createAppAsyncThunk(
   "commit/commit",
   async (message: string, { rejectWithValue }) => {
     try {
