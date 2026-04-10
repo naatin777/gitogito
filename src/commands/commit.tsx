@@ -1,15 +1,12 @@
 import { Command } from "@cliffy/command";
+import { AppRouter } from "../app/router.tsx";
 import { runTuiWithRedux } from "../lib/runner.tsx";
-import { RouterUI } from "../views/router/ui.tsx";
+import type { Config } from "../services/config/schema/config_schema.ts";
 
-export async function openCommitTui() {
-  await runTuiWithRedux(<RouterUI initialPath="/commit" />);
-}
-
-export function createCommitCommand(action: () => Promise<void> = openCommitTui) {
+export function createCommitCommand(_config?: Config) {
   return new Command()
     .description("Commit changes to the repository")
-    .action(action);
+    .action(async () => {
+      await runTuiWithRedux(<AppRouter initialPath="/commit" />);
+    });
 }
-
-export const commitCommand = createCommitCommand();

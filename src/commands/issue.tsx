@@ -1,15 +1,12 @@
 import { Command } from "@cliffy/command";
+import { AppRouter } from "../app/router.tsx";
 import { runTuiWithRedux } from "../lib/runner.tsx";
-import { RouterUI } from "../views/router/ui.tsx";
+import type { Config } from "../services/config/schema/config_schema.ts";
 
-export async function openIssueTui() {
-  await runTuiWithRedux(<RouterUI initialPath="/issue" />);
-}
-
-export function createIssueCommand(action: () => Promise<void> = openIssueTui) {
+export function createIssueCommand(_config?: Config) {
   return new Command()
     .description("Manage issues in the repository")
-    .action(action);
+    .action(async () => {
+      await runTuiWithRedux(<AppRouter initialPath="/issue" />);
+    });
 }
-
-export const issueCommand = createIssueCommand();
