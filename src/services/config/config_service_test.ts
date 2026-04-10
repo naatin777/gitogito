@@ -1,7 +1,6 @@
 import { expect, test } from "bun:test";
+import type { ConfigFile, ConfigScope } from "./config_file.ts";
 import { ConfigServiceImpl } from "./config_service.ts";
-import type { EnvService } from "./env.ts";
-import type { ConfigFile, ConfigScope } from "./file.ts";
 
 class ConfigFileMock implements ConfigFile {
   private files = new Map<ConfigScope, string>();
@@ -25,67 +24,115 @@ class ConfigFileMock implements ConfigFile {
   }
 }
 
-const envServiceMock: EnvService = {
-  getAiApiKey() {
-    return undefined;
-  },
-  getGitHubToken() {
-    return undefined;
-  },
-  getHome() {
-    return "/tmp";
-  },
-};
+// --- getMergedConfig ---
 
 test("getMergedConfig - deeply merges nested config with defaults", async () => {
   const file = new ConfigFileMock({
-    global: "ai:\n  provider: OpenRouter\n",
-    project: "ai:\n  model: project-model\n",
+    global: "ai:\n  default:\n    provider: OpenRouter\n",
+    project: "ai:\n  default:\n    model: project-model\n",
     local: "commit:\n  rules:\n    requireScope: false\n",
   });
-  const service = new ConfigServiceImpl(envServiceMock, file);
+  const service = new ConfigServiceImpl(file);
 
   const merged = await service.getMergedConfig();
 
-  expect(merged.ai.provider).toBe("OpenRouter");
-  expect(merged.ai.model).toBe("project-model");
+  expect(merged.ai.default.provider).toBe("OpenRouter");
+  expect(merged.ai.default.model).toBe("project-model");
   expect(merged.commit.rules.maxHeaderLength).toBe(72);
   expect(merged.commit.rules.requireScope).toBe(false);
 });
 
-test("saveCredentials - writes nested credentials and preserves config", async () => {
+test("getMergedConfig - credentials field in file is ignored", async () => {
   const file = new ConfigFileMock({
-    global: "ai:\n  provider: OpenRouter\naiApiKey: legacy-key\n",
+    global: "ai:\n  default:\n    provider: OpenRouter\ncredentials:\n  openRouterApiKey: sk-secret\n",
   });
-  const service = new ConfigServiceImpl(envServiceMock, file);
+  const service = new ConfigServiceImpl(file);
 
-  await service.saveCredentials("global", "githubToken", "github-token");
+  const merged = await service.getMergedConfig();
 
-  const saved = await file.load("global");
-  expect(saved).toContain("ai:");
-  expect(saved).toContain("provider: OpenRouter");
-  expect(saved).toContain("credentials:");
-  expect(saved).toContain("aiApiKey: legacy-key");
-  expect(saved).toContain("githubToken: github-token");
-
-  const globalConfig = await service.getGlobalConfig();
-  expect(globalConfig.credentials).toEqual({
-    aiApiKey: "legacy-key",
-    githubToken: "github-token",
-  });
+  expect("credentials" in merged).toBe(false);
+  expect((merged as Record<string, unknown>).openRouterApiKey).toBeUndefined();
 });
 
-test("getMergedCredentials preserves file credentials when env values are undefined", async () => {
+// --- getGlobalConfig ---
+
+test("getGlobalConfig - returns ai/language/theme fields (no commit, no credentials)", async () => {
   const file = new ConfigFileMock({
-    global: "credentials:\n  aiApiKey: saved-key\n",
-    local: "credentials:\n  githubToken: local-token\n",
+    global: "ai:\n  default:\n    provider: OpenRouter\n    model: gpt-4o\nlanguage:\n  dialogue: Japanese\n",
   });
-  const service = new ConfigServiceImpl(envServiceMock, file);
+  const service = new ConfigServiceImpl(file);
 
-  const merged = await service.getMergedCredentials();
+  const global = await service.getGlobalConfig();
 
-  expect(merged).toEqual({
-    aiApiKey: "saved-key",
-    githubToken: "local-token",
+  expect(global.ai?.default.provider).toBe("OpenRouter");
+  expect(global.language?.dialogue).toBe("Japanese");
+  expect((global as Record<string, unknown>).credentials).toBeUndefined();
+  expect((global as Record<string, unknown>).commit).toBeUndefined();
+});
+
+test("getGlobalConfig - returns empty object for empty file", async () => {
+  const service = new ConfigServiceImpl(new ConfigFileMock());
+  const global = await service.getGlobalConfig();
+  expect(global).toEqual({});
+});
+
+// --- getProjectConfig ---
+
+test("getProjectConfig - returns commit field", async () => {
+  const file = new ConfigFileMock({
+    project: "commit:\n  rules:\n    requireScope: true\n  scope:\n    - api\n    - ui\n",
   });
+  const service = new ConfigServiceImpl(file);
+
+  const project = await service.getProjectConfig();
+
+  expect(project.commit?.rules.requireScope).toBe(true);
+  expect(project.commit?.scope).toEqual(["api", "ui"]);
+});
+
+// --- getLocalConfig ---
+
+test("getLocalConfig - returns overrides without credentials", async () => {
+  const file = new ConfigFileMock({
+    local: "ai:\n  default:\n    provider: Gemini\n    model: gemini-pro\n",
+  });
+  const service = new ConfigServiceImpl(file);
+
+  const local = await service.getLocalConfig();
+
+  expect(local.ai?.default.provider).toBe("Gemini");
+  expect((local as Record<string, unknown>).credentials).toBeUndefined();
+});
+
+// --- saveConfig ---
+
+test("saveConfig - preserves existing comments", async () => {
+  const file = new ConfigFileMock({
+    project: [
+      "# AI settings",
+      "ai:",
+      "  default:",
+      "    provider: Ollama # current provider",
+      "    model: qwen3.5:9b",
+    ].join("\n") + "\n",
+  });
+  const service = new ConfigServiceImpl(file);
+
+  await service.saveConfig("project", "ai.default.model", "llama3");
+
+  const saved = await file.load("project");
+  expect(saved).toContain("# AI settings");
+  expect(saved).toContain("# current provider");
+  expect(saved).toContain("model: llama3");
+  expect(saved).toContain("provider: Ollama");
+});
+
+test("saveConfig - creates key in empty file", async () => {
+  const file = new ConfigFileMock();
+  const service = new ConfigServiceImpl(file);
+
+  await service.saveConfig("project", "ai.default.model", "new-model");
+
+  const saved = await file.load("project");
+  expect(saved).toContain("model: new-model");
 });

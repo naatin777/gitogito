@@ -1,10 +1,9 @@
-import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
+import { chmod, mkdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import packageJson from "../../../package.json" with { type: "json" };
-import { type EnvService, envService } from "./env.ts";
+import { type EnvService, envService } from "../env_service.ts";
 
-export type CredentialsScope = "global" | "local";
-export type ConfigScope = CredentialsScope | "project";
+export type ConfigScope = "global" | "project" | "local";
 
 export interface ConfigFile {
   load(configScope: ConfigScope): Promise<string>;
@@ -15,7 +14,7 @@ export interface ConfigFile {
 export class ConfigFileImpl {
   constructor(
     private envService: EnvService = envService,
-  ) {}
+  ) { }
 
   private getGlobalPath() {
     return join(
@@ -54,7 +53,7 @@ export class ConfigFileImpl {
   async load(configScope: ConfigScope): Promise<string> {
     const path = this.getFilePath(configScope);
     try {
-      const content = await readFile(path, "utf8");
+      const content = await Bun.file(path).text();
       return content;
     } catch (error) {
       if (isNotFoundError(error)) {
@@ -70,24 +69,17 @@ export class ConfigFileImpl {
 
     if (configScope === "global" || configScope === "local") {
       await mkdir(dir, { recursive: true, mode: 0o700 });
-      await writeFile(path, data, { mode: 0o600, encoding: "utf8" });
+      await Bun.write(path, data);
+      await chmod(path, 0o600);
     } else {
       await mkdir(dir, { recursive: true });
-      await writeFile(path, data, "utf8");
+      await Bun.write(path, data);
     }
   }
 
   async exists(configScope: ConfigScope): Promise<boolean> {
     const path = this.getFilePath(configScope);
-    try {
-      const info = await stat(path);
-      return info.isFile();
-    } catch (error) {
-      if (isNotFoundError(error)) {
-        return false;
-      }
-      throw error;
-    }
+    return Bun.file(path).exists();
   }
 }
 

@@ -1,3 +1,4 @@
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import {
   generateObject,
@@ -7,10 +8,13 @@ import {
 } from "ai";
 import { ollama } from "ollama-ai-provider-v2";
 import { z } from "zod";
-import type { AI_PROVIDER_KEY } from "../constants/ai.ts";
 import type { ConfigService } from "./config/config_service.ts";
 import { configService } from "./config/config_service.ts";
-import { AiConfigSchema } from "./config/schema/domain/ai.ts";
+import { type AiConfig, AiConfigSchema, type AiModel } from "./config/schema/fields/ai_schema.ts";
+import type { Credentials } from "./credential/credentials_schema.ts";
+import { type CredentialService, credentialService } from "./credential/credential_service.ts";
+
+export type AiTask = keyof Omit<AiConfig, "default">;
 
 export interface TokenUsage {
   inputTokens: number;
@@ -22,39 +26,42 @@ export type UsageCallback = (usage: TokenUsage) => void;
 
 export class AIService {
   protected modelCache: LanguageModel | null = null;
-  protected provider: AI_PROVIDER_KEY;
+  protected provider: AiModel["provider"];
   protected model: string;
-  protected aiApiKey: string;
+  protected credentials: Partial<Credentials>;
 
   constructor(
-    provider: AI_PROVIDER_KEY,
+    provider: AiModel["provider"],
     model: string,
-    aiApiKey: string,
+    credentials: Partial<Credentials>,
   ) {
     this.provider = provider;
     this.model = model;
-    this.aiApiKey = aiApiKey;
+    this.credentials = credentials;
   }
 
   static async create(
-    source: Pick<ConfigService, "getMergedConfig" | "getMergedCredentials"> =
-      configService,
+    configSource: Pick<ConfigService, "getMergedConfig"> = configService,
+    credentialSource: Pick<CredentialService, "getMergedCredentials"> = credentialService,
+    task?: AiTask,
   ) {
-    const mergedConfig = await source.getMergedConfig();
-    const mergedCredentials = await source.getMergedCredentials();
+    const mergedConfig = await configSource.getMergedConfig();
+    const mergedCredentials = await credentialSource.getMergedCredentials();
     const aiConfig = AiConfigSchema.parse(mergedConfig.ai);
+    const { provider, model } = (task && aiConfig[task]) ?? aiConfig.default;
 
-    if (aiConfig.provider === "OpenRouter" && !mergedCredentials.aiApiKey) {
+    if (provider === "OpenRouter" && !mergedCredentials.openRouterApiKey) {
       throw new Error(
-        "Missing AI API key. Set credentials.aiApiKey or GITOGITO_AI_API_KEY.",
+        "Missing OpenRouter API key. Set credentials.openRouterApiKey or GITOGITO_OPEN_ROUTER_API_KEY.",
+      );
+    }
+    if (provider === "Gemini" && !mergedCredentials.geminiApiKey) {
+      throw new Error(
+        "Missing Gemini API key. Set credentials.geminiApiKey or GITOGITO_GEMINI_API_KEY.",
       );
     }
 
-    return new AIService(
-      aiConfig.provider,
-      aiConfig.model,
-      mergedCredentials.aiApiKey ?? "",
-    );
+    return new AIService(provider, model, mergedCredentials);
   }
 
   protected getModel(): LanguageModel {
@@ -68,9 +75,16 @@ export class AIService {
         break;
       case "OpenRouter": {
         const openrouter = createOpenRouter({
-          apiKey: this.aiApiKey,
+          apiKey: this.credentials.openRouterApiKey,
         });
         this.modelCache = openrouter(this.model);
+        break;
+      }
+      case "Gemini": {
+        const google = createGoogleGenerativeAI({
+          apiKey: this.credentials.geminiApiKey,
+        });
+        this.modelCache = google(this.model);
         break;
       }
       default: {

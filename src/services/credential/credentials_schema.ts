@@ -1,7 +1,8 @@
 import { z } from "zod";
 
 export const CredentialsSchema = z.object({
-  aiApiKey: z.string().optional().describe("API key for AI provider access."),
+  openRouterApiKey: z.string().optional().describe("API key for OpenRouter."),
+  geminiApiKey: z.string().optional().describe("API key for Google Gemini."),
   githubToken: z.string().optional().describe("GitHub personal access token."),
 }).describe("Credentials configuration.");
 
