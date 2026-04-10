@@ -100,6 +100,9 @@ User input?
 ├─ Multi-line text editor -> components/inputs.md (textarea)
 ├─ Select from a list (vertical) -> components/inputs.md (select)
 ├─ Tab-based selection (horizontal) -> components/inputs.md (tab-select)
+├─ Color/highlight parts of input text -> components/input-styling.md (extmarks)
+├─ Ghost text / inline completion (Copilot-style) -> components/input-styling.md (virtual extmarks)
+├─ Styled placeholder text -> components/input-styling.md (StyledText placeholder)
 └─ Custom keyboard shortcuts -> keyboard/REFERENCE.md
 ```
 
@@ -190,6 +193,7 @@ For component naming differences and text modifiers, see `components/REFERENCE.m
 | Text & Display | `./references/components/text-display.md` | text, ascii-font, styled text |
 | Containers | `./references/components/containers.md` | box, scrollbox, borders |
 | Inputs | `./references/components/inputs.md` | input, textarea, select, tab-select |
+| Input Styling | `./references/components/input-styling.md` | extmarks, ghost text, styled placeholder |
 | Code & Diff | `./references/components/code-diff.md` | code, line-number, diff, markdown, text-table |
 
 ## Resources

@@ -8,7 +8,25 @@ messages and GitHub issues.
 - **Goal**: Provide an interactive TUI for Git/GitHub workflows using AI
   agents.
 
-## 2. Quick Commands
+---
+
+## 2. Agent Workflow
+
+### Before Implementing
+
+Before writing any code, always present a concrete implementation plan to the user and get explicit confirmation (yes/no):
+
+- List files to create/modify with a one-line description of each change
+- Describe any architectural decisions or tradeoffs
+- Wait for the user to confirm before proceeding
+
+### During Implementation
+
+- Run `bun run check` and `bun test` at regular checkpoints — at minimum after completing each logical group of changes (e.g., after adding a slice, after wiring routes, after all pages are done)
+- If either command fails, fix the errors before continuing
+- Do not batch all changes and run checks only at the very end
+
+## 3. Quick Commands
 
 Use these commands to operate the project.
 
@@ -22,12 +40,13 @@ bun run check                             # Type check
 
 # User-facing Commands (Examples)
 bun run src/main.ts init                  # Initialize config
+bun run src/main.ts setup                 # Global config wizard
 bun run src/main.ts commit                # Generate commit message
 bun run src/main.ts issue                 # Generate issue
 bun run src/main.ts config                # Open config TUI
 ```
 
-## 3. Directory Structure
+## 4. Directory Structure
 
 Gitogito follows a layered architecture with clear separation of concerns.
 
@@ -48,9 +67,10 @@ Gitogito follows a layered architecture with clear separation of concerns.
   - Rule: Only store setup and app-wide typed hooks, no feature slices
 
 - **`src/features/`** - Feature Slices
-  - Each feature has: `xxx_slice.ts` (state), `ui.tsx` (view), `hook.ts`
-    (logic), `domain/` (business logic), `components/` (complex UIs)
-  - Examples: `commit/`, `issue/`, `config/`
+  - **Single-page feature** (e.g., `commit/`, `issue/`): `xxx_slice.ts`, `ui.tsx`, `hook.ts`, `routes.tsx`, `domain/`, `components/`
+  - **Multi-page feature** (e.g., `init/`, `config/`, `setup/`): additionally requires `layout.tsx` (shared wrapper with progress/header) and one file per page (e.g., `provider_page.tsx`)
+  - `routes.tsx` is **required for all features** — it registers the feature's route(s) in the app router
+  - `layout.tsx` is **required for multi-page wizard/flow features** — it wraps all child pages with shared UI
   - Rule: Keep related code together, including Redux slices
 
 - **`src/views/`** - Complex UI Flows
@@ -81,7 +101,7 @@ Gitogito follows a layered architecture with clear separation of concerns.
 - Shared component -> `components/` (if used by 2+ features)
 - Store configuration -> `app/store.ts` (register feature reducers)
 
-## 4. Naming Conventions
+## 5. Naming Conventions
 
 This project uses underscore-based TypeScript file naming conventions.
 
@@ -96,7 +116,8 @@ This project uses underscore-based TypeScript file naming conventions.
 2. **Component Files (.tsx)**:
    - Shared/reusable component files use **PascalCase**
    - Examples: `UserCard.tsx`, `Select.tsx`, `TextInput.tsx`
-   - Feature entry files may keep conventional names like `ui.tsx`
+   - Feature entry files use snake_case: `ui.tsx`, `layout.tsx`, `hook.ts`, `routes.tsx`
+   - Multi-page feature page files use snake_case with `_page` suffix: `provider_page.tsx`, `review_page.tsx`, `done_page.tsx`
 
 3. **Test Files - Use snake_case with `_test.ts` suffix**:
    - Test files follow: `[original_file_name]_test.ts` or
@@ -110,7 +131,7 @@ This project uses underscore-based TypeScript file naming conventions.
 - When reviewing code, suggest renaming for any violations
 - Use `git mv` for renaming to preserve file history
 
-## 5. Configuration File Specification
+## 6. Configuration File Specification
 
 Gitogito uses three YAML files with separate responsibilities:
 
@@ -129,7 +150,7 @@ project/
 2. `~/.config/gitogito/config.yml`
 3. `project/.gitogito.yml`
 4. `project/.gitogito.local.yml`
-5. Environment variables: `GITOGITO_AI_API_KEY`, `GITOGITO_GITHUB_TOKEN`
+5. Environment variables (see `src/services/config/env.ts` for the full list)
 
 ### File Roles
 
@@ -151,7 +172,7 @@ project/.gitogito.local.yml      # 600 (-rw-------)
 
 ---
 
-## 6. Feature Specification Template
+## 7. Feature Specification Template
 
 When writing a new feature spec, use the following structure:
 
@@ -189,29 +210,18 @@ When writing a new feature spec, use the following structure:
 
 ---
 
-## 7. Known Issues & Technical Debt
+## 8. Known Issues & Technical Debt
 
 The following are known issues that should be addressed:
 
-### Priority 1 (Fix Immediately)
+### Priority 1 (Code Health)
 
-1. **AI provider config/runtime mismatch** (`src/services/ai.ts`): `AIService.create()` returns hardcoded dummy values. Implement real provider resolution from `ConfigService`.
-2. **Credential save/load structure mismatch** (`src/services/config/config_service.ts`): `saveCredentials()` writes to root but read path expects `{ credentials: { ... } }`. Fix to write under nested `credentials.<key>`.
-3. **Shallow config merge** (`src/services/config/config_service.ts:85`): `getMergedConfig()` uses spread merge only; nested objects are overwritten as a whole. Replace with deep merge.
-
-### Priority 2 (High Impact)
-
-4. **`Select` / `Carousel` unsafe for empty choices** (`src/components/Select.tsx`, `Carousel.tsx`): No zero-length guard on `choices.length`. Add early return for empty choices.
-5. **Non-uniform error handling in async thunks** (`src/features/issue/issue_slice.ts`): Standardize on `rejectWithValue(stringMessage)` and extend error state to include `message`.
-
-### Priority 3 (Code Health)
-
-6. **Large commented-out code blocks**: `src/features/commit/commit_selectors.ts`, various test files. Decide to restore or delete.
-7. **Hook dependency arrays** (`src/components/Spinner.tsx`, `src/features/config/ui.tsx`): Include real dependencies or memoize callbacks.
+1. **Large commented-out code blocks**: `src/features/commit/commit_selectors.ts`, various test files. Decide to restore or delete.
+2. **Hook dependency arrays** (`src/components/Spinner.tsx`, `src/features/config/ui.tsx`): Include real dependencies or memoize callbacks.
 
 ---
 
-## 8. UI Feature Specifications
+## 9. UI Feature Specifications
 
 ### Commit Message UX
 
@@ -257,8 +267,33 @@ Character count includes decorations since they appear in the final commit messa
 
 ---
 
-## 9. Other
+## 10. UI Component Rules
+
+### Themed Components
+
+- **Always check `src/components/ThemedComponents.tsx` first** and use whatever is exported there instead of raw JSX elements (`<box>`, `<text>`, `<scrollbox>`, etc.).
+- Import with named imports: `import { Box, Text } from "../../components/ThemedComponents.tsx"`.
+- When `ThemedComponents.tsx` gets new exports, use them — do not reach for raw elements.
+- Exception: raw elements are allowed only when a specific prop would be overridden by the themed wrapper (e.g., cursor character rendering with `fg` + `TextAttributes.INVERSE`).
+
+### Colors
+
+- **Always obtain colors from `useThemeColors()`** (`src/features/config/use_theme_colors.ts`) and pass them to `fg`/`bg` props.
+- Do not hardcode color strings (e.g., `fg="blue"`, `fg="#007bff"`) in UI components. Use `themeColors.primary`, `themeColors.text`, `themeColors.error`, etc.
+- Exception: cursor/highlight rendering where a fixed contrast color is intentional.
+
+### Redux Async Thunks
+
+- **Always use `createAppAsyncThunk`** (from `src/app/hooks.ts`) instead of `createAsyncThunk`.
+- `createAppAsyncThunk` is pre-typed with `RootState`, `AppDispatch`, and `AppExtraArgument`, eliminating manual type casts like `extra as AppExtraArgument`.
+
+---
+
+## 11. Other
 
 - Do not introduce Deno-specific runtime patterns or comments.
 - Use Bun/Node-compatible APIs (`node:fs`, `node:path`, `process`) over Deno APIs.
-- Prefer `Bun.YAML` over `@std/yaml`, `Bun.stringWidth` over Deno unicode width.
+- Use `Bun.stringWidth` for Unicode character width calculation.
+- **Use the `yaml` npm package** for all YAML parsing and serialization — not `Bun.YAML`.
+  - `parse()` for reading, `parseDocument()` + `doc.setIn()` + `doc.toString()` for comment-preserving writes.
+  - `Bun.YAML` does not support document-level AST manipulation and will strip comments.
