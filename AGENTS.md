@@ -1,3 +1,42 @@
+## How to read this repo
+
+- **`AGENTS.md` (this file)** is the canonical guide: stack, directories, naming, config files, UI rules, and templates.
+- **[`.cursor/rules/`](.cursor/rules/)** holds short `.mdc` snippets Cursor injects by scope; they point here for detail. Do not duplicate long specs in rules.
+- **Product**: the CLI and npm package are **Gitogito** (`gitogito` in [`package.json`](package.json)).
+
+## Rule ownership model
+
+Use this split to keep guidance maintainable and avoid drift:
+
+- **`AGENTS.md`**: durable project standards and detailed rationale.
+- **`.cursor/rules/*.mdc`**: tiny, trigger-scoped reminders that link back to `AGENTS.md`.
+
+When updating guidance:
+
+1. Update `AGENTS.md` first (source of truth).
+2. Keep `.mdc` files short (summary + links only).
+3. Avoid repeating full rule text in `.mdc`.
+
+## Contents
+
+- [Cursor (IDE)](#cursor-ide)
+- [Rule ownership model](#rule-ownership-model)
+- [1. Project Overview](#1-project-overview)
+- [2. Agent Workflow](#2-agent-workflow)
+- [3. Quick Commands](#3-quick-commands)
+- [4. Directory Structure](#4-directory-structure)
+- [5. Naming Conventions](#5-naming-conventions)
+- [6. Configuration File Specification](#6-configuration-file-specification)
+- [7. Feature Specification Template](#7-feature-specification-template)
+- [8. Known Issues & Technical Debt](#8-known-issues--technical-debt)
+- [9. UI Feature Specifications](#9-ui-feature-specifications)
+- [10. UI Component Rules](#10-ui-component-rules)
+- [11. Other](#11-other)
+
+## Cursor (IDE)
+
+Scoped AI rules for this repo live under [`.cursor/rules/`](.cursor/rules/) (thin summaries; **`AGENTS.md` stays authoritative**). For defaults that apply to every project (models, Chat/Agent features, indexing), use **Cursor Settings** in the app. On macOS, optional user JSON lives at `~/Library/Application Support/Cursor/User/settings.json` — prefer the UI when possible because `cursor.*` keys can change between releases.
+
 ## 1. Project Overview
 
 **Gitogito** is an AI-powered CLI tool for generating intelligent commit
@@ -119,11 +158,11 @@ This project uses underscore-based TypeScript file naming conventions.
    - Feature entry files use snake_case: `ui.tsx`, `layout.tsx`, `hook.ts`, `routes.tsx`
    - Multi-page feature page files use snake_case with `_page` suffix: `provider_page.tsx`, `review_page.tsx`, `done_page.tsx`
 
-3. **Test Files - Use snake_case with `_test.ts` suffix**:
-   - Test files follow: `[original_file_name]_test.ts` or
-     `[original_file_name]_test.tsx`
-   - Examples: `commit_message_test.ts`, `word_wrap_test.ts`
-   - Prohibition: Do not use `-test.ts` or `.test.ts` patterns
+3. **Test Files - Use `.test.ts` suffix**:
+   - Test files follow: `[original_file_name].test.ts` or
+     `[original_file_name].test.tsx`
+   - Examples: `commit_message.test.ts`, `word_wrap.test.ts`
+   - Prohibition: Do not use `-test.ts` or `_test.ts` patterns
 
 ### Enforcement
 
@@ -285,7 +324,7 @@ Character count includes decorations since they appear in the final commit messa
 ### Redux Async Thunks
 
 - **Always use `createAppAsyncThunk`** (from `src/app/hooks.ts`) instead of `createAsyncThunk`.
-- `createAppAsyncThunk` is pre-typed with `RootState`, `AppDispatch`, and `AppExtraArgument`, eliminating manual type casts like `extra as AppExtraArgument`.
+- `createAppAsyncThunk` is pre-typed with `RootState`, `AppDispatch`, and `AppDependencies`, eliminating manual type casts like `extra as AppDependencies`.
 
 ---
 
