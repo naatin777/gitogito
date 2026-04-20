@@ -6,7 +6,7 @@ import { issueReducer } from "../features/issue/issue_slice.ts";
 import { notificationsReducer } from "../features/notifications/notifications_slice.ts";
 import {
   type ConfigService,
-  ConfigServiceImpl,
+  createConfigService,
 } from "../services/config/config_service.ts";
 import { ConfigSchema } from "../services/config/schema/config_schema.ts";
 import type { GlobalConfig } from "../services/config/schema/global_config_schema.ts";
@@ -14,14 +14,17 @@ import type { LocalConfig } from "../services/config/schema/local_config_schema.
 import type { ProjectConfig } from "../services/config/schema/project_config_schema.ts";
 import {
   type CredentialService,
-  CredentialServiceImpl,
+  createCredentialService,
 } from "../services/credential/credential_service.ts";
+import type { EnvRepository } from "../repositories/env/env_repository.ts";
+import { createEnvRepository } from "../repositories/env/env_repository.ts";
 import {
   type GitRemoteRepository,
   GitRemoteRepositoryCliImpl,
-} from "../services/git/remote_repository.ts";
+} from "../repositories/git/remote_repository.ts";
 
 export interface AppDependencies {
+  env: EnvRepository;
   config: ConfigService;
   credentials: CredentialService;
   gitRemoteRepository: GitRemoteRepository;
@@ -42,11 +45,7 @@ export function createAppStore({
     globalConfig = {} as Partial<GlobalConfig>,
     projectConfig = {} as Partial<ProjectConfig>,
   } = {},
-  dependencies = {
-    gitRemoteRepository: new GitRemoteRepositoryCliImpl(),
-    config: new ConfigServiceImpl(),
-    credentials: new CredentialServiceImpl(),
-  }
+  dependencies = createDefaultAppDependencies()
 }: {
   config?: {
     mergedConfig?: ReturnType<typeof ConfigSchema.parse>;
@@ -68,6 +67,16 @@ export function createAppStore({
         },
       }),
   });
+}
+
+function createDefaultAppDependencies(): AppDependencies {
+  const env = createEnvRepository();
+  return {
+    env,
+    gitRemoteRepository: new GitRemoteRepositoryCliImpl(),
+    config: createConfigService(),
+    credentials: createCredentialService({ envRepository: env }),
+  };
 }
 
 export type AppStore = ReturnType<typeof createAppStore>;

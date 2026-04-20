@@ -5,8 +5,8 @@ import { createAppAsyncThunk } from "../../app/hooks.ts";
 import { COMMIT_SYSTEM_MESSAGE } from "../../constants/message.ts";
 import { fromPromiseWithMessage } from "../../helpers/error/neverthrow.ts";
 import { CommitSchema } from "../../schema.ts";
-import { AIService } from "../../services/ai.ts";
-import { editText } from "../../services/editor.ts";
+import { AIService } from "../../services/ai/ai_service.ts";
+import { editText } from "../../services/editor/edit_text.ts";
 import { GitService } from "../../services/git/git_service.ts";
 
 // State type preserved from current reducer

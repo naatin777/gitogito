@@ -1,6 +1,6 @@
 import _ from "lodash";
-import { EnvError } from "../lib/errors.ts";
-import type { Credentials } from "./credential/credentials_schema.ts";
+import { EnvError } from "../../lib/errors.ts";
+import type { Credentials } from "../../services/credential/credentials_schema.ts";
 
 export const ENV_KEYS = {
   OPEN_ROUTER_API_KEY: { key: "GITOGITO_OPEN_ROUTER_API_KEY", description: "API key for OpenRouter." },
@@ -35,4 +35,6 @@ export class EnvRepositoryProcessImpl implements EnvRepository {
   }
 }
 
-export const envRepository = new EnvRepositoryProcessImpl();
+export function createEnvRepository(): EnvRepository {
+  return new EnvRepositoryProcessImpl();
+}

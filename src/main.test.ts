@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import packageJson from "../package.json" with { type: "json" };
+import { createAppDependencies } from "./app/app_extra.ts";
 import { createMainCommand } from "./main.ts";
-import { EnvRepositoryProcessImpl } from "./services/env_repository.ts";
 
 test("createMainCommand sets the name from package.json", () => {
   const cmd = createMainCommand();
@@ -24,11 +24,12 @@ test("createMainCommand registers init, config, issue, commit, completions subco
 });
 
 test("createMainCommand passes noColor to help settings", () => {
-  const env = new EnvRepositoryProcessImpl();
+  const dependencies = createAppDependencies();
+  const env = dependencies.env;
   env.getNoColor = () => true;
-  const noColorCmd = createMainCommand(env);
+  const noColorCmd = createMainCommand(dependencies);
   env.getNoColor = () => false;
-  const defaultCmd = createMainCommand(env);
+  const defaultCmd = createMainCommand(dependencies);
   expect(noColorCmd.getName()).toBe(defaultCmd.getName());
 });
 

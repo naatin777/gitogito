@@ -1,9 +1,9 @@
 import _ from "lodash";
 import { parse, parseDocument } from "yaml";
 import type { NestedKeys, PathValue } from "../../type.ts";
-import { envRepository as defaultEnvRepository, type EnvRepository } from "../env_repository.ts";
+import { createEnvRepository, type EnvRepository } from "../../repositories/env/env_repository.ts";
 import {
-  credentialFile as defaultCredentialFile,
+  createCredentialFile,
   type CredentialFile,
   type CredentialsScope,
 } from "./credential_file.ts";
@@ -22,8 +22,8 @@ export interface CredentialService {
 
 export class CredentialServiceImpl implements CredentialService {
   constructor(
-    private envRepository: EnvRepository = defaultEnvRepository,
-    private credentialFile: CredentialFile = defaultCredentialFile,
+    private envRepository: EnvRepository,
+    private credentialFile: CredentialFile,
   ) { }
 
   async getGlobalCredentials(): Promise<Partial<Credentials>> {
@@ -55,4 +55,12 @@ export class CredentialServiceImpl implements CredentialService {
   }
 }
 
-export const credentialService = new CredentialServiceImpl();
+export function createCredentialService({
+  envRepository = createEnvRepository(),
+  credentialFile = createCredentialFile(envRepository),
+}: {
+  envRepository?: EnvRepository;
+  credentialFile?: CredentialFile;
+} = {}): CredentialService {
+  return new CredentialServiceImpl(envRepository, credentialFile);
+}

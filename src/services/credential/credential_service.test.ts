@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import type { EnvRepository } from "../env_repository.ts";
+import type { EnvRepository } from "../../repositories/env/env_repository.ts";
 import type { CredentialFile, CredentialsScope } from "./credential_file.ts";
 import { CredentialServiceImpl } from "./credential_service.ts";
 

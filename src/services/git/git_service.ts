@@ -1,23 +1,23 @@
 import {
   type GitCommitRepository,
   GitCommitRepositoryCliImpl,
-} from "./commit_repository.ts";
+} from "../../repositories/git/commit_repository.ts";
 import {
   type GitDiffRepository,
   GitDiffRepositoryCliImpl,
-} from "./diff_repository.ts";
+} from "../../repositories/git/diff_repository.ts";
 import {
   type GitRemoteRepository,
   GitRemoteRepositoryCliImpl,
-} from "./remote_repository.ts";
+} from "../../repositories/git/remote_repository.ts";
 import {
   type GitRevParseRepository,
   GitRevParseRepositoryCliImpl,
-} from "./rev_parse_repository.ts";
+} from "../../repositories/git/rev_parse_repository.ts";
 import {
   type GitStatusRepository,
   GitStatusRepositoryCliImpl,
-} from "./status_repository.ts";
+} from "../../repositories/git/status_repository.ts";
 
 /**
  * GitService aggregates all git repository operations

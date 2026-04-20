@@ -15,7 +15,7 @@ import {
 } from "../../features/issue/domain/parser.ts";
 import { getIssueTemplatePath } from "../../features/issue/domain/template_paths.ts";
 import type { IssueSchema } from "../../schema.ts";
-import { editText } from "../../services/editor.ts";
+import { editText } from "../../services/editor/edit_text.ts";
 import { createIssue as createIssueService } from "../../services/github/issue.ts";
 import type { Issue, IssueTemplate } from "../../type.ts";
 

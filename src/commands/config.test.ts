@@ -40,6 +40,11 @@ function buildTestCommand(saveConfig = makeSaveConfig()) {
   };
 
   const mockDependencies: AppDependencies = {
+    env: {
+      getCredentials: mock(() => ({})),
+      getNoColor: mock(() => false),
+      getHome: mock(() => "/tmp"),
+    },
     config: mockConfigService,
     credentials: {
       getGlobalCredentials: mock(() => Promise.resolve({})),

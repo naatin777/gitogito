@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { parse, parseDocument } from "yaml";
 import type { NestedKeys, PathValue } from "../../type.ts";
-import { configFile as defaultConfigFile, type ConfigFile, type ConfigScope } from "./config_file.ts";
+import { createConfigFile, type ConfigFile, type ConfigScope } from "./config_file.ts";
 import { type Config, DEFAULT_CONFIG } from "./schema/config_schema.ts";
 import { GlobalConfigSchema, type GlobalConfig } from "./schema/global_config_schema.ts";
 import { LocalConfigSchema, type LocalConfig } from "./schema/local_config_schema.ts";
@@ -25,7 +25,7 @@ const PROJECT_KEYS = Object.keys(ProjectConfigSchema.shape) as (keyof ProjectCon
 const LOCAL_KEYS = Object.keys(LocalConfigSchema.shape) as (keyof LocalConfig)[];
 
 export class ConfigServiceImpl implements ConfigService {
-  constructor(private configFile: ConfigFile = defaultConfigFile) {}
+  constructor(private configFile: ConfigFile) {}
 
   async getGlobalConfig(): Promise<Partial<GlobalConfig>> {
     const text = await this.configFile.load("global");
@@ -62,4 +62,8 @@ export class ConfigServiceImpl implements ConfigService {
     doc.setIn((key as string).split("."), value);
     await this.configFile.save(configScope, doc.toString());
   }
+}
+
+export function createConfigService(configFile: ConfigFile = createConfigFile()): ConfigService {
+  return new ConfigServiceImpl(configFile);
 }

@@ -1,7 +1,7 @@
 import { chmod, mkdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import packageJson from "../../../package.json" with { type: "json" };
-import { type EnvRepository, envRepository as defaultEnvRepository } from "../env_repository.ts";
+import { createEnvRepository, type EnvRepository } from "../../repositories/env/env_repository.ts";
 
 export type CredentialsScope = "global" | "local";
 
@@ -12,7 +12,7 @@ export interface CredentialFile {
 }
 
 export class CredentialFileImpl implements CredentialFile {
-  constructor(private envRepository: EnvRepository = defaultEnvRepository) { }
+  constructor(private envRepository: EnvRepository) { }
 
   private getGlobalPath(): string {
     return join(
@@ -54,7 +54,11 @@ export class CredentialFileImpl implements CredentialFile {
   }
 }
 
-export const credentialFile = new CredentialFileImpl();
+export function createCredentialFile(
+  envRepository: EnvRepository = createEnvRepository(),
+): CredentialFile {
+  return new CredentialFileImpl(envRepository);
+}
 
 function isNotFoundError(error: unknown): error is NodeJS.ErrnoException {
   return (

@@ -53,17 +53,7 @@ messages and GitHub issues.
 
 ### Before Implementing
 
-Before writing any code, always present a concrete implementation plan to the user and get explicit confirmation (yes/no):
-
-- List files to create/modify with a one-line description of each change
-- Describe any architectural decisions or tradeoffs
-- Wait for the user to confirm before proceeding
-
 ### During Implementation
-
-- Run `bun run check` and `bun test` at regular checkpoints — at minimum after completing each logical group of changes (e.g., after adding a slice, after wiring routes, after all pages are done)
-- If either command fails, fix the errors before continuing
-- Do not batch all changes and run checks only at the very end
 
 ## 3. Quick Commands
 

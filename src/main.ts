@@ -9,10 +9,9 @@ import { createCommitCommand } from "./commands/commit.tsx";
 import { createConfigCommand } from "./commands/config.tsx";
 import { createInitCommand } from "./commands/init.tsx";
 import { createIssueCommand } from "./commands/issue.tsx";
-import { ENV_KEYS, envRepository, type EnvRepository } from "./services/env_repository.ts";
+import { ENV_KEYS } from "./repositories/env/env_repository.ts";
 
 export function createMainCommand(
-  env: EnvRepository = envRepository,
   dependencies: AppDependencies = createAppDependencies(),
 ) {
   return new Command()
@@ -24,7 +23,7 @@ export function createMainCommand(
     .globalEnv(ENV_KEYS.GEMINI_API_KEY.key, ENV_KEYS.GEMINI_API_KEY.description)
     .globalEnv(ENV_KEYS.GITHUB_TOKEN.key, ENV_KEYS.GITHUB_TOKEN.description)
     .help({
-      colors: !env.getNoColor(),
+      colors: !dependencies.env.getNoColor(),
     })
     .action(function () {
       this.showHelp();
@@ -39,5 +38,5 @@ export function createMainCommand(
 
 if (import.meta.main) {
   const dependencies = createAppDependencies();
-  await createMainCommand(envRepository, dependencies).parse(Bun.argv.slice(2));
+  await createMainCommand(dependencies).parse(Bun.argv.slice(2));
 }

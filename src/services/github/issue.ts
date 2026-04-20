@@ -1,6 +1,6 @@
 import { Octokit } from "octokit";
 import type { IssueCreateResponse } from "../../type.ts";
-import { credentialService } from "../credential/credential_service.ts";
+import { createCredentialService } from "../credential/credential_service.ts";
 import { GitService } from "../git/git_service.ts";
 
 export async function createIssue(
@@ -8,6 +8,7 @@ export async function createIssue(
   body: string,
 ): Promise<IssueCreateResponse> {
   const gitService = new GitService();
+  const credentialService = createCredentialService();
   const { owner, repo } = await gitService.remote.getOwnerAndRepo();
   const { githubToken } = await credentialService.getMergedCredentials();
   const octokit = new Octokit({ auth: githubToken });
