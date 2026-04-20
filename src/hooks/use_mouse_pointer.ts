@@ -47,7 +47,15 @@ function createMousePointerWriter(): MousePointerWriter {
     return mousePointerWriter;
   }
 
-  ttyFd = openSync("/dev/tty", "w");
+  try {
+    ttyFd = openSync("/dev/tty", "w");
+  } catch {
+    // In CI/sandbox environments, /dev/tty may be unavailable.
+    // Fall back to a no-op writer so pointer updates do not crash rendering/tests.
+    mousePointerWriter = () => { };
+    return mousePointerWriter;
+  }
+
   mousePointerWriter = (output: string) => {
     if (ttyFd === null) {
       throw new Error("Mouse pointer writer is not initialized.");
