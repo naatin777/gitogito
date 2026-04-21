@@ -1,5 +1,3 @@
-# https://lefthook.dev/configuration/
-# Lefthook はローカルのみ。--no-verify や hooks 未導入を防ぐには GitHub Actions のままがよい。
 pre-commit:
   commands:
     biome:

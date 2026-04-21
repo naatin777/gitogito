@@ -8,3 +8,4 @@
 *.swp
 
 .gitogito.local.yml
+.gitogito.credentials.yml
