@@ -5,11 +5,20 @@ export function sendToTerminal(sequence: string): void {
   const isWindows = platform() === "win32";
   const ttyPath = isWindows ? "CONOUT$" : "/dev/tty";
 
+  let fd: number | undefined;
+
   try {
-    const fd = openSync(ttyPath, "w");
+    fd = openSync(ttyPath, "w");
     writeSync(fd, sequence);
-    closeSync(fd);
   } catch (_err) {
     process.stderr.write(sequence);
+  } finally {
+    if (fd !== undefined) {
+      try {
+        closeSync(fd);
+      } catch {
+        // ignore close errors
+      }
+    }
   }
 }

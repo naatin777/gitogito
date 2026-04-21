@@ -53,8 +53,6 @@ export const TreeList = ({ items, selectedPath, openPaths, onSelect, onToggle }:
                 event.preventDefault();
                 onSelect(path);
                 onToggle(path);
-                console.log(path);
-                console.error(path);
               }}
             >
               <Text
