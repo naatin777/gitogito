@@ -15,10 +15,7 @@ export type SplitPaneProps = {
   children: [React.ReactNode, React.ReactNode];
 };
 
-export function parseDefaultSize(
-  defaultSize: number | string,
-  containerSize: number,
-): number {
+export function parseDefaultSize(defaultSize: number | string, containerSize: number): number {
   if (typeof defaultSize === "number") {
     return defaultSize;
   }
@@ -40,10 +37,7 @@ function clampDividerPosition(
   const lastValidPosition = Math.max(containerSize - 1, 0);
   const minPosition = Math.min(minSize, lastValidPosition);
   const maxPositionFromMinSize = Math.max(lastValidPosition - minSize, 0);
-  let maxPosition = Math.min(
-    maxSize ?? maxPositionFromMinSize,
-    lastValidPosition,
-  );
+  let maxPosition = Math.min(maxSize ?? maxPositionFromMinSize, lastValidPosition);
 
   if (maxPosition < minPosition) {
     maxPosition = lastValidPosition;
@@ -64,10 +58,12 @@ export function SplitPane({
   const setPointer = useMousePointer();
   const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [dividerPosition, setDividerPosition] = useState(30);
 
   const isHorizontal = direction === "horizontal";
   const containerSize = isHorizontal ? width : height;
+  const [dividerPosition, setDividerPosition] = useState(() =>
+    parseDefaultSize(defaultSize, Math.max(containerSize, 1)),
+  );
   const dividerLength = Math.max(isHorizontal ? height : width, 1);
   const clampedDividerPosition = clampDividerPosition(
     dividerPosition,
@@ -101,12 +97,9 @@ export function SplitPane({
           return;
         }
 
-        setDividerPosition(clampDividerPosition(
-          isHorizontal ? event.x : event.y,
-          containerSize,
-          minSize,
-          maxSize,
-        ));
+        setDividerPosition(
+          clampDividerPosition(isHorizontal ? event.x : event.y, containerSize, minSize, maxSize),
+        );
       }}
       onMouseUp={() => {
         clearHoverTimer();
@@ -152,19 +145,16 @@ export function SplitPane({
           setIsDragging(false);
           setPointer("default");
         }}
-
       >
-        {isHorizontal
-          ? Array.from({ length: dividerLength }, (_, index) => (
+        {isHorizontal ? (
+          Array.from({ length: dividerLength }, (_, index) => (
             <Text key={index} color="primary">
               ┃
             </Text>
           ))
-          : (
-            <Text color="primary">
-              {"━".repeat(dividerLength)}
-            </Text>
-          )}
+        ) : (
+          <Text color="primary">{"━".repeat(dividerLength)}</Text>
+        )}
       </Box>
       <Box
         flexGrow={1}

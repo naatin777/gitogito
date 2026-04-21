@@ -1,5 +1,5 @@
-import { Select } from "../../components/Select.tsx";
 import { useLocation, useNavigate } from "react-router";
+import { Select } from "../../components/Select.tsx";
 
 const profileChoices = [
   {

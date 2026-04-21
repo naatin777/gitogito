@@ -11,9 +11,7 @@ import { createInitCommand } from "./commands/init.tsx";
 import { createIssueCommand } from "./commands/issue.tsx";
 import { ENV_KEYS } from "./repositories/env/env_repository.ts";
 
-export function createMainCommand(
-  dependencies: AppDependencies = createAppDependencies(),
-) {
+export function createMainCommand(dependencies: AppDependencies = createAppDependencies()) {
   return new Command()
     .name(packageJson.name)
     .version(packageJson.version)
@@ -33,7 +31,7 @@ export function createMainCommand(
     .command("issue", createIssueCommand(dependencies))
     .command("commit", createCommitCommand(dependencies))
     .command("completions", new CompletionsCommand())
-    .command("upgrade", new UpgradeCommand({ provider: [new NpmProvider()] }),);
+    .command("upgrade", new UpgradeCommand({ provider: [new NpmProvider()] }));
 }
 
 if (import.meta.main) {

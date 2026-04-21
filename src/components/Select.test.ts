@@ -1,9 +1,5 @@
 import { expect, test } from "bun:test";
-import {
-  getSafeSelectIndex,
-  getSelectPositionLabel,
-  SELECT_EMPTY_MESSAGE,
-} from "./Select.tsx";
+import { getSafeSelectIndex, getSelectPositionLabel, SELECT_EMPTY_MESSAGE } from "./Select.tsx";
 
 test("getSelectPositionLabel uses zero when there are no choices", () => {
   expect(getSelectPositionLabel(0, 0)).toBe("(0/0)");

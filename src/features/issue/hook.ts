@@ -9,6 +9,7 @@ import {
 } from "../../constants/message.ts";
 import type { IssueSchema } from "../../schema.ts";
 import type { Issue, IssueTemplate } from "../../type.ts";
+import type { IssueState } from "./issue_slice.ts";
 import {
   createIssue,
   editIssue,
@@ -19,7 +20,6 @@ import {
   setGeneratedIssues,
   submitOverview,
 } from "./issue_slice.ts";
-import type { IssueState } from "./issue_slice.ts";
 
 export {
   ISSUE_GENERATION_EMPTY_MESSAGE,
@@ -36,9 +36,7 @@ export function getTemplateSelectionError(template: IssueTemplate | undefined) {
 }
 
 export function getGeneratedIssuesError(result: z.infer<typeof IssueSchema>) {
-  return result && result.issue.length > 0
-    ? undefined
-    : ISSUE_GENERATION_EMPTY_MESSAGE;
+  return result && result.issue.length > 0 ? undefined : ISSUE_GENERATION_EMPTY_MESSAGE;
 }
 
 export function getIssueSelectionError(issue: Issue | undefined) {
@@ -64,39 +62,51 @@ export function useIssueFlow() {
     await dispatch(loadTemplates());
   }, [dispatch]);
 
-  const selectTemplateHandler = useCallback((template: IssueTemplate | undefined) => {
-    const errorMessage = getTemplateSelectionError(template);
-    if (!errorMessage && template) {
-      dispatch(selectTemplate(template));
-      return;
-    }
+  const selectTemplateHandler = useCallback(
+    (template: IssueTemplate | undefined) => {
+      const errorMessage = getTemplateSelectionError(template);
+      if (!errorMessage && template) {
+        dispatch(selectTemplate(template));
+        return;
+      }
 
-    dispatch(setError(errorMessage ?? ISSUE_TEMPLATE_CANCELLED_MESSAGE));
-  }, [dispatch]);
+      dispatch(setError(errorMessage ?? ISSUE_TEMPLATE_CANCELLED_MESSAGE));
+    },
+    [dispatch],
+  );
 
-  const submitOverviewHandler = useCallback((overview: string) => {
-    dispatch(submitOverview(overview));
-  }, [dispatch]);
+  const submitOverviewHandler = useCallback(
+    (overview: string) => {
+      dispatch(submitOverview(overview));
+    },
+    [dispatch],
+  );
 
-  const handleAgentDone = useCallback((result: z.infer<typeof IssueSchema>) => {
-    const errorMessage = getGeneratedIssuesError(result);
-    if (!errorMessage) {
-      dispatch(setGeneratedIssues(result));
-      return;
-    }
+  const handleAgentDone = useCallback(
+    (result: z.infer<typeof IssueSchema>) => {
+      const errorMessage = getGeneratedIssuesError(result);
+      if (!errorMessage) {
+        dispatch(setGeneratedIssues(result));
+        return;
+      }
 
-    dispatch(setError(errorMessage));
-  }, [dispatch]);
+      dispatch(setError(errorMessage));
+    },
+    [dispatch],
+  );
 
-  const selectIssueHandler = useCallback((issue: Issue | undefined) => {
-    const errorMessage = getIssueSelectionError(issue);
-    if (!errorMessage && issue) {
-      dispatch(selectIssue(issue));
-      return;
-    }
+  const selectIssueHandler = useCallback(
+    (issue: Issue | undefined) => {
+      const errorMessage = getIssueSelectionError(issue);
+      if (!errorMessage && issue) {
+        dispatch(selectIssue(issue));
+        return;
+      }
 
-    dispatch(setError(errorMessage ?? ISSUE_SELECTION_CANCELLED_MESSAGE));
-  }, [dispatch]);
+      dispatch(setError(errorMessage ?? ISSUE_SELECTION_CANCELLED_MESSAGE));
+    },
+    [dispatch],
+  );
 
   const editIssueHandler = useCallback(async () => {
     if (step === "edit_issue" && selectedIssue) {

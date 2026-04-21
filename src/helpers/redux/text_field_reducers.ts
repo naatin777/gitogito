@@ -12,9 +12,7 @@ export type TextFieldState = {
  * Inserts a character at the current cursor position
  */
 export function typeChar(state: TextFieldState, char: string): void {
-  state.value = state.value.slice(0, state.cursor) +
-    char +
-    state.value.slice(state.cursor);
+  state.value = state.value.slice(0, state.cursor) + char + state.value.slice(state.cursor);
   state.cursor += char.length;
 }
 
@@ -23,8 +21,7 @@ export function typeChar(state: TextFieldState, char: string): void {
  */
 export function deleteChar(state: TextFieldState): void {
   if (state.cursor === 0) return;
-  state.value = state.value.slice(0, state.cursor - 1) +
-    state.value.slice(state.cursor);
+  state.value = state.value.slice(0, state.cursor - 1) + state.value.slice(state.cursor);
   state.cursor -= 1;
 }
 

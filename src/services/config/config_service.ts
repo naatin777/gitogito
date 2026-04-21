@@ -1,11 +1,11 @@
 import _ from "lodash";
 import { parse, parseDocument } from "yaml";
 import type { NestedKeys, PathValue } from "../../type.ts";
-import { createConfigFile, type ConfigFile, type ConfigScope } from "./config_file.ts";
+import { type ConfigFile, type ConfigScope, createConfigFile } from "./config_file.ts";
 import { type Config, DEFAULT_CONFIG } from "./schema/config_schema.ts";
-import { GlobalConfigSchema, type GlobalConfig } from "./schema/global_config_schema.ts";
-import { LocalConfigSchema, type LocalConfig } from "./schema/local_config_schema.ts";
-import { ProjectConfigSchema, type ProjectConfig } from "./schema/project_config_schema.ts";
+import { type GlobalConfig, GlobalConfigSchema } from "./schema/global_config_schema.ts";
+import { type LocalConfig, LocalConfigSchema } from "./schema/local_config_schema.ts";
+import { type ProjectConfig, ProjectConfigSchema } from "./schema/project_config_schema.ts";
 
 export interface ConfigService {
   getGlobalConfig(): Promise<Partial<GlobalConfig>>;

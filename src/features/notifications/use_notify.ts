@@ -1,8 +1,5 @@
 import { useAppDispatch } from "../../app/hooks.ts";
-import {
-  addNotification,
-  type NotificationLevel,
-} from "./notifications_slice.ts";
+import { addNotification, type NotificationLevel } from "./notifications_slice.ts";
 
 export function useNotify() {
   const dispatch = useAppDispatch();

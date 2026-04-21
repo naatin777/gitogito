@@ -6,12 +6,7 @@ import { SubjectNode } from "./subject.ts";
 import { TypeNode } from "./type.ts";
 
 export function createCommitEngine(): PromptEngine<CommitContext> {
-  const nodes = [
-    new TypeNode(),
-    new ScopeNode(),
-    new SeparatorNode(),
-    new SubjectNode(),
-  ];
+  const nodes = [new TypeNode(), new ScopeNode(), new SeparatorNode(), new SubjectNode()];
 
   return new PromptEngine(nodes, "type");
 }
@@ -22,9 +17,7 @@ console.log("=== Test 1: Incomplete type 'fea' (cursor=3, selectIndex=0) ===");
 console.log(await engine.analyze("fea", 3, 0));
 console.log("\n");
 
-console.log(
-  "=== Test 2: Complete type 'feat' (cursor=4, selectIndex=1 for ': ') ===",
-);
+console.log("=== Test 2: Complete type 'feat' (cursor=4, selectIndex=1 for ': ') ===");
 console.log(await engine.analyze("feat", 4, 1));
 console.log("\n");
 

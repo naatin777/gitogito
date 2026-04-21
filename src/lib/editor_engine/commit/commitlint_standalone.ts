@@ -13,11 +13,7 @@ import { lint, load } from "@commitlint/core";
 import type { QualifiedConfig } from "@commitlint/types";
 import { ConsoleNode } from "../console_node.ts";
 import { PromptEngine } from "../prompt_engine.ts";
-import type {
-  CompletionItem,
-  FragmentContext,
-  TextFragment,
-} from "../types.ts";
+import type { CompletionItem, FragmentContext, TextFragment } from "../types.ts";
 
 // ---------------------------------------------------------------------------
 // CommitContext
@@ -35,26 +31,24 @@ interface CommitContext extends Record<string, string> {
 // ---------------------------------------------------------------------------
 
 const TYPE_DESCRIPTIONS: Record<string, string> = {
-  feat:     "✨ New feature",
-  fix:      "🐛 Bug fix",
-  docs:     "📝 Documentation",
-  style:    "💄 Formatting / styling",
+  feat: "✨ New feature",
+  fix: "🐛 Bug fix",
+  docs: "📝 Documentation",
+  style: "💄 Formatting / styling",
   refactor: "♻️  Code refactoring",
-  test:     "✅ Add / fix tests",
-  chore:    "🔧 Maintenance",
-  perf:     "⚡ Performance improvement",
-  ci:       "👷 CI/CD changes",
-  build:    "📦 Build system",
-  revert:   "⏪ Revert changes",
+  test: "✅ Add / fix tests",
+  chore: "🔧 Maintenance",
+  perf: "⚡ Performance improvement",
+  ci: "👷 CI/CD changes",
+  build: "📦 Build system",
+  revert: "⏪ Revert changes",
 };
 
 class CommitlintProvider {
   private config: QualifiedConfig | null = null;
 
   async init(userConfig?: Parameters<typeof load>[0]): Promise<void> {
-    this.config = await load(
-      userConfig ?? { extends: ["@commitlint/config-conventional"] },
-    );
+    this.config = await load(userConfig ?? { extends: ["@commitlint/config-conventional"] });
   }
 
   getTypes(prefix: string): CompletionItem[] {
@@ -134,9 +128,9 @@ class TypeNode extends ConsoleNode<CommitContext> {
 
   constructor(private provider: CommitlintProvider) {
     super([
-      { to: "scope",     trigger: /^\w+(?=\()/ },
+      { to: "scope", trigger: /^\w+(?=\()/ },
       { to: "separator", trigger: /^\w+(?=!?:)/ },
-      { to: "type",      trigger: /^\w+/ },
+      { to: "type", trigger: /^\w+/ },
     ]);
   }
 
@@ -155,7 +149,7 @@ class ScopeNode extends ConsoleNode<CommitContext> {
   constructor(private provider: CommitlintProvider) {
     super([
       { to: "separator", trigger: /^\([^)]+\)(?=!?:)/ },
-      { to: "scope",     trigger: /^\([^)]*/ },
+      { to: "scope", trigger: /^\([^)]*/ },
     ]);
   }
 
@@ -225,12 +219,7 @@ export async function createStandaloneCommitEngine(
   await provider.init(userConfig);
 
   const engine = new PromptEngine<CommitContext>(
-    [
-      new TypeNode(provider),
-      new ScopeNode(provider),
-      new SeparatorNode(),
-      new SubjectNode(),
-    ],
+    [new TypeNode(provider), new ScopeNode(provider), new SeparatorNode(), new SubjectNode()],
     "type",
   );
 
@@ -250,13 +239,13 @@ const { engine, provider } = await createStandaloneCommitEngine({
 });
 
 const cases = [
-  { label: "type 途中 'fe'",              input: "fe",                    cursor: 2  },
-  { label: "type 確定 'feat'",            input: "feat",                  cursor: 4  },
-  { label: "scope 途中 'feat(ap'",        input: "feat(ap",               cursor: 7  },
-  { label: "scope 確定 'feat(api): '",    input: "feat(api): ",           cursor: 11 },
-  { label: "subject 入力 'feat: add x'",  input: "feat: add x",           cursor: 11 },
-  { label: "breaking 'feat!: '",          input: "feat!: ",               cursor: 7  },
-  { label: "長い subject (75文字超え)",    input: "feat: " + "a".repeat(75), cursor: 81 },
+  { label: "type 途中 'fe'", input: "fe", cursor: 2 },
+  { label: "type 確定 'feat'", input: "feat", cursor: 4 },
+  { label: "scope 途中 'feat(ap'", input: "feat(ap", cursor: 7 },
+  { label: "scope 確定 'feat(api): '", input: "feat(api): ", cursor: 11 },
+  { label: "subject 入力 'feat: add x'", input: "feat: add x", cursor: 11 },
+  { label: "breaking 'feat!: '", input: "feat!: ", cursor: 7 },
+  { label: "長い subject (75文字超え)", input: "feat: " + "a".repeat(75), cursor: 81 },
 ];
 
 console.log("=== スタンドアロン commitlint エンジン デモ ===\n");
@@ -269,9 +258,9 @@ for (const { label, input, cursor } of cases) {
   // フラグメント表示
   const rendered = fragment
     .map((f) => {
-      if (f.role === "ghost")  return `\x1b[2m${f.text}\x1b[0m`; // dim
-      if (f.role === "error")  return `\x1b[31m${f.text}\x1b[0m`; // red
-      if (f.role === "meta")   return `\x1b[90m${f.text}\x1b[0m`; // gray
+      if (f.role === "ghost") return `\x1b[2m${f.text}\x1b[0m`; // dim
+      if (f.role === "error") return `\x1b[31m${f.text}\x1b[0m`; // red
+      if (f.role === "meta") return `\x1b[90m${f.text}\x1b[0m`; // gray
       return f.text;
     })
     .join("");
@@ -289,7 +278,7 @@ for (const { label, input, cursor } of cases) {
 
   // バリデーション
   const v = await provider.validate(input.trim());
-  if (!v.valid)             console.log(`   ❌ ${v.errors.join(" / ")}`);
+  if (!v.valid) console.log(`   ❌ ${v.errors.join(" / ")}`);
   else if (v.warnings.length) console.log(`   ⚠️  ${v.warnings.join(" / ")}`);
 
   console.log();

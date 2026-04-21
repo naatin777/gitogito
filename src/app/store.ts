@@ -4,10 +4,13 @@ import { configUiReducer } from "../features/config/config_page_slice.ts";
 import { configReducer } from "../features/config/config_slice.ts";
 import { issueReducer } from "../features/issue/issue_slice.ts";
 import { notificationsReducer } from "../features/notifications/notifications_slice.ts";
+import type { EnvRepository } from "../repositories/env/env_repository.ts";
+import { createEnvRepository } from "../repositories/env/env_repository.ts";
 import {
-  type ConfigService,
-  createConfigService,
-} from "../services/config/config_service.ts";
+  type GitRemoteRepository,
+  GitRemoteRepositoryCliImpl,
+} from "../repositories/git/remote_repository.ts";
+import { type ConfigService, createConfigService } from "../services/config/config_service.ts";
 import { ConfigSchema } from "../services/config/schema/config_schema.ts";
 import type { GlobalConfig } from "../services/config/schema/global_config_schema.ts";
 import type { LocalConfig } from "../services/config/schema/local_config_schema.ts";
@@ -16,12 +19,6 @@ import {
   type CredentialService,
   createCredentialService,
 } from "../services/credential/credential_service.ts";
-import type { EnvRepository } from "../repositories/env/env_repository.ts";
-import { createEnvRepository } from "../repositories/env/env_repository.ts";
-import {
-  type GitRemoteRepository,
-  GitRemoteRepositoryCliImpl,
-} from "../repositories/git/remote_repository.ts";
 
 export interface AppDependencies {
   env: EnvRepository;
@@ -45,7 +42,7 @@ export function createAppStore({
     globalConfig = {} as Partial<GlobalConfig>,
     projectConfig = {} as Partial<ProjectConfig>,
   } = {},
-  dependencies = createDefaultAppDependencies()
+  dependencies = createDefaultAppDependencies(),
 }: {
   config?: {
     mergedConfig?: ReturnType<typeof ConfigSchema.parse>;
@@ -58,7 +55,7 @@ export function createAppStore({
   return configureStore({
     reducer,
     preloadedState: {
-      config: { mergedConfig, localConfig, globalConfig, projectConfig }
+      config: { mergedConfig, localConfig, globalConfig, projectConfig },
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({

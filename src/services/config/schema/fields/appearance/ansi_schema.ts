@@ -17,7 +17,7 @@ const AnsiSchema = z.object({
   bright_magenta: z.string(),
   bright_cyan: z.string(),
   bright_white: z.string(),
-})
+});
 
 export type AnsiSchemaType = z.infer<typeof AnsiSchema>;
 export const AnsiSchemaKeyof = AnsiSchema.keyof().options;

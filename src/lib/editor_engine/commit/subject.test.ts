@@ -3,6 +3,7 @@ import { expect, test } from "bun:test";
 const assertEquals = (actual: unknown, expected: unknown) => {
   expect(actual).toEqual(expected);
 };
+
 import { SubjectNode } from "./subject.ts";
 
 test("SubjectNode - trigger: /^[\\s\\S]+/ matches any non-empty content", () => {
@@ -86,9 +87,7 @@ test("SubjectNode - trigger: real-world examples", () => {
 
   // Long subject
   assertEquals(
-    trigger.test(
-      "add comprehensive error handling for API requests with retry logic",
-    ),
+    trigger.test("add comprehensive error handling for API requests with retry logic"),
     true,
   );
 

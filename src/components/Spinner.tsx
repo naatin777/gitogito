@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { cycleZip } from "../helpers/collections/cycle_zip.ts";
+
 // import { renderTui } from "../lib/opentui_render.tsx";
 
 type Frame = {
@@ -23,9 +24,11 @@ class FrameBuilder {
   }
 
   addSpace() {
-    this.frames = cycleZip(this.frames, [{
-      frames: [{ color: undefined, text: " " }],
-    }]).map((v) => ({ frames: [...v[0].frames, ...v[1].frames] }));
+    this.frames = cycleZip(this.frames, [
+      {
+        frames: [{ color: undefined, text: " " }],
+      },
+    ]).map((v) => ({ frames: [...v[0].frames, ...v[1].frames] }));
     return this;
   }
 
@@ -57,12 +60,13 @@ const defaultFrame = new FrameBuilder()
   .addFrame([undefined], frames2)
   .build();
 
-export function Spinner(
-  { frame = defaultFrame, handleDataLoading }: {
-    frame?: Frame[];
-    handleDataLoading: () => Promise<void>;
-  },
-) {
+export function Spinner({
+  frame = defaultFrame,
+  handleDataLoading,
+}: {
+  frame?: Frame[];
+  handleDataLoading: () => Promise<void>;
+}) {
   const [frameIndex, setFrameIndex] = useState(0);
 
   useEffect(() => {
@@ -81,7 +85,11 @@ export function Spinner(
   return (
     <box paddingLeft={1} paddingRight={1}>
       {frame[frameIndex].frames.map((v, i) => {
-        return <text key={i} fg={v.color}>{v.text}</text>;
+        return (
+          <text key={i} fg={v.color}>
+            {v.text}
+          </text>
+        );
       })}
     </box>
   );

@@ -4,7 +4,13 @@ import { useAppSelector } from "../../app/hooks.ts";
 import type { RootState } from "../../app/store.ts";
 import { useThemeMode } from "../../contexts/theme_mode_context.tsx";
 import type { ColorConfig, ThemeConfig } from "../../services/config/schema/fields/theme_schema.ts";
-import { DARK_THEME_COLORS, DEFAULT_COLOR_CONFIG, LIGHT_THEME_COLORS, SOLID_DARK_THEME_COLORS, SOLID_LIGHT_THEME_COLORS } from "../../services/config/schema/fields/theme_schema.ts";
+import {
+  DARK_THEME_COLORS,
+  DEFAULT_COLOR_CONFIG,
+  LIGHT_THEME_COLORS,
+  SOLID_DARK_THEME_COLORS,
+  SOLID_LIGHT_THEME_COLORS,
+} from "../../services/config/schema/fields/theme_schema.ts";
 
 export function resolveThemeColors(
   mode: ThemeConfig["mode"],
@@ -13,13 +19,9 @@ export function resolveThemeColors(
 ): ColorConfig {
   switch (mode) {
     case "AdaptiveDark":
-      return themeMode === "light"
-        ? LIGHT_THEME_COLORS
-        : DARK_THEME_COLORS;
+      return themeMode === "light" ? LIGHT_THEME_COLORS : DARK_THEME_COLORS;
     case "AdaptiveLight":
-      return themeMode === "dark"
-        ? DARK_THEME_COLORS
-        : LIGHT_THEME_COLORS;
+      return themeMode === "dark" ? DARK_THEME_COLORS : LIGHT_THEME_COLORS;
     case "GenericDark":
       return DARK_THEME_COLORS;
     case "GenericLight":
@@ -34,7 +36,7 @@ export function resolveThemeColors(
 }
 
 export function useThemeColors(): ColorConfig {
-  const config = useAppSelector(((state: RootState) => state.config.mergedConfig));
+  const config = useAppSelector((state: RootState) => state.config.mergedConfig);
   const themeMode = useThemeMode();
 
   if (!config) {

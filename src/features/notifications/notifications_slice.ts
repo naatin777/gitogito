@@ -22,10 +22,7 @@ const notificationsSlice = createSlice({
   name: "notifications",
   initialState,
   reducers: {
-    addNotification: (
-      state,
-      action: PayloadAction<Omit<Notification, "id">>,
-    ) => {
+    addNotification: (state, action: PayloadAction<Omit<Notification, "id">>) => {
       state.items.push({ id: String(nextId++), ...action.payload });
     },
     removeNotification: (state, action: PayloadAction<string>) => {

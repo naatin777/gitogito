@@ -6,19 +6,12 @@ import { useCommitFlow } from "./hook.ts";
 
 export function CommitUI() {
   const themeColors = useThemeColors();
-  const {
-    state,
-    generateCommitMessages,
-    selectCommitMessage,
-    commitMessage,
-    editCommitMessage,
-  } = useCommitFlow();
+  const { state, generateCommitMessages, selectCommitMessage, commitMessage, editCommitMessage } =
+    useCommitFlow();
 
   return (
     <Box>
-      {state.step === "loading" && (
-        <Spinner handleDataLoading={generateCommitMessages} />
-      )}
+      {state.step === "loading" && <Spinner handleDataLoading={generateCommitMessages} />}
       {state.step === "select" && (
         <Select
           message="Enter commit messages"
@@ -30,9 +23,7 @@ export function CommitUI() {
           onSelect={selectCommitMessage}
         />
       )}
-      {state.step === "edit" && (
-        <Spinner handleDataLoading={editCommitMessage} />
-      )}
+      {state.step === "edit" && <Spinner handleDataLoading={editCommitMessage} />}
       {state.step === "commit" && <Spinner handleDataLoading={commitMessage} />}
       {state.step === "done" && <Text>Done</Text>}
       {state.step === "error" && <Text fg={themeColors.error}>Error: {state.message}</Text>}

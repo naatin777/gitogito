@@ -10,47 +10,30 @@ interface DetailPanelProps {
 }
 
 export const DetailPanel = ({ item }: DetailPanelProps) => {
-  const itemPath = fullPath(item)
+  const itemPath = fullPath(item);
 
-  const mergedConfig = useAppSelector((state) => state.config.mergedConfig)
-  const defaultConfig = ConfigSchema.parse({})
-  const localConfig = useAppSelector((state) => state.config.localConfig)
-  const projectConfig = useAppSelector((state) => state.config.projectConfig)
-  const globalConfig = useAppSelector((state) => state.config.globalConfig)
+  const mergedConfig = useAppSelector((state) => state.config.mergedConfig);
+  const defaultConfig = ConfigSchema.parse({});
+  const localConfig = useAppSelector((state) => state.config.localConfig);
+  const projectConfig = useAppSelector((state) => state.config.projectConfig);
+  const globalConfig = useAppSelector((state) => state.config.globalConfig);
 
   return (
     <Box flexDirection="column" flexGrow={1}>
-      <Box
-        border
-        borderStyle="rounded"
-        paddingX={1}
-        flexGrow={1}
-        flexDirection="column"
-      >
-        <Text>
-          {`<${itemPath}>`}
-        </Text>
-        <Text>
-          {item.description}
-        </Text>
+      <Box border borderStyle="rounded" paddingX={1} flexGrow={1} flexDirection="column">
+        <Text>{`<${itemPath}>`}</Text>
+        <Text>{item.description}</Text>
         {item.isLeaf ? (
           <>
-            <Text>
-              current: {String(_.get(mergedConfig, itemPath) ?? "")}
-            </Text>
-            <Text>
-              default: {String(_.get(defaultConfig, itemPath) ?? "(not set)")}
-            </Text>
-            <Text>
-              local: {String(_.get(localConfig, itemPath) ?? "(not set)")}
-            </Text>
-            <Text>
-              project: {String(_.get(projectConfig, itemPath) ?? "(not set)")}
-            </Text>
-            <Text>
-              global: {String(_.get(globalConfig, itemPath) ?? "(not set)")}
-            </Text>
-          </>) : <Box />}
+            <Text>current: {String(_.get(mergedConfig, itemPath) ?? "")}</Text>
+            <Text>default: {String(_.get(defaultConfig, itemPath) ?? "(not set)")}</Text>
+            <Text>local: {String(_.get(localConfig, itemPath) ?? "(not set)")}</Text>
+            <Text>project: {String(_.get(projectConfig, itemPath) ?? "(not set)")}</Text>
+            <Text>global: {String(_.get(globalConfig, itemPath) ?? "(not set)")}</Text>
+          </>
+        ) : (
+          <Box />
+        )}
       </Box>
     </Box>
   );

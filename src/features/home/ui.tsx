@@ -1,9 +1,5 @@
-import { Box } from "../../components/ThemedComponents"
+import { Box } from "../../components/ThemedComponents";
 
 export const HomeUI = () => {
-  return (
-    <Box>
-
-    </Box>
-  )
-}
+  return <Box></Box>;
+};

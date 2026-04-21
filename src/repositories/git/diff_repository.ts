@@ -1,5 +1,5 @@
-import git from "isomorphic-git";
 import fs from "node:fs";
+import git from "isomorphic-git";
 import { simpleGit } from "simple-git";
 
 /**
@@ -13,9 +13,7 @@ export interface GitDiffRepository {
   getGitDiffUnstagedName(): Promise<string>;
   getUnStagedFileNames(): Promise<string[]>;
   /** Read file content from HEAD and STAGE for TUI diff display */
-  getBlobsForDiff(
-    filepath: string,
-  ): Promise<{ headText: string; stageText: string }>;
+  getBlobsForDiff(filepath: string): Promise<{ headText: string; stageText: string }>;
 }
 
 /**
@@ -50,9 +48,7 @@ export class GitDiffRepositoryCliImpl implements GitDiffRepository {
     return raw.split(/\r?\n/).filter(Boolean);
   }
 
-  async getBlobsForDiff(
-    filepath: string,
-  ): Promise<{ headText: string; stageText: string }> {
+  async getBlobsForDiff(filepath: string): Promise<{ headText: string; stageText: string }> {
     const dir = await git.findRoot({ fs, filepath: process.cwd() });
 
     let headText = "";
@@ -76,10 +72,8 @@ export class GitDiffRepositoryCliImpl implements GitDiffRepository {
           trees: [git.STAGE()],
           map: async (walkPath, [entry]) => {
             if (walkPath !== filepath || !entry) return;
-            if (await entry.type() === "tree") return;
-            stageText = new TextDecoder().decode(
-              await entry.content() as Uint8Array,
-            );
+            if ((await entry.type()) === "tree") return;
+            stageText = new TextDecoder().decode((await entry.content()) as Uint8Array);
           },
         });
       }

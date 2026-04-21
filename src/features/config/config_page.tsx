@@ -35,7 +35,7 @@ export const ConfigPage = ({ flattenConfigSchema }: ConfigPageProps) => {
   const openPaths = useAppSelector(selectConfigOpenPaths);
   const selectedItem = useAppSelector(selectConfigSelectedItem);
 
-  const theme = useThemeMode()
+  const theme = useThemeMode();
 
   useEffect(() => {
     dispatch(initializeConfigTree(flattenConfigSchema));
@@ -75,9 +75,7 @@ export const ConfigPage = ({ flattenConfigSchema }: ConfigPageProps) => {
 
   return (
     <Box flexDirection="column" height={size.height}>
-      <Text attributes={TextAttributes.BOLD}>
-        {`<Config> ${theme ?? ""}`}
-      </Text>
+      <Text attributes={TextAttributes.BOLD}>{`<Config> ${theme ?? ""}`}</Text>
       <SplitPane direction="horizontal">
         <TreeList
           items={filteredItems}
@@ -89,6 +87,6 @@ export const ConfigPage = ({ flattenConfigSchema }: ConfigPageProps) => {
         <DetailPanel item={selectedItem} />
       </SplitPane>
       <NotificationBar />
-    </Box >
+    </Box>
   );
 };

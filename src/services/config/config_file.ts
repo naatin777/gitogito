@@ -12,31 +12,18 @@ export interface ConfigFile {
 }
 
 export class ConfigFileImpl implements ConfigFile {
-  constructor(
-    private envRepository: EnvRepository,
-  ) { }
+  constructor(private envRepository: EnvRepository) {}
 
   private getGlobalPath() {
-    return join(
-      this.envRepository.getHome(),
-      ".config",
-      packageJson.name,
-      "config.yml",
-    );
+    return join(this.envRepository.getHome(), ".config", packageJson.name, "config.yml");
   }
 
   private getProjectPath() {
-    return join(
-      process.cwd(),
-      `.${packageJson.name}.yml`,
-    );
+    return join(process.cwd(), `.${packageJson.name}.yml`);
   }
 
   private getLocalPath() {
-    return join(
-      process.cwd(),
-      `.${packageJson.name}.local.yml`,
-    );
+    return join(process.cwd(), `.${packageJson.name}.local.yml`);
   }
 
   private getFilePath(configScope: ConfigScope): string {
@@ -83,14 +70,15 @@ export class ConfigFileImpl implements ConfigFile {
   }
 }
 
-export function createConfigFile(
-  envRepository: EnvRepository = createEnvRepository(),
-): ConfigFile {
+export function createConfigFile(envRepository: EnvRepository = createEnvRepository()): ConfigFile {
   return new ConfigFileImpl(envRepository);
 }
 
 function isNotFoundError(error: unknown): error is NodeJS.ErrnoException {
-  return typeof error === "object" && error !== null &&
+  return (
+    typeof error === "object" &&
+    error !== null &&
     "code" in error &&
-    (error as NodeJS.ErrnoException).code === "ENOENT";
+    (error as NodeJS.ErrnoException).code === "ENOENT"
+  );
 }

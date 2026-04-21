@@ -2,11 +2,11 @@ import { TextAttributes } from "@opentui/core";
 import { useKeyboard, useRenderer } from "@opentui/react";
 import { useState } from "react";
 import { SELECT_EMPTY_MESSAGE } from "../constants/message.ts";
-import { isCtrlC, isEnter } from "../helpers/opentui/key.ts";
 // import { renderTui } from "../lib/opentui_render.tsx";
 import { useThemeColors } from "../features/config/use_theme_colors.ts";
-import { Box, Text } from "./ThemedComponents.tsx";
+import { isCtrlC, isEnter } from "../helpers/opentui/key.ts";
 import type { Choice } from "../type.ts";
+import { Box, Text } from "./ThemedComponents.tsx";
 
 export { SELECT_EMPTY_MESSAGE };
 
@@ -18,10 +18,7 @@ type SelectOptions<T> = {
   initialIndex?: number;
 };
 
-export function getSelectPositionLabel(
-  selectedIndex: number,
-  choiceCount: number,
-) {
+export function getSelectPositionLabel(selectedIndex: number, choiceCount: number) {
   return `(${choiceCount > 0 ? selectedIndex + 1 : 0}/${choiceCount})`;
 }
 
@@ -35,10 +32,7 @@ export function Select<T>(options: SelectOptions<T>) {
   const themeColors = useThemeColors();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const hasChoices = options.choices.length > 0;
-  const safeSelectedIndex = getSafeSelectIndex(
-    selectedIndex,
-    options.choices.length,
-  );
+  const safeSelectedIndex = getSafeSelectIndex(selectedIndex, options.choices.length);
 
   useKeyboard((event) => {
     if (isCtrlC(event)) {
@@ -66,9 +60,7 @@ export function Select<T>(options: SelectOptions<T>) {
     }
 
     if (event.name === "up") {
-      setSelectedIndex((prev) =>
-        (prev - 1 + options.choices.length) % options.choices.length
-      );
+      setSelectedIndex((prev) => (prev - 1 + options.choices.length) % options.choices.length);
     }
 
     if (event.name === "down") {
@@ -88,14 +80,11 @@ export function Select<T>(options: SelectOptions<T>) {
           {getSelectPositionLabel(safeSelectedIndex, options.choices.length)}
         </Text>
       </Box>
-      {hasChoices
-        ? options.choices.map((value, index) => {
+      {hasChoices ? (
+        options.choices.map((value, index) => {
           const isSelected = safeSelectedIndex === index;
           return (
-            <Box
-              key={value.name}
-              flexDirection="column"
-            >
+            <Box key={value.name} flexDirection="column">
               <Text
                 attributes={TextAttributes.BOLD}
                 truncate
@@ -104,25 +93,16 @@ export function Select<T>(options: SelectOptions<T>) {
                 {`→ ${value.name}`}
               </Text>
               {isSelected && (
-                <Box
-                  paddingLeft={1}
-                  borderStyle="single"
-                  border={[
-                    "left",
-                  ]}
-                  borderColor="gray"
-                >
+                <Box paddingLeft={1} borderStyle="single" border={["left"]} borderColor="gray">
                   <Text attributes={TextAttributes.DIM}>{`${value.description}`}</Text>
                 </Box>
               )}
             </Box>
           );
         })
-        : (
-          <Text attributes={TextAttributes.DIM}>
-            {SELECT_EMPTY_MESSAGE}
-          </Text>
-        )}
+      ) : (
+        <Text attributes={TextAttributes.DIM}>{SELECT_EMPTY_MESSAGE}</Text>
+      )}
     </Box>
   );
 }

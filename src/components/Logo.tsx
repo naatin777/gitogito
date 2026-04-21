@@ -15,9 +15,7 @@ type LogoSegment = {
 };
 
 const art: ReadonlyArray<ReadonlyArray<LogoSegment>> = [
-  [
-    { text: " ,／⌒八⌒＼、", fg: yellow },
-  ],
+  [{ text: " ,／⌒八⌒＼、", fg: yellow }],
   [
     { text: "／", fg: yellow },
     { text: "／", fg: orange },
@@ -95,22 +93,13 @@ const art: ReadonlyArray<ReadonlyArray<LogoSegment>> = [
     { text: " ,,＿＿＿＿,, ", attributes: TextAttributes.DIM },
     { text: "）））", fg: orange },
   ],
-  [
-    { text: "＼＼＿＿＿＿＿＿／／", fg: orange },
-  ],
-  [
-    { text: "～＊～＊～＊～＊～＊～＊～＊～", fg: gold },
-  ],
+  [{ text: "＼＼＿＿＿＿＿＿／／", fg: orange }],
+  [{ text: "～＊～＊～＊～＊～＊～＊～＊～", fg: gold }],
 ];
 
 export function Logo() {
   return (
-    <Box
-      width={30}
-      flexDirection="column"
-      justifyContent="center"
-      alignItems="center"
-    >
+    <Box width={30} flexDirection="column" justifyContent="center" alignItems="center">
       {art.map((row, rowIndex) => (
         <Box key={rowIndex} flexDirection="row">
           {row.map((segment, segmentIndex) => (

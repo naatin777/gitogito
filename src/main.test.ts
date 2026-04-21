@@ -32,4 +32,3 @@ test("createMainCommand passes noColor to help settings", () => {
   const defaultCmd = createMainCommand(dependencies);
   expect(noColorCmd.getName()).toBe(defaultCmd.getName());
 });
-

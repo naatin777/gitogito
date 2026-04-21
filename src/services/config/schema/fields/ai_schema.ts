@@ -7,19 +7,25 @@ export const AI_PROVIDER = [
   "CodexCLI",
   "ClaudeCode",
   "CodexCLIWithOllama",
-  "ClaudeCodeWithOllama"
+  "ClaudeCodeWithOllama",
 ] as const;
 
-export const AiModelSchema = z.object({
-  provider: z.enum(AI_PROVIDER).describe("AI provider used for generation."),
-  model: z.string().describe("Model name used by the selected AI provider."),
-}).describe("AI model configuration.");
+export const AiModelSchema = z
+  .object({
+    provider: z.enum(AI_PROVIDER).describe("AI provider used for generation."),
+    model: z.string().describe("Model name used by the selected AI provider."),
+  })
+  .describe("AI model configuration.");
 
-export const AiConfigSchema = z.object({
-  default: AiModelSchema.describe("Default model used when no task-specific model is configured."),
-  commit: AiModelSchema.optional().describe("Model used for commit message generation."),
-  issue: AiModelSchema.optional().describe("Model used for issue generation."),
-}).describe("AI configuration.");
+export const AiConfigSchema = z
+  .object({
+    default: AiModelSchema.describe(
+      "Default model used when no task-specific model is configured.",
+    ),
+    commit: AiModelSchema.optional().describe("Model used for commit message generation."),
+    issue: AiModelSchema.optional().describe("Model used for issue generation."),
+  })
+  .describe("AI configuration.");
 
 export type AiModel = z.infer<typeof AiModelSchema>;
 export type AiConfig = z.infer<typeof AiConfigSchema>;

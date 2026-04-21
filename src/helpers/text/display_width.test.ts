@@ -3,6 +3,7 @@ import { expect, test } from "bun:test";
 const assertEquals = (actual: unknown, expected: unknown) => {
   expect(actual).toEqual(expected);
 };
+
 import { getDisplayWidth } from "./display_width.ts";
 
 test("getDisplayWidth - ASCII characters", () => {

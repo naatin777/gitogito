@@ -5,8 +5,8 @@ import { Spinner } from "../../components/Spinner.tsx";
 import { TextInput } from "../../components/TextInput.tsx";
 import { Box, Text } from "../../components/ThemedComponents.tsx";
 import { ISSUE_SYSTEM_MESSAGE } from "../../constants/message.ts";
-import { useThemeColors } from "../config/use_theme_colors.ts";
 import type { Issue as IssueEntity, IssueTemplate } from "../../type.ts";
+import { useThemeColors } from "../config/use_theme_colors.ts";
 import { useIssueFlow } from "./hook.ts";
 
 export function buildIssueTemplateChoices(templates: IssueTemplate[]) {
@@ -49,9 +49,7 @@ export function IssueUI() {
 
   return (
     <Box flexDirection="column">
-      {state.step === "loading_templates" && (
-        <Spinner handleDataLoading={loadTemplates} />
-      )}
+      {state.step === "loading_templates" && <Spinner handleDataLoading={loadTemplates} />}
       {state.step === "select_template" && (
         <Select
           message="Select an issue template"
@@ -60,24 +58,21 @@ export function IssueUI() {
         />
       )}
       {state.step === "input_overview" && (
-        <TextInput
-          label="? Enter the issue overview ›"
-          onSubmit={submitOverview}
-        />
+        <TextInput label="? Enter the issue overview ›" onSubmit={submitOverview} />
       )}
       {state.step === "generating" && (
         <AgentLoop
           initialMessages={[
             {
               role: "system",
-              content: ISSUE_SYSTEM_MESSAGE
-                .replace(/{{issueTemplate.title}}/g, state.template.title)
-                .replace(/{{issueTemplate.body}}/g, state.template.body),
+              content: ISSUE_SYSTEM_MESSAGE.replace(
+                /{{issueTemplate.title}}/g,
+                state.template.title,
+              ).replace(/{{issueTemplate.body}}/g, state.template.body),
             },
             {
               role: "user",
-              content:
-                `Here is the issue overview provided by the user:\n\n${state.overview}`,
+              content: `Here is the issue overview provided by the user:\n\n${state.overview}`,
             },
           ]}
           onDone={handleAgentDone}

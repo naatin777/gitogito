@@ -1,23 +1,19 @@
 import type { ThemeMode } from "@opentui/core";
 import { useRenderer } from "@opentui/react";
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, type ReactNode, useContext, useEffect, useState } from "react";
 
-const ThemeModeContext = createContext<ThemeMode | null>(null);
+const THEME_MODE_CONTEXT_UNSET = Symbol("ThemeModeContext.unset");
+
+const ThemeModeContext = createContext<ThemeMode | null | typeof THEME_MODE_CONTEXT_UNSET>(
+  THEME_MODE_CONTEXT_UNSET,
+);
 
 export function ThemeModeProvider({ children }: { children: ReactNode }) {
   const renderer = useRenderer();
-  const [themeMode, setThemeMode] = useState<ThemeMode | null>(
-    renderer.themeMode ?? null,
-  );
+  const [themeMode, setThemeMode] = useState<ThemeMode | null>(renderer.themeMode);
 
   useEffect(() => {
-    setThemeMode(renderer.themeMode ?? null);
+    setThemeMode(renderer.themeMode);
 
     const handler = (mode: ThemeMode) => setThemeMode(mode);
     renderer.on("theme_mode", handler);
@@ -26,13 +22,13 @@ export function ThemeModeProvider({ children }: { children: ReactNode }) {
     };
   }, [renderer]);
 
-  return (
-    <ThemeModeContext.Provider value={themeMode}>
-      {children}
-    </ThemeModeContext.Provider>
-  );
+  return <ThemeModeContext.Provider value={themeMode}>{children}</ThemeModeContext.Provider>;
 }
 
 export function useThemeMode(): ThemeMode | null {
-  return useContext(ThemeModeContext);
+  const ctx = useContext(ThemeModeContext);
+  if (ctx === THEME_MODE_CONTEXT_UNSET) {
+    throw new Error("useThemeMode must be used within ThemeModeProvider");
+  }
+  return ctx;
 }

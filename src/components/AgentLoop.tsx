@@ -5,9 +5,9 @@ import { useAppDependencies } from "../contexts/app_dependencies_context.tsx";
 import { IssueAgentSchema, type IssueSchema } from "../schema.ts";
 import { AIService } from "../services/ai/ai_service.ts";
 import type { UsageCallback } from "../services/ai/types.ts";
-import { Box } from "./ThemedComponents.tsx";
 import { Spinner } from "./Spinner.tsx";
 import { TextInput } from "./TextInput.tsx";
+import { Box } from "./ThemedComponents.tsx";
 
 export function AgentLoop({
   initialMessages,
@@ -26,10 +26,7 @@ export function AgentLoop({
 
   const performStep = async () => {
     try {
-      const aiService = await AIService.create(
-        dependencies.config,
-        dependencies.credentials,
-      );
+      const aiService = await AIService.create(dependencies.config, dependencies.credentials);
       const completion = await aiService.generateStructuredOutput(
         history,
         "issueAgent",
@@ -56,11 +53,7 @@ export function AgentLoop({
   };
 
   if (status === "thinking") {
-    return (
-      <Spinner
-        handleDataLoading={performStep}
-      />
-    );
+    return <Spinner handleDataLoading={performStep} />;
   }
 
   const currentQ = questions[currentQuestionIndex];

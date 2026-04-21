@@ -1,10 +1,16 @@
-import { testRender } from "@opentui/react/test-utils";
 import { expect, test } from "bun:test";
+import { testRender } from "@opentui/react/test-utils";
 import { act } from "react";
 import { Provider } from "react-redux";
 import { createAppStore } from "../../app/store.ts";
+import { ThemeModeProvider } from "../../contexts/theme_mode_context.tsx";
 import { ConfigSchema } from "../../services/config/schema/config_schema.ts";
-import { DARK_THEME_COLORS, DEFAULT_COLOR_CONFIG, LIGHT_THEME_COLORS, SOLID_LIGHT_THEME_COLORS } from "../../services/config/schema/fields/theme_schema.ts";
+import {
+  DARK_THEME_COLORS,
+  DEFAULT_COLOR_CONFIG,
+  LIGHT_THEME_COLORS,
+  SOLID_LIGHT_THEME_COLORS,
+} from "../../services/config/schema/fields/theme_schema.ts";
 import { resolveThemeColors, useThemeColors } from "./use_theme_colors.ts";
 
 test("resolveThemeColors reflects detected light mode for AdaptiveDark", () => {
@@ -24,9 +30,7 @@ test("resolveThemeColors returns backgroundColor for SolidLight", () => {
 });
 
 test("resolveThemeColors preserves custom colors including undefined background", () => {
-  expect(
-    resolveThemeColors("Custom", "dark", DEFAULT_COLOR_CONFIG),
-  ).toEqual(DEFAULT_COLOR_CONFIG);
+  expect(resolveThemeColors("Custom", "dark", DEFAULT_COLOR_CONFIG)).toEqual(DEFAULT_COLOR_CONFIG);
 });
 
 test("resolveThemeColors falls back to default custom colors", () => {
@@ -38,9 +42,7 @@ function ThemeColorsProbe() {
 
   return (
     <box>
-      <text>
-        {`colors:${colors.primary}`}
-      </text>
+      <text>{`colors:${colors.primary}`}</text>
     </box>
   );
 }
@@ -51,11 +53,13 @@ test("useThemeColors reads colors from preloaded config", async () => {
       mergedConfig: ConfigSchema.parse({
         theme: { mode: "SolidLight" },
       }),
-    }
+    },
   });
   const tui = await testRender(
     <Provider store={store}>
-      <ThemeColorsProbe />
+      <ThemeModeProvider>
+        <ThemeColorsProbe />
+      </ThemeModeProvider>
     </Provider>,
     {
       width: 80,

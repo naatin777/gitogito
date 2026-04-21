@@ -3,6 +3,7 @@ import { expect, test } from "bun:test";
 const assertEquals = (actual: unknown, expected: unknown) => {
   expect(actual).toEqual(expected);
 };
+
 import { cycleZip } from "./cycle_zip.ts";
 
 test("cycleZip - same length arrays", () => {
@@ -153,7 +154,11 @@ test("cycleZip - verify cycling behavior", () => {
 
 test("cycleZip - objects and arrays", () => {
   const arr1 = [{ id: 1 }, { id: 2 }];
-  const arr2 = [[1, 2], [3, 4], [5, 6]];
+  const arr2 = [
+    [1, 2],
+    [3, 4],
+    [5, 6],
+  ];
   const result = cycleZip(arr1, arr2);
 
   // LCM(2, 3) = 6

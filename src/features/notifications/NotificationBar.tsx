@@ -2,10 +2,7 @@ import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks.ts";
 import { Box } from "../../components/ThemedComponents.tsx";
 import { useThemeColors } from "../config/use_theme_colors.ts";
-import {
-  removeNotification,
-  type NotificationLevel,
-} from "./notifications_slice.ts";
+import { type NotificationLevel, removeNotification } from "./notifications_slice.ts";
 
 const AUTO_DISMISS_MS = 4000;
 
@@ -35,10 +32,14 @@ export const NotificationBar = () => {
 
   const colorFor = (level: NotificationLevel): string => {
     switch (level) {
-      case "info": return theme.info;
-      case "success": return theme.success;
-      case "warn": return theme.warning;
-      case "error": return theme.error;
+      case "info":
+        return theme.info;
+      case "success":
+        return theme.success;
+      case "warn":
+        return theme.warning;
+      case "error":
+        return theme.error;
     }
   };
 

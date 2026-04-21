@@ -14,9 +14,9 @@ export type CommitState =
   | { step: "loading" }
   | { step: "select"; messages: z.infer<typeof CommitSchema> }
   | {
-    step: "edit";
-    selectedMessage: z.infer<typeof CommitSchema>["commit_message"][number];
-  }
+      step: "edit";
+      selectedMessage: z.infer<typeof CommitSchema>["commit_message"][number];
+    }
   | { step: "commit"; commitMessage: string }
   | { step: "done" }
   | { step: "error"; message: string };
@@ -32,38 +32,30 @@ export const generateCommitMessages = createAppAsyncThunk<
   z.infer<typeof CommitSchema>,
   void,
   CommitThunkConfig
->(
-  "commit/generate",
-  async (_, { rejectWithValue, extra }) => {
-    const gitService = new GitService();
+>("commit/generate", async (_, { rejectWithValue, extra }) => {
+  const gitService = new GitService();
 
-    return fromPromiseWithMessage(gitService.diff.getGitDiffStaged())
-      .andThen((diff) => diff ? okAsync(diff) : errAsync("No diff found"))
-      .andThen((diff) =>
-        fromPromiseWithMessage(
-          AIService.create(extra.config, extra.credentials),
-        )
-          .andThen((aiService) =>
-            fromPromiseWithMessage(
-              aiService.generateStructuredOutput(
-                [
-                  { role: "system", content: COMMIT_SYSTEM_MESSAGE },
-                  { role: "user", content: diff },
-                ],
-                COMMIT_SYSTEM_MESSAGE,
-                CommitSchema,
-                (_usage) => {
-                },
-              ),
-            )
-          )
-      )
-      .andThen((result) =>
-        result ? okAsync(result) : errAsync("AI generation failed")
-      )
-      .match((result) => result, rejectWithValue);
-  },
-);
+  return fromPromiseWithMessage(gitService.diff.getGitDiffStaged())
+    .andThen((diff) => (diff ? okAsync(diff) : errAsync("No diff found")))
+    .andThen((diff) =>
+      fromPromiseWithMessage(AIService.create(extra.config, extra.credentials)).andThen(
+        (aiService) =>
+          fromPromiseWithMessage(
+            aiService.generateStructuredOutput(
+              [
+                { role: "system", content: COMMIT_SYSTEM_MESSAGE },
+                { role: "user", content: diff },
+              ],
+              COMMIT_SYSTEM_MESSAGE,
+              CommitSchema,
+              (_usage) => {},
+            ),
+          ),
+      ),
+    )
+    .andThen((result) => (result ? okAsync(result) : errAsync("AI generation failed")))
+    .match((result) => result, rejectWithValue);
+});
 
 export const editCommitMessage = createAppAsyncThunk<
   string,
@@ -75,14 +67,12 @@ export const editCommitMessage = createAppAsyncThunk<
     selectedMessage: z.infer<typeof CommitSchema>["commit_message"][number],
     { rejectWithValue },
   ) => {
-    const combinedMessage = [
-      selectedMessage.header,
-      selectedMessage.body,
-      selectedMessage.footer,
-    ].filter(Boolean).join("\n\n");
+    const combinedMessage = [selectedMessage.header, selectedMessage.body, selectedMessage.footer]
+      .filter(Boolean)
+      .join("\n\n");
 
     return fromPromiseWithMessage(editText(combinedMessage))
-      .andThen((edited) => edited.trim() ? okAsync(edited) : errAsync("Empty message"))
+      .andThen((edited) => (edited.trim() ? okAsync(edited) : errAsync("Empty message")))
       .match((edited) => edited, rejectWithValue);
   },
 );

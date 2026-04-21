@@ -1,11 +1,11 @@
 import { Command } from "@cliffy/command";
 import { createAppDependencies } from "../app/app_extra.ts";
-import type { AppDependencies } from "../app/store.ts";
 import { AppRouter } from "../app/router.tsx";
+import type { AppDependencies } from "../app/store.ts";
 import { flatSchema, fullPath, urlPath } from "../helpers/flat_schema.ts";
 import { runTuiWithRedux } from "../lib/runner.tsx";
 import type { ConfigScope } from "../services/config/config_file.ts";
-import { ConfigSchema, type Config } from "../services/config/schema/config_schema.ts";
+import { type Config, ConfigSchema } from "../services/config/schema/config_schema.ts";
 import type { NestedKeys } from "../type.ts";
 
 export type ConfigCommandOptions = {
@@ -35,11 +35,11 @@ export function buildSubcommands(
 
     const itemFullPath = fullPath(item);
     const itemUrlPath = urlPath(item);
-    const cmd = new Command<ConfigCommandOptions>()
-      .description(`Configure ${itemFullPath}`);
+    const cmd = new Command<ConfigCommandOptions>().description(`Configure ${itemFullPath}`);
 
     if (item.isLeaf) {
-      cmd.option("--set <value:string>", "Set value for this config key.")
+      cmd
+        .option("--set <value:string>", "Set value for this config key.")
         .action(async (options: ConfigSetCommandOptions) => {
           const scope = resolveScope(options);
           if (options.set) {
@@ -82,9 +82,7 @@ export function buildSubcommands(
   }
 }
 
-export function createConfigCommand(
-  dependencies: AppDependencies = createAppDependencies(),
-) {
+export function createConfigCommand(dependencies: AppDependencies = createAppDependencies()) {
   const command = new Command()
     .description("Configure the repository")
     .globalOption("--project", "Set project settings.", {
@@ -98,7 +96,9 @@ export function createConfigCommand(
     })
     .action(async (options: ConfigCommandOptions) => {
       const scope = resolveScope(options);
-      await runTuiWithRedux(<AppRouter initialPath="/config" params={{ scope }} />, { dependencies });
+      await runTuiWithRedux(<AppRouter initialPath="/config" params={{ scope }} />, {
+        dependencies,
+      });
     });
 
   buildSubcommands(command, flatSchema(ConfigSchema), dependencies);

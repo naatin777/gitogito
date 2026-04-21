@@ -1,22 +1,24 @@
 import { z } from "zod";
 
-export const ColorConfigSchema = z.object({
-  backgroundColor: z.string().optional().describe("Background color used by the CLI theme."),
-  surface: z.string().describe("Background color for panels, modals, and floating elements."),
-  inputBackground: z.string().describe("Background color for text input fields."),
-  text: z.string().describe("Base text color. Use DIM modifier for muted/disabled text."),
-  primary: z.string().describe("Primary color used by the CLI theme."),
-  focus: z.string().describe("Background color for focused elements."),
-  selected: z.string().describe("Background color for selected items in lists or menus."),
-  border: z.string().describe("Border color used by the CLI theme."),
-  borderFocus: z.string().describe("Border color for focused elements."),
-  divider: z.string().describe("Color for separators and dividers between panes."),
-  error: z.string().describe("Color for error messages and destructive actions."),
-  warning: z.string().describe("Color for warnings and alerts."),
-  success: z.string().describe("Color for success messages."),
-  info: z.string().describe("Color for informational messages."),
-  cursor: z.string().describe("Cursor color for text inputs."),
-}).describe("Color configuration for the CLI theme.");
+export const ColorConfigSchema = z
+  .object({
+    backgroundColor: z.string().optional().describe("Background color used by the CLI theme."),
+    surface: z.string().describe("Background color for panels, modals, and floating elements."),
+    inputBackground: z.string().describe("Background color for text input fields."),
+    text: z.string().describe("Base text color. Use DIM modifier for muted/disabled text."),
+    primary: z.string().describe("Primary color used by the CLI theme."),
+    focus: z.string().describe("Background color for focused elements."),
+    selected: z.string().describe("Background color for selected items in lists or menus."),
+    border: z.string().describe("Border color used by the CLI theme."),
+    borderFocus: z.string().describe("Border color for focused elements."),
+    divider: z.string().describe("Color for separators and dividers between panes."),
+    error: z.string().describe("Color for error messages and destructive actions."),
+    warning: z.string().describe("Color for warnings and alerts."),
+    success: z.string().describe("Color for success messages."),
+    info: z.string().describe("Color for informational messages."),
+    cursor: z.string().describe("Cursor color for text inputs."),
+  })
+  .describe("Color configuration for the CLI theme.");
 
 export type ColorConfig = z.infer<typeof ColorConfigSchema>;
 
@@ -66,22 +68,24 @@ export const SOLID_LIGHT_THEME_COLORS: ColorConfig = {
 
 export const DEFAULT_COLOR_CONFIG: ColorConfig = SOLID_DARK_THEME_COLORS;
 
-export const ThemeConfigSchema = z.object({
-  mode: z.enum([
-    "AdaptiveDark",
-    "AdaptiveLight",
-    "GenericDark",
-    "GenericLight",
-    "SolidDark",
-    "SolidLight",
-    "Custom"
-  ]).describe(
-    "Theme mode used by the CLI.",
-  ),
-  color: ColorConfigSchema.default(DEFAULT_COLOR_CONFIG).describe(
-    "Color settings for the theme.",
-  ),
-}).describe("Theme configuration.");
+export const ThemeConfigSchema = z
+  .object({
+    mode: z
+      .enum([
+        "AdaptiveDark",
+        "AdaptiveLight",
+        "GenericDark",
+        "GenericLight",
+        "SolidDark",
+        "SolidLight",
+        "Custom",
+      ])
+      .describe("Theme mode used by the CLI."),
+    color: ColorConfigSchema.default(DEFAULT_COLOR_CONFIG).describe(
+      "Color settings for the theme.",
+    ),
+  })
+  .describe("Theme configuration.");
 
 export type ThemeConfig = z.infer<typeof ThemeConfigSchema>;
 

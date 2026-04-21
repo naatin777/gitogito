@@ -12,8 +12,8 @@ export interface GitStatusRepository {
  */
 export class GitStatusRepositoryCliImpl implements GitStatusRepository {
   async getStatus(): Promise<string> {
-    return simpleGit().status().then((s) =>
-      s.files.map((f) => `${f.index}${f.working_dir} ${f.path}`).join("\n")
-    );
+    return simpleGit()
+      .status()
+      .then((s) => s.files.map((f) => `${f.index}${f.working_dir} ${f.path}`).join("\n"));
   }
 }

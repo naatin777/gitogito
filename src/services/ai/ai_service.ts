@@ -1,22 +1,13 @@
-import {
-  generateObject,
-  type LanguageModel,
-  type ModelMessage,
-  streamObject,
-} from "ai";
-import { z } from "zod";
-import {
-  createConfigService,
-  type ConfigService,
-} from "../config/config_service.ts";
+import { generateObject, type LanguageModel, type ModelMessage, streamObject } from "ai";
+import type { z } from "zod";
+import { type ConfigService, createConfigService } from "../config/config_service.ts";
 import { AiConfigSchema } from "../config/schema/fields/ai_schema.ts";
-import type { Credentials } from "../credential/credentials_schema.ts";
 import {
-  createCredentialService,
   type CredentialService,
+  createCredentialService,
 } from "../credential/credential_service.ts";
-import { createLanguageModel } from "./provider.ts";
-import { normalizeAiProvider } from "./provider.ts";
+import type { Credentials } from "../credential/credentials_schema.ts";
+import { createLanguageModel, normalizeAiProvider } from "./provider.ts";
 import type { AiProvider, AiTask, UsageCallback } from "./types.ts";
 
 export class AIService {
@@ -25,11 +16,7 @@ export class AIService {
   protected model: string;
   protected credentials: Partial<Credentials>;
 
-  constructor(
-    provider: AiProvider,
-    model: string,
-    credentials: Partial<Credentials>,
-  ) {
+  constructor(provider: AiProvider, model: string, credentials: Partial<Credentials>) {
     this.provider = provider;
     this.model = model;
     this.credentials = credentials;
@@ -37,10 +24,7 @@ export class AIService {
 
   static async create(
     configSource: Pick<ConfigService, "getMergedConfig"> = createConfigService(),
-    credentialSource: Pick<
-      CredentialService,
-      "getMergedCredentials"
-    > = createCredentialService(),
+    credentialSource: Pick<CredentialService, "getMergedCredentials"> = createCredentialService(),
     task?: AiTask,
   ): Promise<AIService> {
     const mergedConfig = await configSource.getMergedConfig();

@@ -1,10 +1,7 @@
-import { testRender } from "@opentui/react/test-utils";
 import { expect, test } from "bun:test";
+import { testRender } from "@opentui/react/test-utils";
 import { act, useEffect } from "react";
-import {
-  setMousePointerWriterForTest,
-  useMousePointer,
-} from "./use_mouse_pointer.ts";
+import { setMousePointerWriterForTest, useMousePointer } from "./use_mouse_pointer.ts";
 
 const pointerWrites: string[] = [];
 
@@ -48,10 +45,7 @@ test("useMousePointer writes OSC 22 sequences only when the style changes", asyn
   await tui.renderOnce();
 
   expect(tui.captureCharFrame()).toContain("pointer:ew-resize,ew-resize,default");
-  expect(pointerWrites).toEqual([
-    "\x1b]22;ew-resize\x1b\\",
-    "\x1b]22;default\x1b\\",
-  ]);
+  expect(pointerWrites).toEqual(["\x1b]22;ew-resize\x1b\\", "\x1b]22;default\x1b\\"]);
 
   act(() => {
     tui.renderer.destroy();

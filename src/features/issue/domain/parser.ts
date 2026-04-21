@@ -1,9 +1,7 @@
 import { parse, stringify } from "yaml";
 import type { Issue, IssueTemplate } from "../../../type.ts";
 
-export function parseMarkdownIssueTemplate(
-  markdown: string,
-): IssueTemplate {
+export function parseMarkdownIssueTemplate(markdown: string): IssueTemplate {
   const { attributes, body } = parseFrontMatter(markdown);
   const attrs = attributes as Partial<IssueTemplate>;
 
@@ -15,9 +13,7 @@ export function parseMarkdownIssueTemplate(
   };
 }
 
-export function stringifyMarkdownIssue(
-  issue: Issue,
-): string {
+export function stringifyMarkdownIssue(issue: Issue): string {
   const yamlBlock = stringify(
     {
       title: issue.title,

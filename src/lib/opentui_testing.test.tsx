@@ -44,13 +44,10 @@ function KeyboardAwareOpenTuiMarkup() {
 }
 
 test("@opentui/react/test-utils renders static OpenTUI markup", async () => {
-  const tui = await testRender(
-    <StaticOpenTuiMarkup />,
-    {
-      width: 40,
-      height: 8,
-    },
-  );
+  const tui = await testRender(<StaticOpenTuiMarkup />, {
+    width: 40,
+    height: 8,
+  });
 
   await tui.renderOnce();
 
@@ -62,13 +59,10 @@ test("@opentui/react/test-utils renders static OpenTUI markup", async () => {
 });
 
 test("@opentui/react/test-utils renders hook-based OpenTUI components", async () => {
-  const tui = await testRender(
-    <RendererAwareOpenTuiMarkup />,
-    {
-      width: 40,
-      height: 8,
-    },
-  );
+  const tui = await testRender(<RendererAwareOpenTuiMarkup />, {
+    width: 40,
+    height: 8,
+  });
 
   await tui.renderOnce();
 
@@ -80,13 +74,10 @@ test("@opentui/react/test-utils renders hook-based OpenTUI components", async ()
 });
 
 test("@opentui/react/test-utils can drive keyboard interaction", async () => {
-  const tui = await testRender(
-    <KeyboardAwareOpenTuiMarkup />,
-    {
-      width: 40,
-      height: 8,
-    },
-  );
+  const tui = await testRender(<KeyboardAwareOpenTuiMarkup />, {
+    width: 40,
+    height: 8,
+  });
 
   await tui.renderOnce();
   expect(tui.captureCharFrame()).toContain("status:idle");

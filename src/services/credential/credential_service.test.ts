@@ -31,7 +31,10 @@ const envMock: EnvRepository = {
 };
 
 const envMockWithCredentials: EnvRepository = {
-  getCredentials: () => ({ openRouterApiKey: "env-openrouter-key", githubToken: "env-github-token" }),
+  getCredentials: () => ({
+    openRouterApiKey: "env-openrouter-key",
+    githubToken: "env-github-token",
+  }),
   getHome: () => "/tmp",
   getNoColor: () => false,
 };
@@ -122,7 +125,10 @@ test("getMergedCredentials - returns empty object when no files and no env", asy
 test("getMergedCredentials - returns env credentials when no files exist", async () => {
   const service = new CredentialServiceImpl(envMockWithCredentials, new CredentialFileMock());
   const merged = await service.getMergedCredentials();
-  expect(merged).toEqual({ openRouterApiKey: "env-openrouter-key", githubToken: "env-github-token" });
+  expect(merged).toEqual({
+    openRouterApiKey: "env-openrouter-key",
+    githubToken: "env-github-token",
+  });
 });
 
 // --- saveCredentials ---
@@ -157,10 +163,11 @@ test("saveCredentials - works with local scope", async () => {
 
 test("saveCredentials - preserves existing comments", async () => {
   const file = new CredentialFileMock({
-    global: [
-      "# Personal credentials - do not share",
-      "openRouterApiKey: old-key # replace when expired",
-    ].join("\n") + "\n",
+    global:
+      [
+        "# Personal credentials - do not share",
+        "openRouterApiKey: old-key # replace when expired",
+      ].join("\n") + "\n",
   });
   const service = new CredentialServiceImpl(envMock, file);
 

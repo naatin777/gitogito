@@ -1,4 +1,4 @@
-import { createContext, useContext, type ReactNode } from "react";
+import { createContext, type ReactNode, useContext } from "react";
 import type { AppDependencies } from "../app/store.ts";
 
 const AppDependenciesContext = createContext<AppDependencies | null>(null);
@@ -11,9 +11,7 @@ export function AppDependenciesProvider({
   children: ReactNode;
 }) {
   return (
-    <AppDependenciesContext.Provider value={value}>
-      {children}
-    </AppDependenciesContext.Provider>
+    <AppDependenciesContext.Provider value={value}>{children}</AppDependenciesContext.Provider>
   );
 }
 
