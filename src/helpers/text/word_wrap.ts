@@ -19,10 +19,7 @@ export type WrappedLine = {
  * //   { text: "feature", start: 29 }
  * // ]
  */
-export function wrapTextByWords(
-  text: string,
-  maxWidth: number,
-): WrappedLine[] {
+export function wrapTextByWords(text: string, maxWidth: number): WrappedLine[] {
   const lines: WrappedLine[] = [];
 
   if (maxWidth <= 0) return [{ text: text, start: 0 }];
@@ -125,9 +122,7 @@ function tokenizeText(text: string): Token[] {
 
   for (const char of text) {
     const isWhitespace = /\s/.test(char);
-    const charType: "word" | "whitespace" = isWhitespace
-      ? "whitespace"
-      : "word";
+    const charType: "word" | "whitespace" = isWhitespace ? "whitespace" : "word";
 
     if (currentType === null) {
       currentType = charType;

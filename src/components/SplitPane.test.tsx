@@ -1,10 +1,11 @@
-import { testRender } from "@opentui/react/test-utils";
 import { expect, test } from "bun:test";
+import { testRender } from "@opentui/react/test-utils";
 import { act } from "react";
 import { Provider } from "react-redux";
 import { createAppStore } from "../app/store.ts";
+import { ThemeModeProvider } from "../contexts/theme_mode_context.tsx";
 import { ConfigSchema } from "../services/config/schema/config_schema.ts";
-import { SplitPane, parseDefaultSize } from "./SplitPane.tsx";
+import { parseDefaultSize, SplitPane } from "./SplitPane.tsx";
 
 // ---------------------------------------------------------------------------
 // parseDefaultSize — pure unit tests (no renderer needed)
@@ -45,7 +46,11 @@ function makeStore() {
 }
 
 function wrap(node: React.ReactNode) {
-  return <Provider store={makeStore()}>{node}</Provider>;
+  return (
+    <Provider store={makeStore()}>
+      <ThemeModeProvider>{node}</ThemeModeProvider>
+    </Provider>
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -54,11 +59,7 @@ function wrap(node: React.ReactNode) {
 
 test("SplitPane renders content of both panes", async () => {
   const tui = await testRender(
-    wrap(
-      <SplitPane>
-        {[<text>left-pane</text>, <text>right-pane</text>]}
-      </SplitPane>,
-    ),
+    wrap(<SplitPane>{[<text>left-pane</text>, <text>right-pane</text>]}</SplitPane>),
     { width: 80, height: 24 },
   );
 
@@ -68,7 +69,9 @@ test("SplitPane renders content of both panes", async () => {
   expect(frame).toContain("left-pane");
   expect(frame).toContain("right-pane");
 
-  act(() => { tui.renderer.destroy(); });
+  act(() => {
+    tui.renderer.destroy();
+  });
 });
 
 test("SplitPane horizontal: first pane occupies defaultSize columns", async () => {
@@ -89,7 +92,9 @@ test("SplitPane horizontal: first pane occupies defaultSize columns", async () =
   expect(frame).toContain("BBBB");
   expect(frame).toContain("┃");
 
-  act(() => { tui.renderer.destroy(); });
+  act(() => {
+    tui.renderer.destroy();
+  });
 });
 
 test("SplitPane horizontal: percentage defaultSize renders both panes", async () => {
@@ -108,7 +113,9 @@ test("SplitPane horizontal: percentage defaultSize renders both panes", async ()
   expect(frame).toContain("LEFT");
   expect(frame).toContain("RIGHT");
 
-  act(() => { tui.renderer.destroy(); });
+  act(() => {
+    tui.renderer.destroy();
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -132,7 +139,9 @@ test("SplitPane vertical: renders both panes stacked", async () => {
   expect(frame).toContain("BOTTOM");
   expect(frame).toContain("━━");
 
-  act(() => { tui.renderer.destroy(); });
+  act(() => {
+    tui.renderer.destroy();
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -153,7 +162,9 @@ test("SplitPane horizontal: dragging divider right increases first pane", async 
   await tui.renderOnce();
 
   // Drag divider 10 columns to the right — first pane should grow to 40
-  await act(async () => { await tui.mockMouse.drag(30, 5, 40, 5); });
+  await act(async () => {
+    await tui.mockMouse.drag(30, 5, 40, 5);
+  });
   await tui.renderOnce();
 
   // Both panes must still be visible after drag
@@ -161,7 +172,9 @@ test("SplitPane horizontal: dragging divider right increases first pane", async 
   expect(frame).toContain("FIRST");
   expect(frame).toContain("SECOND");
 
-  act(() => { tui.renderer.destroy(); });
+  act(() => {
+    tui.renderer.destroy();
+  });
 });
 
 test("SplitPane horizontal: dragging divider left shrinks first pane", async () => {
@@ -177,14 +190,18 @@ test("SplitPane horizontal: dragging divider left shrinks first pane", async () 
   await tui.renderOnce();
 
   // Drag divider 10 columns to the left
-  await act(async () => { await tui.mockMouse.drag(40, 5, 30, 5); });
+  await act(async () => {
+    await tui.mockMouse.drag(40, 5, 30, 5);
+  });
   await tui.renderOnce();
 
   const frame = tui.captureCharFrame();
   expect(frame).toContain("FIRST");
   expect(frame).toContain("SECOND");
 
-  act(() => { tui.renderer.destroy(); });
+  act(() => {
+    tui.renderer.destroy();
+  });
 });
 
 test("SplitPane respects minSize when dragging past boundary", async () => {
@@ -200,7 +217,9 @@ test("SplitPane respects minSize when dragging past boundary", async () => {
   await tui.renderOnce();
 
   // Attempt to drag divider all the way to x=0 (past minSize=10)
-  await act(async () => { await tui.mockMouse.drag(20, 5, 0, 5); });
+  await act(async () => {
+    await tui.mockMouse.drag(20, 5, 0, 5);
+  });
   await tui.renderOnce();
 
   // Both panes still visible — first pane should be clamped to minSize (10)
@@ -208,7 +227,9 @@ test("SplitPane respects minSize when dragging past boundary", async () => {
   expect(frame).toContain("FIRST");
   expect(frame).toContain("SECOND");
 
-  act(() => { tui.renderer.destroy(); });
+  act(() => {
+    tui.renderer.destroy();
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -228,12 +249,16 @@ test("SplitPane vertical: dragging divider down increases first pane", async () 
   await tui.renderOnce();
 
   // Drag divider 4 rows down
-  await act(async () => { await tui.mockMouse.drag(10, 8, 10, 12); });
+  await act(async () => {
+    await tui.mockMouse.drag(10, 8, 10, 12);
+  });
   await tui.renderOnce();
 
   const frame = tui.captureCharFrame();
   expect(frame).toContain("TOP");
   expect(frame).toContain("BOTTOM");
 
-  act(() => { tui.renderer.destroy(); });
+  act(() => {
+    tui.renderer.destroy();
+  });
 });

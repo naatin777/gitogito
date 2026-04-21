@@ -42,9 +42,7 @@ export class CommitlintProvider {
   private config: QualifiedConfig | null = null;
 
   async init(userConfig?: Parameters<typeof load>[0]): Promise<void> {
-    this.config = await load(
-      userConfig ?? { extends: ["@commitlint/config-conventional"] },
-    );
+    this.config = await load(userConfig ?? { extends: ["@commitlint/config-conventional"] });
   }
 
   /** type-enum ルールから prefix に前方一致する補完候補を返す */

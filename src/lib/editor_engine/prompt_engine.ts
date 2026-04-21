@@ -26,9 +26,7 @@ export class PromptEngine<T extends Record<string, string>> {
       const currentNode = this.nodeMap.get(currentNodeId);
       if (!currentNode) break;
 
-      const transition = currentNode.next.find((t) =>
-        t.trigger.test(remaining)
-      );
+      const transition = currentNode.next.find((t) => t.trigger.test(remaining));
       if (!transition) break;
 
       const match = remaining.match(transition.trigger);
@@ -36,8 +34,7 @@ export class PromptEngine<T extends Record<string, string>> {
 
       const [value] = match;
 
-      const isPrimary = consumed <= cursor &&
-        cursor <= (consumed + value.length);
+      const isPrimary = consumed <= cursor && cursor <= consumed + value.length;
 
       const completions = await currentNode.getSuggestions(value);
       if (isPrimary) {

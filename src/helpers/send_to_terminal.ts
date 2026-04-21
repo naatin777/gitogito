@@ -1,15 +1,24 @@
-import { closeSync, openSync, writeSync } from 'node:fs';
-import { platform } from 'node:os';
+import { closeSync, openSync, writeSync } from "node:fs";
+import { platform } from "node:os";
 
-function sendToTerminal(sequence: string): void {
-  const isWindows = platform() === 'win32';
-  const ttyPath = isWindows ? 'CONOUT$' : '/dev/tty';
+export function sendToTerminal(sequence: string): void {
+  const isWindows = platform() === "win32";
+  const ttyPath = isWindows ? "CONOUT$" : "/dev/tty";
+
+  let fd: number | undefined;
 
   try {
-    const fd = openSync(ttyPath, 'w');
+    fd = openSync(ttyPath, "w");
     writeSync(fd, sequence);
-    closeSync(fd);
-  } catch (err) {
+  } catch (_err) {
     process.stderr.write(sequence);
+  } finally {
+    if (fd !== undefined) {
+      try {
+        closeSync(fd);
+      } catch {
+        // ignore close errors
+      }
+    }
   }
 }

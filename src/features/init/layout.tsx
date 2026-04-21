@@ -1,7 +1,7 @@
 import { Outlet } from "react-router";
 import { useAppSelector } from "../../app/hooks.ts";
-import type { Config } from "../../services/config/schema/config_schema.ts";
 import { Box } from "../../components/ThemedComponents.tsx";
+import type { Config } from "../../services/config/schema/config_schema.ts";
 
 export interface InitOutletContext {
   config: Config;

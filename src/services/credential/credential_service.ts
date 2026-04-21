@@ -1,11 +1,11 @@
 import _ from "lodash";
 import { parse, parseDocument } from "yaml";
-import type { NestedKeys, PathValue } from "../../type.ts";
 import { createEnvRepository, type EnvRepository } from "../../repositories/env/env_repository.ts";
+import type { NestedKeys, PathValue } from "../../type.ts";
 import {
-  createCredentialFile,
   type CredentialFile,
   type CredentialsScope,
+  createCredentialFile,
 } from "./credential_file.ts";
 import type { Credentials } from "./credentials_schema.ts";
 
@@ -24,7 +24,7 @@ export class CredentialServiceImpl implements CredentialService {
   constructor(
     private envRepository: EnvRepository,
     private credentialFile: CredentialFile,
-  ) { }
+  ) {}
 
   async getGlobalCredentials(): Promise<Partial<Credentials>> {
     const text = await this.credentialFile.load("global");

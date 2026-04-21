@@ -19,9 +19,7 @@ export function flatSchema(
   schema: z.ZodDefault<z.ZodObject> | z.ZodObject,
   parents: string[] = [],
 ): FlatSchemaItem[] {
-  const shape = schema instanceof z.ZodDefault
-    ? schema.unwrap().shape
-    : schema.shape;
+  const shape = schema instanceof z.ZodDefault ? schema.unwrap().shape : schema.shape;
 
   return Object.entries(shape).flatMap(([key, field]) => {
     const item: FlatSchemaItem = {
@@ -34,10 +32,7 @@ export function flatSchema(
     if (field instanceof z.ZodDefault || field instanceof z.ZodObject) {
       return [
         item,
-        ...flatSchema(field as z.ZodDefault<z.ZodObject> | z.ZodObject, [
-          ...parents,
-          key,
-        ]),
+        ...flatSchema(field as z.ZodDefault<z.ZodObject> | z.ZodObject, [...parents, key]),
       ];
     }
     return [item];

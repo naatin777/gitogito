@@ -6,9 +6,7 @@ export class SubjectNode extends ConsoleNode<CommitContext> {
   override id = "subject" as const;
 
   constructor() {
-    super([
-      { to: "subject", trigger: /^[\s\S]+/ },
-    ]);
+    super([{ to: "subject", trigger: /^[\s\S]+/ }]);
   }
 
   getSuggestions(): Promise<CompletionItem[]> {

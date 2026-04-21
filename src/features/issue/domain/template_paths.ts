@@ -1,9 +1,7 @@
 import { readdir } from "node:fs/promises";
 import { join } from "node:path";
 
-export async function getIssueTemplatePath(): Promise<
-  { markdown: string[]; yaml: string[] }
-> {
+export async function getIssueTemplatePath(): Promise<{ markdown: string[]; yaml: string[] }> {
   const markdownTemplatePath = [];
   const yamlTemplatePath = [];
   const templateDir = join(process.cwd(), ".github", "ISSUE_TEMPLATE");

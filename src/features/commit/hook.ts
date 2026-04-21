@@ -27,10 +27,10 @@ export function useCommitFlow() {
     selectCommitMessage: (
       message:
         | {
-          header: string;
-          body: string | null;
-          footer: string | null;
-        }
+            header: string;
+            body: string | null;
+            footer: string | null;
+          }
         | undefined,
     ) => {
       if (message) {

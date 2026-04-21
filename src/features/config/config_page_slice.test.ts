@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { type FlatSchemaItem } from "../../helpers/flat_schema.ts";
+import type { FlatSchemaItem } from "../../helpers/flat_schema.ts";
 import {
   configUiReducer,
   initializeConfigTree,
@@ -35,10 +35,7 @@ test("toggleItem shows children only while the parent path is open", () => {
     items[2],
     items[3],
   ]);
-  expect(selectConfigFilteredItems.resultFunc(closed)).toEqual([
-    items[0],
-    items[3],
-  ]);
+  expect(selectConfigFilteredItems.resultFunc(closed)).toEqual([items[0], items[3]]);
 });
 
 test("moveDown uses the visible item order", () => {
@@ -49,10 +46,7 @@ test("moveDown uses the visible item order", () => {
 
   const visibleItems = selectConfigFilteredItems.resultFunc(state);
   const expectedSelectedPath = selectConfigSelectedPath.resultFunc(state);
-  const selectedIndex = selectConfigSelectedIndex.resultFunc(
-    visibleItems,
-    expectedSelectedPath,
-  );
+  const selectedIndex = selectConfigSelectedIndex.resultFunc(visibleItems, expectedSelectedPath);
 
   expect(expectedSelectedPath).toBe("ai.provider");
   expect(selectedIndex).toBe(2);

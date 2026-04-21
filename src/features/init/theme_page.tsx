@@ -11,11 +11,7 @@ import type { InitOutletContext } from "./layout.tsx";
 export function ThemePage() {
   const { config } = useOutletContext<InitOutletContext>();
   const themeMode = useThemeMode();
-  const themeColors = resolveThemeColors(
-    config.theme.mode,
-    themeMode,
-    config.theme.color,
-  );
+  const themeColors = resolveThemeColors(config.theme.mode, themeMode, config.theme.color);
   const themes = ThemeConfigSchema.shape.mode.options;
   const [selected, setSelected] = useState(themes.indexOf(config.theme.mode));
 
@@ -29,22 +25,27 @@ export function ThemePage() {
 
   return (
     <Box flexDirection="column">
-      <Text fg={themeColors.primary} attributes={TextAttributes.BOLD}>Select a theme</Text>
+      <Text fg={themeColors.primary} attributes={TextAttributes.BOLD}>
+        Select a theme
+      </Text>
       <Text fg={themeColors.text}>
         current: {config.theme.mode} / detected: {themeMode ?? "unsupported"}
       </Text>
       <Box flexDirection="row">
         <Box flexDirection="column" width={30}>
           {themes.map((theme, index) => (
-            <Box key={theme} flexDirection="row" onMouseDown={() => {
-              setSelected(index)
-            }}>
+            <Box
+              key={theme}
+              flexDirection="row"
+              onMouseDown={() => {
+                setSelected(index);
+              }}
+            >
               <Text fg={themeColors.primary}>{index === selected ? "→ " : "  "}</Text>
 
               <Text fg={index === selected ? themeColors.primary : themeColors.text}>
                 {theme} {theme === config.theme.mode ? "(current)" : ""}
               </Text>
-
             </Box>
           ))}
         </Box>

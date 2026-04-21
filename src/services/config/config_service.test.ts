@@ -44,7 +44,8 @@ test("getMergedConfig - deeply merges nested config with defaults", async () => 
 
 test("getMergedConfig - credentials field in file is ignored", async () => {
   const file = new ConfigFileMock({
-    global: "ai:\n  default:\n    provider: OpenRouter\ncredentials:\n  openRouterApiKey: sk-secret\n",
+    global:
+      "ai:\n  default:\n    provider: OpenRouter\ncredentials:\n  openRouterApiKey: sk-secret\n",
   });
   const service = new ConfigServiceImpl(file);
 
@@ -58,7 +59,8 @@ test("getMergedConfig - credentials field in file is ignored", async () => {
 
 test("getGlobalConfig - returns ai/language/theme fields (no commit, no credentials)", async () => {
   const file = new ConfigFileMock({
-    global: "ai:\n  default:\n    provider: OpenRouter\n    model: gpt-4o\nlanguage:\n  dialogue: Japanese\n",
+    global:
+      "ai:\n  default:\n    provider: OpenRouter\n    model: gpt-4o\nlanguage:\n  dialogue: Japanese\n",
   });
   const service = new ConfigServiceImpl(file);
 
@@ -108,13 +110,14 @@ test("getLocalConfig - returns overrides without credentials", async () => {
 
 test("saveConfig - preserves existing comments", async () => {
   const file = new ConfigFileMock({
-    project: [
-      "# AI settings",
-      "ai:",
-      "  default:",
-      "    provider: Ollama # current provider",
-      "    model: qwen3.5:9b",
-    ].join("\n") + "\n",
+    project:
+      [
+        "# AI settings",
+        "ai:",
+        "  default:",
+        "    provider: Ollama # current provider",
+        "    model: qwen3.5:9b",
+      ].join("\n") + "\n",
   });
   const service = new ConfigServiceImpl(file);
 

@@ -1,5 +1,5 @@
-import { Command } from "@cliffy/command";
 import { expect, mock, test } from "bun:test";
+import { Command } from "@cliffy/command";
 import type { AppDependencies } from "../app/store.ts";
 import type { ConfigScope } from "../services/config/config_file.ts";
 import type { ConfigService } from "../services/config/config_service.ts";
@@ -52,7 +52,9 @@ function buildTestCommand(saveConfig = makeSaveConfig()) {
       getMergedCredentials: mock(() => Promise.resolve({})),
       saveCredentials: mock(() => Promise.resolve()),
     },
-    gitRemoteRepository: { getOwnerAndRepo: mock(() => Promise.resolve({ owner: "o", repo: "r" })) },
+    gitRemoteRepository: {
+      getOwnerAndRepo: mock(() => Promise.resolve({ owner: "o", repo: "r" })),
+    },
   };
 
   const root = new Command()

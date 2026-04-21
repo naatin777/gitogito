@@ -1,10 +1,8 @@
-import { ScrollBoxRenderable, TextAttributes } from "@opentui/core";
+import { type ScrollBoxRenderable, TextAttributes } from "@opentui/core";
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router";
 import { Box, ScrollBox, Text } from "../../../components/ThemedComponents.tsx";
 import type { FlatSchemaItem } from "../../../helpers/flat_schema.ts";
 import { fullPath } from "../../../helpers/flat_schema.ts";
-
 
 interface TreeListProps {
   items: FlatSchemaItem[];
@@ -14,20 +12,11 @@ interface TreeListProps {
   onToggle: (path: string) => void;
 }
 
-export const TreeList = (
-  {
-    items,
-    selectedPath,
-    openPaths,
-    onSelect,
-    onToggle,
-  }: TreeListProps,
-) => {
+export const TreeList = ({ items, selectedPath, openPaths, onSelect, onToggle }: TreeListProps) => {
   const [hoveredPath, setHoveredPath] = useState<string | null>(null);
-  const scrollboxRef = useRef<ScrollBoxRenderable | null>(null)
-  const height = (scrollboxRef.current?.height ?? 0) - 1
+  const scrollboxRef = useRef<ScrollBoxRenderable | null>(null);
+  const height = (scrollboxRef.current?.height ?? 0) - 1;
   useEffect(() => {
-
     const pos = scrollboxRef.current?.scrollTop ?? 0;
     const index = items.findIndex((item) => fullPath(item) === selectedPath);
     if (index > height + pos) {
@@ -35,17 +24,11 @@ export const TreeList = (
     } else if (index < pos) {
       scrollboxRef.current?.scrollTo(index);
     }
-  }, [selectedPath])
-
-  const params = useParams();
-  const allIds = params["*"]?.split("/") ?? [];
-
+  }, [selectedPath]);
 
   return (
     <Box flexDirection="column" width={30} height="100%">
-      <ScrollBox
-        ref={scrollboxRef}
-      >
+      <ScrollBox ref={scrollboxRef}>
         {items.map((item) => {
           const path = fullPath(item);
           const depth = item.parents.length;
@@ -64,16 +47,12 @@ export const TreeList = (
                 setHoveredPath(path);
               }}
               onMouseOut={() => {
-                setHoveredPath((currentPath) =>
-                  currentPath === path ? null : currentPath
-                );
+                setHoveredPath((currentPath) => (currentPath === path ? null : currentPath));
               }}
               onMouseDown={(event) => {
                 event.preventDefault();
                 onSelect(path);
                 onToggle(path);
-                console.log(path)
-                console.error(path)
               }}
             >
               <Text

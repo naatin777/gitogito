@@ -1,19 +1,16 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import {
-  errAsync,
-  okAsync,
-} from "neverthrow";
+import { errAsync, okAsync } from "neverthrow";
 import type z from "zod";
 import { createAppAsyncThunk } from "../../app/hooks.ts";
-import {
-  fromPromiseWithMessage,
-  fromThrowableWithMessage,
-} from "../../helpers/error/neverthrow.ts";
 import {
   parseMarkdownIssueTemplate,
   stringifyMarkdownIssue,
 } from "../../features/issue/domain/parser.ts";
 import { getIssueTemplatePath } from "../../features/issue/domain/template_paths.ts";
+import {
+  fromPromiseWithMessage,
+  fromThrowableWithMessage,
+} from "../../helpers/error/neverthrow.ts";
 import type { IssueSchema } from "../../schema.ts";
 import { editText } from "../../services/editor/edit_text.ts";
 import { createIssue as createIssueService } from "../../services/github/issue.ts";
@@ -42,11 +39,7 @@ type IssueThunkConfig = {
 const parseIssueTemplate = fromThrowableWithMessage(parseMarkdownIssueTemplate);
 
 // Async thunks
-export const loadTemplates = createAppAsyncThunk<
-  IssueTemplate[],
-  void,
-  IssueThunkConfig
->(
+export const loadTemplates = createAppAsyncThunk<IssueTemplate[], void, IssueThunkConfig>(
   "issue/loadTemplates",
   async (_, { rejectWithValue }) => {
     return fromPromiseWithMessage(getIssueTemplatePath())
@@ -54,15 +47,13 @@ export const loadTemplates = createAppAsyncThunk<
         fromPromiseWithMessage(
           Promise.all(
             issueTemplatePath.markdown.map(async (markdownPath) =>
-              parseMarkdownIssueTemplate(await Bun.file(markdownPath).text())
+              parseMarkdownIssueTemplate(await Bun.file(markdownPath).text()),
             ),
           ),
-        )
+        ),
       )
       .andThen((issueTemplates) =>
-        issueTemplates.length === 0
-          ? errAsync("No templates found")
-          : okAsync(issueTemplates)
+        issueTemplates.length === 0 ? errAsync("No templates found") : okAsync(issueTemplates),
       )
       .match((issueTemplates) => issueTemplates, rejectWithValue);
   },
@@ -162,13 +153,7 @@ const issueSlice = createSlice({
   },
 });
 
-export const {
-  selectTemplate,
-  submitOverview,
-  setGeneratedIssues,
-  selectIssue,
-  setError,
-  reset,
-} = issueSlice.actions;
+export const { selectTemplate, submitOverview, setGeneratedIssues, selectIssue, setError, reset } =
+  issueSlice.actions;
 
 export const issueReducer = issueSlice.reducer;

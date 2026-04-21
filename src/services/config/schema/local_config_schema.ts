@@ -1,4 +1,4 @@
-import { ConfigSchema, type Config, DEFAULT_CONFIG } from "./config_schema.ts";
+import { type Config, ConfigSchema, DEFAULT_CONFIG } from "./config_schema.ts";
 
 export const LocalConfigSchema = ConfigSchema.describe(
   "Local config schema. Stored in .gitogito.local.yml (personal overrides, not git-managed).",

@@ -1,12 +1,8 @@
 import { TextAttributes } from "@opentui/core";
 import { useKeyboard } from "@opentui/react";
-import {
-  useLocation,
-  useNavigate,
-  useSearchParams
-} from "react-router";
-import { isEnter } from "../../helpers/opentui/key.ts";
+import { useLocation, useNavigate, useSearchParams } from "react-router";
 import { Box, Text } from "../../components/ThemedComponents.tsx";
+import { isEnter } from "../../helpers/opentui/key.ts";
 
 export function ReviewPage() {
   const [searchParams] = useSearchParams();

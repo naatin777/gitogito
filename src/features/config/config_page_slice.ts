@@ -1,10 +1,6 @@
-import {
-  createSelector,
-  createSlice,
-  type PayloadAction,
-} from "@reduxjs/toolkit";
+import { createSelector, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../../app/store.ts";
-import { fullPath, type FlatSchemaItem } from "../../helpers/flat_schema.ts";
+import { type FlatSchemaItem, fullPath } from "../../helpers/flat_schema.ts";
 
 interface ConfigState {
   items: FlatSchemaItem[];
@@ -19,16 +15,17 @@ const initialState: ConfigState = {
 };
 
 const isVisible = (item: FlatSchemaItem, openPaths: string[]) =>
-  item.parents.every((_, i) =>
-    openPaths.includes(item.parents.slice(0, i + 1).join("."))
-  );
+  item.parents.every((_, i) => openPaths.includes(item.parents.slice(0, i + 1).join(".")));
 
 const visibleItems = (state: ConfigState) =>
   state.items.filter((item) => isVisible(item, state.openPaths));
 
 const clampSelection = (state: ConfigState) => {
   const items = visibleItems(state);
-  if (items.length === 0) { state.selectedPath = null; return; }
+  if (items.length === 0) {
+    state.selectedPath = null;
+    return;
+  }
   if (!items.some((item) => fullPath(item) === state.selectedPath)) {
     state.selectedPath = items[0] ? fullPath(items[0]) : null;
   }
@@ -49,9 +46,7 @@ const configUiSlice = createSlice({
       if (!item || item.isLeaf) return;
 
       if (state.openPaths.includes(path)) {
-        state.openPaths = state.openPaths.filter(
-          (p) => p !== path && !p.startsWith(`${path}.`)
-        );
+        state.openPaths = state.openPaths.filter((p) => p !== path && !p.startsWith(`${path}.`));
       } else {
         state.openPaths.push(path);
       }
@@ -75,10 +70,7 @@ const configUiSlice = createSlice({
 
 const selectConfigState = (state: RootState) => state.configUi;
 
-export const selectConfigFilteredItems = createSelector(
-  [selectConfigState],
-  visibleItems,
-);
+export const selectConfigFilteredItems = createSelector([selectConfigState], visibleItems);
 
 export const selectConfigOpenPaths = createSelector(
   [selectConfigState],
@@ -92,7 +84,11 @@ export const selectConfigSelectedPath = createSelector(
 
 export const selectConfigSelectedIndex = createSelector(
   [selectConfigFilteredItems, selectConfigSelectedPath],
-  (items, path) => Math.max(0, items.findIndex((item) => fullPath(item) === path)),
+  (items, path) =>
+    Math.max(
+      0,
+      items.findIndex((item) => fullPath(item) === path),
+    ),
 );
 
 export const selectConfigSelectedItem = createSelector(
@@ -100,11 +96,6 @@ export const selectConfigSelectedItem = createSelector(
   (items, i) => items[i] ?? null,
 );
 
-export const {
-  initializeConfigTree,
-  moveDown,
-  moveUp,
-  selectItem,
-  toggleItem,
-} = configUiSlice.actions;
+export const { initializeConfigTree, moveDown, moveUp, selectItem, toggleItem } =
+  configUiSlice.actions;
 export const configUiReducer = configUiSlice.reducer;

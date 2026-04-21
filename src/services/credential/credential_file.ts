@@ -12,15 +12,10 @@ export interface CredentialFile {
 }
 
 export class CredentialFileImpl implements CredentialFile {
-  constructor(private envRepository: EnvRepository) { }
+  constructor(private envRepository: EnvRepository) {}
 
   private getGlobalPath(): string {
-    return join(
-      this.envRepository.getHome(),
-      ".config",
-      packageJson.name,
-      "credentials.yml",
-    );
+    return join(this.envRepository.getHome(), ".config", packageJson.name, "credentials.yml");
   }
 
   private getLocalPath(): string {

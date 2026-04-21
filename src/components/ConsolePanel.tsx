@@ -1,4 +1,4 @@
-import { ScrollBoxRenderable, TextAttributes } from "@opentui/core";
+import { type ScrollBoxRenderable, TextAttributes } from "@opentui/core";
 import { useEffect, useRef, useState } from "react";
 import { useThemeColors } from "../features/config/use_theme_colors.ts";
 import { Box, ScrollBox, Text } from "./ThemedComponents.tsx";
@@ -17,11 +17,7 @@ export interface ConsolePanelProps {
   width?: number | `${number}%` | "auto";
 }
 
-export const ConsolePanel = ({
-  maxLines = 5,
-  height = 7,
-  width = "100%",
-}: ConsolePanelProps) => {
+export const ConsolePanel = ({ maxLines = 5, height = 7, width = "100%" }: ConsolePanelProps) => {
   const theme = useThemeColors();
   const [entries, setEntries] = useState<LogEntry[]>([]);
   const scrollboxRef = useRef<ScrollBoxRenderable | null>(null);
@@ -37,11 +33,9 @@ export const ConsolePanel = ({
 
     for (const level of levels) {
       originals.current[level] = console[level].bind(console);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: patch console by dynamic log level for capture
       (console as any)[level] = (...args: unknown[]) => {
-        const message = args
-          .map((a) => (typeof a === "string" ? a : JSON.stringify(a)))
-          .join(" ");
+        const message = args.map((a) => (typeof a === "string" ? a : JSON.stringify(a))).join(" ");
         // Defer to avoid calling setState during React reconciliation
         setTimeout(() => {
           setEntries((prev) => [...prev, { level, message }]);
@@ -51,7 +45,7 @@ export const ConsolePanel = ({
 
     return () => {
       for (const level of levels) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: restore patched console methods
         (console as any)[level] = originals.current[level];
       }
     };

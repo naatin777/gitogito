@@ -2,7 +2,7 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { createAppAsyncThunk } from "../../app/hooks.ts";
 import { fromPromiseWithMessage } from "../../helpers/error/neverthrow.ts";
 import type { ConfigScope } from "../../services/config/config_file.ts";
-import { ConfigSchema, type Config } from "../../services/config/schema/config_schema.ts";
+import { type Config, ConfigSchema } from "../../services/config/schema/config_schema.ts";
 import type { GlobalConfig } from "../../services/config/schema/global_config_schema.ts";
 import type { LocalConfig } from "../../services/config/schema/local_config_schema.ts";
 import type { ProjectConfig } from "../../services/config/schema/project_config_schema.ts";
@@ -41,10 +41,9 @@ export const setConfig = createAppAsyncThunk<
     value: PathValue<Config, NestedKeys<Config>>;
   },
   SetConfigThunkConfig
->(
-  "Config/setGlobalConfig",
-  async ({ scope, key, value }, { extra, rejectWithValue }) => {
-    return fromPromiseWithMessage((async () => {
+>("Config/setGlobalConfig", async ({ scope, key, value }, { extra, rejectWithValue }) => {
+  return fromPromiseWithMessage(
+    (async () => {
       await extra.config.saveConfig(scope, key, value);
       const mergedConfig = await extra.config.getMergedConfig();
 
@@ -56,9 +55,9 @@ export const setConfig = createAppAsyncThunk<
         case "project":
           return { projectConfig: await extra.config.getProjectConfig(), mergedConfig };
       }
-    })()).match((result) => result, rejectWithValue);
-  },
-);
+    })(),
+  ).match((result) => result, rejectWithValue);
+});
 
 const configSlice = createSlice({
   name: "Config",

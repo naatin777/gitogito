@@ -6,9 +6,7 @@ export class SeparatorNode extends ConsoleNode<CommitContext> {
   id = "separator" as const;
 
   constructor() {
-    super(
-      [{ to: "subject", trigger: /^!?:\s*/ }],
-    );
+    super([{ to: "subject", trigger: /^!?:\s*/ }]);
   }
 
   getSuggestions(_input: string): Promise<CompletionItem[]> {

@@ -1,13 +1,9 @@
 import { TextAttributes } from "@opentui/core";
 import { useKeyboard, useRenderer } from "@opentui/react";
-import {
-  useLocation,
-  useNavigate,
-  useSearchParams
-} from "react-router";
+import { useLocation, useNavigate, useSearchParams } from "react-router";
 import { Box, Text } from "../../components/ThemedComponents.tsx";
-import { useThemeColors } from "../config/use_theme_colors.ts";
 import { isCtrlC, isEnter } from "../../helpers/opentui/key.ts";
+import { useThemeColors } from "../config/use_theme_colors.ts";
 
 export function DonePage() {
   const [searchParams] = useSearchParams();

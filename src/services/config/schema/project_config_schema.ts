@@ -1,4 +1,4 @@
-import { ConfigSchema, type Config, DEFAULT_CONFIG } from "./config_schema.ts";
+import { type Config, ConfigSchema, DEFAULT_CONFIG } from "./config_schema.ts";
 
 export const ProjectConfigSchema = ConfigSchema.describe(
   "Project config schema. Stored in .gitogito.yml (shared with team).",

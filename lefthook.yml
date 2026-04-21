@@ -1,0 +1,10 @@
+pre-commit:
+  commands:
+    biome:
+      glob:
+        - "src/**/*.ts"
+        - "src/**/*.tsx"
+      stage_fixed: true
+      run: biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
+    check:
+      run: bun check

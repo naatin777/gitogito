@@ -1,6 +1,4 @@
 /.idea/
-/.vscode/
-/.zed/
 
 /node_modules
 
@@ -10,3 +8,4 @@
 *.swp
 
 .gitogito.local.yml
+.gitogito.credentials.yml

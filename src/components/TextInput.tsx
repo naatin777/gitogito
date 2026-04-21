@@ -1,18 +1,20 @@
 import { TextAttributes } from "@opentui/core";
 import { useKeyboard, useRenderer } from "@opentui/react";
 import { useEffect, useState } from "react";
-import { Box, Text } from "./ThemedComponents.tsx";
 import { useThemeColors } from "../features/config/use_theme_colors.ts";
 import { isCtrlC, isEnter, keyEventToInput } from "../helpers/opentui/key.ts";
+import { Box, Text } from "./ThemedComponents.tsx";
 // import { renderTui } from "../lib/opentui_render.tsx";
 
-export function TextInput(
-  { label, isInline, onSubmit }: {
-    label: string;
-    isInline?: boolean;
-    onSubmit: (val: string) => void;
-  },
-) {
+export function TextInput({
+  label,
+  isInline,
+  onSubmit,
+}: {
+  label: string;
+  isInline?: boolean;
+  onSubmit: (val: string) => void;
+}) {
   const themeColors = useThemeColors();
   const [value, setValue] = useState("");
   const [cursorPosition, setCursorPosition] = useState(0);
@@ -53,9 +55,7 @@ export function TextInput(
 
     if (event.name === "backspace" || event.name === "delete" || event.name === "forwarddelete") {
       if (cursorPosition > 0) {
-        setValue((v) =>
-          v.slice(0, cursorPosition - 1) + v.slice(cursorPosition)
-        );
+        setValue((v) => v.slice(0, cursorPosition - 1) + v.slice(cursorPosition));
         setCursorPosition((p) => p - 1);
       }
       return;
@@ -72,9 +72,7 @@ export function TextInput(
     }
 
     if (!event.ctrl && !event.meta && input.length > 0) {
-      setValue((v) =>
-        v.slice(0, cursorPosition) + input + v.slice(cursorPosition)
-      );
+      setValue((v) => v.slice(0, cursorPosition) + input + v.slice(cursorPosition));
       setCursorPosition((p) => p + input.length);
     }
   });
@@ -86,31 +84,23 @@ export function TextInput(
   return (
     <Box flexDirection={isInline ? "row" : "column"}>
       <Text attributes={TextAttributes.BOLD}>{label}</Text>
-      {isInline
-        ? (
-          <Box flexDirection="row">
-            <text fg={themeColors.primary}>{before}</text>
-            <text
-              fg={themeColors.primary}
-              attributes={showCursor ? TextAttributes.INVERSE : 0}
-            >
-              {charAtCursor}
-            </text>
-            <text fg={themeColors.primary}>{after}</text>
-          </Box>
-        )
-        : (
-          <Box>
-            <text fg={themeColors.primary}>{before}</text>
-            <text
-              fg={themeColors.primary}
-              attributes={showCursor ? TextAttributes.INVERSE : 0}
-            >
-              {charAtCursor}
-            </text>
-            <text fg={themeColors.primary}>{after}</text>
-          </Box>
-        )}
+      {isInline ? (
+        <Box flexDirection="row">
+          <text fg={themeColors.primary}>{before}</text>
+          <text fg={themeColors.primary} attributes={showCursor ? TextAttributes.INVERSE : 0}>
+            {charAtCursor}
+          </text>
+          <text fg={themeColors.primary}>{after}</text>
+        </Box>
+      ) : (
+        <Box>
+          <text fg={themeColors.primary}>{before}</text>
+          <text fg={themeColors.primary} attributes={showCursor ? TextAttributes.INVERSE : 0}>
+            {charAtCursor}
+          </text>
+          <text fg={themeColors.primary}>{after}</text>
+        </Box>
+      )}
     </Box>
   );
 }

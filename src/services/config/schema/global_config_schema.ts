@@ -1,4 +1,4 @@
-import { z } from "zod";
+import type { z } from "zod";
 import { ConfigSchema } from "./config_schema.ts";
 
 export const GlobalConfigSchema = ConfigSchema.omit({ commit: true }).describe(

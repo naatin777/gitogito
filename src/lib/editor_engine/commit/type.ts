@@ -1,9 +1,5 @@
 import { ConsoleNode } from "../console_node.ts";
-import type {
-  CompletionItem,
-  FragmentContext,
-  TextFragment,
-} from "../types.ts";
+import type { CompletionItem, FragmentContext, TextFragment } from "../types.ts";
 import type { CommitContext } from "./context.ts";
 
 export class TypeNode extends ConsoleNode<CommitContext> {
