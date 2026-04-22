@@ -6,19 +6,13 @@ import { issueReducer } from "../features/issue/issue_slice.ts";
 import { notificationsReducer } from "../features/notifications/notifications_slice.ts";
 import type { EnvRepository } from "../repositories/env/env_repository.ts";
 import { createEnvRepository } from "../repositories/env/env_repository.ts";
-import {
-  type GitRemoteRepository,
-  GitRemoteRepositoryCliImpl,
-} from "../repositories/git/remote_repository.ts";
+import { type GitRemoteRepository, GitRemoteRepositoryCliImpl } from "../repositories/git/remote_repository.ts";
 import { type ConfigService, createConfigService } from "../services/config/config_service.ts";
 import { ConfigSchema } from "../services/config/schema/config_schema.ts";
 import type { GlobalConfig } from "../services/config/schema/global_config_schema.ts";
 import type { LocalConfig } from "../services/config/schema/local_config_schema.ts";
 import type { ProjectConfig } from "../services/config/schema/project_config_schema.ts";
-import {
-  type CredentialService,
-  createCredentialService,
-} from "../services/credential/credential_service.ts";
+import { type CredentialService, createCredentialService } from "../services/credential/credential_service.ts";
 
 export interface AppDependencies {
   env: EnvRepository;

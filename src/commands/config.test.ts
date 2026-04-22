@@ -10,7 +10,7 @@ import type { ProjectConfig } from "../services/config/schema/project_config_sch
 import type { NestedKeys, PathValue } from "../type.ts";
 
 mock.module("../lib/runner.tsx", () => ({
-  runTuiWithRedux: mock(() => Promise.resolve()),
+  runFullScreenTui: mock(() => Promise.resolve()),
 }));
 mock.module("../app/router.tsx", () => ({
   AppRouter: () => null,
@@ -21,12 +21,8 @@ const { flatSchema } = await import("../helpers/flat_schema.ts");
 const { ConfigSchema } = await import("../services/config/schema/config_schema.ts");
 
 function makeSaveConfig() {
-  return mock(
-    (
-      _scope: ConfigScope,
-      _key: NestedKeys<Config>,
-      _value: PathValue<Config, NestedKeys<Config>>,
-    ) => Promise.resolve(),
+  return mock((_scope: ConfigScope, _key: NestedKeys<Config>, _value: PathValue<Config, NestedKeys<Config>>) =>
+    Promise.resolve(),
   );
 }
 
@@ -82,7 +78,7 @@ test("--set でサブコマンドの saveConfig が呼ばれる", async () => {
 
   expect(saveConfig).toHaveBeenCalledTimes(1);
   expect(saveConfig.mock.calls[0][0]).toBe("project");
-  expect(saveConfig.mock.calls[0][1]).toBe("ai.default.provider");
+  expect(String(saveConfig.mock.calls[0][1])).toBe("ai.default.provider");
   expect(saveConfig.mock.calls[0][2]).toBe("openai");
 });
 
@@ -106,14 +102,10 @@ test("--local で saveConfig に local スコープが渡される", async () =>
 
 test("--global と --local を同時に指定するとエラー", async () => {
   const { root } = buildTestCommand();
-  await expect(
-    root.parse(["--global", "--local", "ai", "default", "provider", "--set", "x"]),
-  ).rejects.toThrow();
+  await expect(root.parse(["--global", "--local", "ai", "default", "provider", "--set", "x"])).rejects.toThrow();
 });
 
 test("--project と --global を同時に指定するとエラー", async () => {
   const { root } = buildTestCommand();
-  await expect(
-    root.parse(["--project", "--global", "ai", "default", "provider", "--set", "x"]),
-  ).rejects.toThrow();
+  await expect(root.parse(["--project", "--global", "ai", "default", "provider", "--set", "x"])).rejects.toThrow();
 });

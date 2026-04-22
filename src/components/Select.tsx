@@ -76,20 +76,14 @@ export function Select<T>(options: SelectOptions<T>) {
     <Box flexDirection="column" paddingLeft={1} paddingRight={1}>
       <Box>
         <Text>{`${options.message} `}</Text>
-        <Text attributes={TextAttributes.DIM}>
-          {getSelectPositionLabel(safeSelectedIndex, options.choices.length)}
-        </Text>
+        <Text attributes={TextAttributes.DIM}>{getSelectPositionLabel(safeSelectedIndex, options.choices.length)}</Text>
       </Box>
       {hasChoices ? (
         options.choices.map((value, index) => {
           const isSelected = safeSelectedIndex === index;
           return (
             <Box key={value.name} flexDirection="column">
-              <Text
-                attributes={TextAttributes.BOLD}
-                truncate
-                fg={isSelected ? themeColors.primary : undefined}
-              >
+              <Text attributes={TextAttributes.BOLD} truncate fg={isSelected ? themeColors.primary : undefined}>
                 {`→ ${value.name}`}
               </Text>
               {isSelected && (

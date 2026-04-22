@@ -31,9 +31,7 @@ export function ReviewPage() {
     <Box flexDirection="column">
       <Text attributes={TextAttributes.BOLD}>Review page</Text>
       <Text>Profile: {profile}</Text>
-      <Text attributes={TextAttributes.DIM}>
-        Press Left to go back or Enter to finish the sample flow.
-      </Text>
+      <Text attributes={TextAttributes.DIM}>Press Left to go back or Enter to finish the sample flow.</Text>
     </Box>
   );
 }

@@ -3,7 +3,7 @@ import type { RouteObject } from "react-router";
 import { createMemoryRouter, Outlet, RouterProvider } from "react-router";
 import { commitRoute } from "../features/commit/routes.tsx";
 import { configRoute } from "../features/config/routes.tsx";
-import { homeFallbackRoute, homeIndexRoute } from "../features/home/routes.tsx";
+import { homeRoute } from "../features/home/routes.tsx";
 import { initRoute } from "../features/init/routes.tsx";
 import { issueRoute } from "../features/issue/routes.tsx";
 
@@ -11,7 +11,7 @@ const routes = [
   {
     path: "/",
     element: <Outlet />,
-    children: [homeFallbackRoute, initRoute, homeIndexRoute, commitRoute, issueRoute, configRoute],
+    children: [homeRoute, initRoute, commitRoute, issueRoute, configRoute],
   } satisfies RouteObject,
 ];
 

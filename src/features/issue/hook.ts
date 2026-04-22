@@ -21,11 +21,7 @@ import {
   submitOverview,
 } from "./issue_slice.ts";
 
-export {
-  ISSUE_GENERATION_EMPTY_MESSAGE,
-  ISSUE_SELECTION_CANCELLED_MESSAGE,
-  ISSUE_TEMPLATE_CANCELLED_MESSAGE,
-};
+export { ISSUE_GENERATION_EMPTY_MESSAGE, ISSUE_SELECTION_CANCELLED_MESSAGE, ISSUE_TEMPLATE_CANCELLED_MESSAGE };
 
 export function shouldCloseIssueFlow(step: IssueState["step"]) {
   return step === "done" || step === "error";

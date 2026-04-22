@@ -28,18 +28,15 @@ type CommitThunkConfig = {
 };
 
 // Async thunks for side effects
-export const generateCommitMessages = createAppAsyncThunk<
-  z.infer<typeof CommitSchema>,
-  void,
-  CommitThunkConfig
->("commit/generate", async (_, { rejectWithValue, extra }) => {
-  const gitService = new GitService();
+export const generateCommitMessages = createAppAsyncThunk<z.infer<typeof CommitSchema>, void, CommitThunkConfig>(
+  "commit/generate",
+  async (_, { rejectWithValue, extra }) => {
+    const gitService = new GitService();
 
-  return fromPromiseWithMessage(gitService.diff.getGitDiffStaged())
-    .andThen((diff) => (diff ? okAsync(diff) : errAsync("No diff found")))
-    .andThen((diff) =>
-      fromPromiseWithMessage(AIService.create(extra.config, extra.credentials)).andThen(
-        (aiService) =>
+    return fromPromiseWithMessage(gitService.diff.getGitDiffStaged())
+      .andThen((diff) => (diff ? okAsync(diff) : errAsync("No diff found")))
+      .andThen((diff) =>
+        fromPromiseWithMessage(AIService.create(extra.config, extra.credentials)).andThen((aiService) =>
           fromPromiseWithMessage(
             aiService.generateStructuredOutput(
               [
@@ -51,11 +48,12 @@ export const generateCommitMessages = createAppAsyncThunk<
               (_usage) => {},
             ),
           ),
-      ),
-    )
-    .andThen((result) => (result ? okAsync(result) : errAsync("AI generation failed")))
-    .match((result) => result, rejectWithValue);
-});
+        ),
+      )
+      .andThen((result) => (result ? okAsync(result) : errAsync("AI generation failed")))
+      .match((result) => result, rejectWithValue);
+  },
+);
 
 export const editCommitMessage = createAppAsyncThunk<
   string,
@@ -63,10 +61,7 @@ export const editCommitMessage = createAppAsyncThunk<
   CommitThunkConfig
 >(
   "commit/edit",
-  async (
-    selectedMessage: z.infer<typeof CommitSchema>["commit_message"][number],
-    { rejectWithValue },
-  ) => {
+  async (selectedMessage: z.infer<typeof CommitSchema>["commit_message"][number], { rejectWithValue }) => {
     const combinedMessage = [selectedMessage.header, selectedMessage.body, selectedMessage.footer]
       .filter(Boolean)
       .join("\n\n");
@@ -82,9 +77,10 @@ export const commitMessage = createAppAsyncThunk<boolean, string, CommitThunkCon
   async (message: string, { rejectWithValue }) => {
     const gitService = new GitService();
 
-    return fromPromiseWithMessage(
-      gitService.commit.commitWithMessages([message]).then(() => true),
-    ).match((result) => result, rejectWithValue);
+    return fromPromiseWithMessage(gitService.commit.commitWithMessages([message]).then(() => true)).match(
+      (result) => result,
+      rejectWithValue,
+    );
   },
 );
 

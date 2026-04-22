@@ -5,10 +5,14 @@ import { NpmProvider } from "@cliffy/command/upgrade/provider/npm";
 import packageJson from "../package.json" with { type: "json" };
 import { createAppDependencies } from "./app/app_extra.ts";
 import type { AppDependencies } from "./app/store.ts";
+import { createAddCommand } from "./commands/add.tsx";
+import { createBranchCommand } from "./commands/branch.tsx";
 import { createCommitCommand } from "./commands/commit.tsx";
 import { createConfigCommand } from "./commands/config.tsx";
+import { createDoctorCommand } from "./commands/doctor.tsx";
 import { createInitCommand } from "./commands/init.tsx";
 import { createIssueCommand } from "./commands/issue.tsx";
+import { createPrCommand } from "./commands/pr.tsx";
 import { ENV_KEYS } from "./repositories/env/env_repository.ts";
 
 export function createMainCommand(dependencies: AppDependencies = createAppDependencies()) {
@@ -28,10 +32,15 @@ export function createMainCommand(dependencies: AppDependencies = createAppDepen
     })
     .command("init", createInitCommand(dependencies))
     .command("config", createConfigCommand(dependencies))
-    .command("issue", createIssueCommand(dependencies))
+    .command("upgrade", new UpgradeCommand({ provider: [new NpmProvider()] }))
+    .command("doctor", createDoctorCommand(dependencies))
+    .command("add", createAddCommand(dependencies))
     .command("commit", createCommitCommand(dependencies))
+    .command("issue", createIssueCommand(dependencies))
+    .command("branch", createBranchCommand(dependencies))
+    .command("pr", createPrCommand(dependencies))
     .command("completions", new CompletionsCommand())
-    .command("upgrade", new UpgradeCommand({ provider: [new NpmProvider()] }));
+    .hidden();
 }
 
 if (import.meta.main) {

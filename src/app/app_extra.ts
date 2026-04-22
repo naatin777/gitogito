@@ -14,8 +14,7 @@ export function createAppDependencies(overrides: Partial<AppDependencies> = {}):
   return {
     env,
     config: overrides.config ?? createConfigService(configFile),
-    credentials:
-      overrides.credentials ?? createCredentialService({ envRepository: env, credentialFile }),
+    credentials: overrides.credentials ?? createCredentialService({ envRepository: env, credentialFile }),
     gitRemoteRepository: overrides.gitRemoteRepository ?? new GitRemoteRepositoryCliImpl(),
   };
 }

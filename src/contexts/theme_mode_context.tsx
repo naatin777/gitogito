@@ -4,9 +4,7 @@ import { createContext, type ReactNode, useContext, useEffect, useState } from "
 
 const THEME_MODE_CONTEXT_UNSET = Symbol("ThemeModeContext.unset");
 
-const ThemeModeContext = createContext<ThemeMode | null | typeof THEME_MODE_CONTEXT_UNSET>(
-  THEME_MODE_CONTEXT_UNSET,
-);
+const ThemeModeContext = createContext<ThemeMode | null | typeof THEME_MODE_CONTEXT_UNSET>(THEME_MODE_CONTEXT_UNSET);
 
 export function ThemeModeProvider({ children }: { children: ReactNode }) {
   const renderer = useRenderer();

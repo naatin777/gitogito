@@ -1,12 +1,7 @@
 import { useRenderer } from "@opentui/react";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks.ts";
-import {
-  commitMessage,
-  editCommitMessage,
-  generateCommitMessages,
-  selectMessage,
-} from "./commit_slice.ts";
+import { commitMessage, editCommitMessage, generateCommitMessages, selectMessage } from "./commit_slice.ts";
 
 export function useCommitFlow() {
   const dispatch = useAppDispatch();

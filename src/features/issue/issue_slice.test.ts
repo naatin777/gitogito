@@ -11,10 +11,7 @@ test("setError stores the provided message", () => {
 });
 
 test("loadTemplates.rejected stores the rejected message", () => {
-  const state = issueReducer(
-    undefined,
-    loadTemplates.rejected(null, "request-id", undefined, "No templates found"),
-  );
+  const state = issueReducer(undefined, loadTemplates.rejected(null, "request-id", undefined, "No templates found"));
 
   expect(state).toEqual({
     step: "error",

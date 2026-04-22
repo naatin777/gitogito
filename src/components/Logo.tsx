@@ -1,6 +1,6 @@
 import { TextAttributes } from "@opentui/core";
 import { createAppDependencies } from "../app/app_extra.ts";
-import { runTuiWithRedux } from "../lib/runner.tsx";
+import { runFullScreenTui } from "../lib/runner.tsx";
 import { Box, Text } from "./ThemedComponents";
 
 const yellow = "#FFFF00";
@@ -103,11 +103,7 @@ export function Logo() {
       {art.map((row, rowIndex) => (
         <Box key={rowIndex} flexDirection="row">
           {row.map((segment, segmentIndex) => (
-            <Text
-              key={`${rowIndex}-${segmentIndex}`}
-              fg={segment.fg}
-              attributes={segment.attributes}
-            >
+            <Text key={`${rowIndex}-${segmentIndex}`} fg={segment.fg} attributes={segment.attributes}>
               {segment.text}
             </Text>
           ))}
@@ -120,11 +116,11 @@ export function Logo() {
 /* v8 ignore start */
 if (import.meta.main) {
   const dependencies = createAppDependencies();
-  await runTuiWithRedux(
+  await runFullScreenTui(
     <Box width="100%" height="100%" justifyContent="center" alignItems="center">
       <Logo />
     </Box>,
-    { dependencies },
+    dependencies,
   );
 }
 /* v8 ignore stop */

@@ -164,10 +164,7 @@ test("saveCredentials - works with local scope", async () => {
 test("saveCredentials - preserves existing comments", async () => {
   const file = new CredentialFileMock({
     global:
-      [
-        "# Personal credentials - do not share",
-        "openRouterApiKey: old-key # replace when expired",
-      ].join("\n") + "\n",
+      ["# Personal credentials - do not share", "openRouterApiKey: old-key # replace when expired"].join("\n") + "\n",
   });
   const service = new CredentialServiceImpl(envMock, file);
 

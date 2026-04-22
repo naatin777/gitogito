@@ -70,9 +70,7 @@ export function Carousel<T>({ message, choices, onSelect }: CarouselProps<T>) {
         <Text attributes={TextAttributes.BOLD}>{`? ${message} `}</Text>
       </Box>
       <Box>
-        <Text attributes={TextAttributes.DIM}>
-          {getCarouselPositionLabel(safeSelectedIndex, choices.length)}
-        </Text>
+        <Text attributes={TextAttributes.DIM}>{getCarouselPositionLabel(safeSelectedIndex, choices.length)}</Text>
         <Text attributes={TextAttributes.DIM}>(Enter to Select)</Text>
       </Box>
 

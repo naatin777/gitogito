@@ -77,9 +77,7 @@ export class CommitlintProvider {
   }
 
   /** 現在のコミットメッセージ全体をリアルタイムでバリデーション */
-  async validate(
-    message: string,
-  ): Promise<{ valid: boolean; errors: string[]; warnings: string[] }> {
+  async validate(message: string): Promise<{ valid: boolean; errors: string[]; warnings: string[] }> {
     if (!this.config) return { valid: true, errors: [], warnings: [] };
     const result = await lint(message, this.config.rules, {
       parserOpts: this.config.parserPreset?.parserOpts as never,
@@ -127,12 +125,7 @@ export async function createCommitEngineWithLint(
   await provider.init(userConfig);
 
   const engine = new PromptEngine<CommitContext>(
-    [
-      new CommitlintTypeNode(provider),
-      new CommitlintScopeNode(provider),
-      new SeparatorNode(),
-      new SubjectNode(),
-    ],
+    [new CommitlintTypeNode(provider), new CommitlintScopeNode(provider), new SeparatorNode(), new SubjectNode()],
     "type",
   );
 
@@ -183,12 +176,7 @@ for (const { label, input, cursor } of cases) {
 
 // Breaking change の補完も確認
 console.log("=== バリデーション単体テスト ===\n");
-const messages = [
-  "feat!: remove legacy API",
-  "fix(auth): token refresh",
-  "wip: stuff",
-  "feat: " + "a".repeat(80),
-];
+const messages = ["feat!: remove legacy API", "fix(auth): token refresh", "wip: stuff", "feat: " + "a".repeat(80)];
 for (const msg of messages) {
   const r = await provider.validate(msg);
   const icon = r.valid ? "✅" : "❌";

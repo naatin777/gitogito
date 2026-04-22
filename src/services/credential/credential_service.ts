@@ -2,11 +2,7 @@ import _ from "lodash";
 import { parse, parseDocument } from "yaml";
 import { createEnvRepository, type EnvRepository } from "../../repositories/env/env_repository.ts";
 import type { NestedKeys, PathValue } from "../../type.ts";
-import {
-  type CredentialFile,
-  type CredentialsScope,
-  createCredentialFile,
-} from "./credential_file.ts";
+import { type CredentialFile, type CredentialsScope, createCredentialFile } from "./credential_file.ts";
 import type { Credentials } from "./credentials_schema.ts";
 
 export interface CredentialService {

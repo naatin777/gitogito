@@ -17,8 +17,7 @@ const initialState: ConfigState = {
 const isVisible = (item: FlatSchemaItem, openPaths: string[]) =>
   item.parents.every((_, i) => openPaths.includes(item.parents.slice(0, i + 1).join(".")));
 
-const visibleItems = (state: ConfigState) =>
-  state.items.filter((item) => isVisible(item, state.openPaths));
+const visibleItems = (state: ConfigState) => state.items.filter((item) => isVisible(item, state.openPaths));
 
 const clampSelection = (state: ConfigState) => {
   const items = visibleItems(state);
@@ -72,15 +71,9 @@ const selectConfigState = (state: RootState) => state.configUi;
 
 export const selectConfigFilteredItems = createSelector([selectConfigState], visibleItems);
 
-export const selectConfigOpenPaths = createSelector(
-  [selectConfigState],
-  (state) => new Set(state.openPaths),
-);
+export const selectConfigOpenPaths = createSelector([selectConfigState], (state) => new Set(state.openPaths));
 
-export const selectConfigSelectedPath = createSelector(
-  [selectConfigState],
-  (state) => state.selectedPath,
-);
+export const selectConfigSelectedPath = createSelector([selectConfigState], (state) => state.selectedPath);
 
 export const selectConfigSelectedIndex = createSelector(
   [selectConfigFilteredItems, selectConfigSelectedPath],
@@ -96,6 +89,5 @@ export const selectConfigSelectedItem = createSelector(
   (items, i) => items[i] ?? null,
 );
 
-export const { initializeConfigTree, moveDown, moveUp, selectItem, toggleItem } =
-  configUiSlice.actions;
+export const { initializeConfigTree, moveDown, moveUp, selectItem, toggleItem } = configUiSlice.actions;
 export const configUiReducer = configUiSlice.reducer;

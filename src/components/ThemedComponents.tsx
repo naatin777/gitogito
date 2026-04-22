@@ -3,14 +3,7 @@ import { useThemeColors } from "../features/config/use_theme_colors";
 
 export const Box = (props: BoxProps) => {
   const theme = useThemeColors();
-  return (
-    <box
-      backgroundColor={theme.backgroundColor}
-      borderColor={theme.border}
-      border={false}
-      {...props}
-    />
-  );
+  return <box backgroundColor={theme.backgroundColor} borderColor={theme.border} border={false} {...props} />;
 };
 
 export const Text = ({ color = "text", ...props }: TextProps & { color?: "text" | "primary" }) => {

@@ -1,9 +1,5 @@
 import { expect, test } from "bun:test";
-import {
-  CAROUSEL_EMPTY_MESSAGE,
-  getCarouselPositionLabel,
-  getSafeCarouselIndex,
-} from "./Carousel.tsx";
+import { CAROUSEL_EMPTY_MESSAGE, getCarouselPositionLabel, getSafeCarouselIndex } from "./Carousel.tsx";
 
 test("getCarouselPositionLabel uses zero when there are no choices", () => {
   expect(getCarouselPositionLabel(0, 0)).toBe("← 0/0 →");
