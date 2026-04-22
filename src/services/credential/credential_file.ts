@@ -49,17 +49,12 @@ export class CredentialFileImpl implements CredentialFile {
   }
 }
 
-export function createCredentialFile(
-  envRepository: EnvRepository = createEnvRepository(),
-): CredentialFile {
+export function createCredentialFile(envRepository: EnvRepository = createEnvRepository()): CredentialFile {
   return new CredentialFileImpl(envRepository);
 }
 
 function isNotFoundError(error: unknown): error is NodeJS.ErrnoException {
   return (
-    typeof error === "object" &&
-    error !== null &&
-    "code" in error &&
-    (error as NodeJS.ErrnoException).code === "ENOENT"
+    typeof error === "object" && error !== null && "code" in error && (error as NodeJS.ErrnoException).code === "ENOENT"
   );
 }

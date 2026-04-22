@@ -28,12 +28,7 @@ export function parseDefaultSize(defaultSize: number | string, containerSize: nu
 
 const POINTER_HOVER_DELAY_MS = 0;
 
-function clampDividerPosition(
-  position: number,
-  containerSize: number,
-  minSize = 5,
-  maxSize?: number,
-): number {
+function clampDividerPosition(position: number, containerSize: number, minSize = 5, maxSize?: number): number {
   const lastValidPosition = Math.max(containerSize - 1, 0);
   const minPosition = Math.min(minSize, lastValidPosition);
   const maxPositionFromMinSize = Math.max(lastValidPosition - minSize, 0);
@@ -65,12 +60,7 @@ export function SplitPane({
     parseDefaultSize(defaultSize, Math.max(containerSize, 1)),
   );
   const dividerLength = Math.max(isHorizontal ? height : width, 1);
-  const clampedDividerPosition = clampDividerPosition(
-    dividerPosition,
-    containerSize,
-    minSize,
-    maxSize,
-  );
+  const clampedDividerPosition = clampDividerPosition(dividerPosition, containerSize, minSize, maxSize);
   const resizePointer = isHorizontal ? "ew-resize" : "ns-resize";
 
   const clearHoverTimer = () => {
@@ -97,9 +87,7 @@ export function SplitPane({
           return;
         }
 
-        setDividerPosition(
-          clampDividerPosition(isHorizontal ? event.x : event.y, containerSize, minSize, maxSize),
-        );
+        setDividerPosition(clampDividerPosition(isHorizontal ? event.x : event.y, containerSize, minSize, maxSize));
       }}
       onMouseUp={() => {
         clearHoverTimer();
@@ -156,11 +144,7 @@ export function SplitPane({
           <Text color="primary">{"━".repeat(dividerLength)}</Text>
         )}
       </Box>
-      <Box
-        flexGrow={1}
-        width={isHorizontal ? "auto" : "100%"}
-        height={isHorizontal ? "100%" : "auto"}
-      >
+      <Box flexGrow={1} width={isHorizontal ? "auto" : "100%"} height={isHorizontal ? "100%" : "auto"}>
         {children[1]}
       </Box>
     </Box>

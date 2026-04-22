@@ -86,10 +86,7 @@ test("SubjectNode - trigger: real-world examples", () => {
   assertEquals(trigger.test("initial commit"), true);
 
   // Long subject
-  assertEquals(
-    trigger.test("add comprehensive error handling for API requests with retry logic"),
-    true,
-  );
+  assertEquals(trigger.test("add comprehensive error handling for API requests with retry logic"), true);
 
   // Subject with references
   assertEquals(trigger.test("fix authentication bug (#123)"), true);

@@ -36,16 +36,8 @@ export function getIssueErrorText(message: string) {
 /* v8 ignore start */
 export function IssueUI() {
   const themeColors = useThemeColors();
-  const {
-    state,
-    loadTemplates,
-    selectTemplate,
-    submitOverview,
-    handleAgentDone,
-    selectIssue,
-    editIssue,
-    createIssue,
-  } = useIssueFlow();
+  const { state, loadTemplates, selectTemplate, submitOverview, handleAgentDone, selectIssue, editIssue, createIssue } =
+    useIssueFlow();
 
   return (
     <Box flexDirection="column">
@@ -57,18 +49,16 @@ export function IssueUI() {
           onSelect={selectTemplate}
         />
       )}
-      {state.step === "input_overview" && (
-        <TextInput label="? Enter the issue overview ›" onSubmit={submitOverview} />
-      )}
+      {state.step === "input_overview" && <TextInput label="? Enter the issue overview ›" onSubmit={submitOverview} />}
       {state.step === "generating" && (
         <AgentLoop
           initialMessages={[
             {
               role: "system",
-              content: ISSUE_SYSTEM_MESSAGE.replace(
-                /{{issueTemplate.title}}/g,
-                state.template.title,
-              ).replace(/{{issueTemplate.body}}/g, state.template.body),
+              content: ISSUE_SYSTEM_MESSAGE.replace(/{{issueTemplate.title}}/g, state.template.title).replace(
+                /{{issueTemplate.body}}/g,
+                state.template.body,
+              ),
             },
             {
               role: "user",
@@ -92,9 +82,7 @@ export function IssueUI() {
           <Text fg={themeColors.success}>{getIssueCreatedText(state.url)}</Text>
         </Box>
       )}
-      {state.step === "error" && (
-        <Text fg={themeColors.error}>{getIssueErrorText(state.message)}</Text>
-      )}
+      {state.step === "error" && <Text fg={themeColors.error}>{getIssueErrorText(state.message)}</Text>}
     </Box>
   );
 }

@@ -2,10 +2,7 @@ import { generateObject, type LanguageModel, type ModelMessage, streamObject } f
 import type { z } from "zod";
 import { type ConfigService, createConfigService } from "../config/config_service.ts";
 import { AiConfigSchema } from "../config/schema/fields/ai_schema.ts";
-import {
-  type CredentialService,
-  createCredentialService,
-} from "../credential/credential_service.ts";
+import { type CredentialService, createCredentialService } from "../credential/credential_service.ts";
 import type { Credentials } from "../credential/credentials_schema.ts";
 import { createLanguageModel, normalizeAiProvider } from "./provider.ts";
 import type { AiProvider, AiTask, UsageCallback } from "./types.ts";
@@ -34,14 +31,10 @@ export class AIService {
     const runtimeProvider = normalizeAiProvider(provider);
 
     if (runtimeProvider === "OpenRouter" && !mergedCredentials.openRouterApiKey) {
-      throw new Error(
-        "Missing OpenRouter API key. Set credentials.openRouterApiKey or GITOGITO_OPEN_ROUTER_API_KEY.",
-      );
+      throw new Error("Missing OpenRouter API key. Set credentials.openRouterApiKey or GITOGITO_OPEN_ROUTER_API_KEY.");
     }
     if (runtimeProvider === "Gemini" && !mergedCredentials.geminiApiKey) {
-      throw new Error(
-        "Missing Gemini API key. Set credentials.geminiApiKey or GITOGITO_GEMINI_API_KEY.",
-      );
+      throw new Error("Missing Gemini API key. Set credentials.geminiApiKey or GITOGITO_GEMINI_API_KEY.");
     }
 
     return new AIService(provider, model, mergedCredentials);

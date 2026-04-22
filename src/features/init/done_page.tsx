@@ -34,9 +34,7 @@ export function DonePage() {
       </Text>
       <Text>Sample init flow completed.</Text>
       <Text>Profile: {profile}</Text>
-      <Text attributes={TextAttributes.DIM}>
-        Press Left to review again, or Enter to close the TUI.
-      </Text>
+      <Text attributes={TextAttributes.DIM}>Press Left to review again, or Enter to close the TUI.</Text>
     </Box>
   );
 }

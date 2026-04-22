@@ -58,10 +58,10 @@ function wrap(node: React.ReactNode) {
 // ---------------------------------------------------------------------------
 
 test("SplitPane renders content of both panes", async () => {
-  const tui = await testRender(
-    wrap(<SplitPane>{[<text>left-pane</text>, <text>right-pane</text>]}</SplitPane>),
-    { width: 80, height: 24 },
-  );
+  const tui = await testRender(wrap(<SplitPane>{[<text>left-pane</text>, <text>right-pane</text>]}</SplitPane>), {
+    width: 80,
+    height: 24,
+  });
 
   await tui.renderOnce();
   const frame = tui.captureCharFrame();

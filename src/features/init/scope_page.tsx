@@ -20,9 +20,7 @@ export function ScopePage() {
   return (
     <Box flexDirection="column">
       <Text attributes={TextAttributes.BOLD}>Scope page</Text>
-      <Text attributes={TextAttributes.DIM}>
-        Press Enter to continue to the sample profile page.
-      </Text>
+      <Text attributes={TextAttributes.DIM}>Press Enter to continue to the sample profile page.</Text>
     </Box>
   );
 }

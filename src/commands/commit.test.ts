@@ -8,10 +8,10 @@ mock.module("../app/router.tsx", () => ({
 }));
 
 const { createCommitCommand } = await import("./commit.tsx");
-const { runTuiWithRedux } = await import("../lib/runner.tsx");
+const { runFullScreenTui } = await import("../lib/runner.tsx");
 
 beforeEach(() => {
-  (runTuiWithRedux as ReturnType<typeof mock>).mockClear();
+  (runFullScreenTui as ReturnType<typeof mock>).mockClear();
 });
 
 test("description が設定されている", () => {
@@ -20,5 +20,5 @@ test("description が設定されている", () => {
 
 test("parse() で runTuiWithRedux が呼ばれる", async () => {
   await createCommitCommand().parse([]);
-  expect(runTuiWithRedux).toHaveBeenCalledTimes(1);
+  expect(runFullScreenTui).toHaveBeenCalledTimes(1);
 });

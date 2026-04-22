@@ -3,7 +3,7 @@ import { createAppDependencies } from "../app/app_extra.ts";
 import { AppRouter } from "../app/router.tsx";
 import type { AppDependencies } from "../app/store.ts";
 import { flatSchema, fullPath, urlPath } from "../helpers/flat_schema.ts";
-import { runTuiWithRedux } from "../lib/runner.tsx";
+import { runFullScreenTui } from "../lib/runner.tsx";
 import type { ConfigScope } from "../services/config/config_file.ts";
 import { type Config, ConfigSchema } from "../services/config/schema/config_schema.ts";
 import type { NestedKeys } from "../type.ts";
@@ -43,25 +43,18 @@ export function buildSubcommands(
         .action(async (options: ConfigSetCommandOptions) => {
           const scope = resolveScope(options);
           if (options.set) {
-            await dependencies.config.saveConfig(
-              scope,
-              itemFullPath as NestedKeys<Config>,
-              options.set,
-            );
+            await dependencies.config.saveConfig(scope, itemFullPath as NestedKeys<Config>, options.set);
           } else {
-            await runTuiWithRedux(
+            await runFullScreenTui(
               <AppRouter initialPath={`/config/${itemUrlPath}`} params={{ scope }} />,
-              { dependencies },
+              dependencies,
             );
           }
         });
     } else {
       cmd.action(async (options: ConfigCommandOptions) => {
         const scope = resolveScope(options);
-        await runTuiWithRedux(
-          <AppRouter initialPath={`/config/${itemUrlPath}`} params={{ scope }} />,
-          { dependencies },
-        );
+        await runFullScreenTui(<AppRouter initialPath={`/config/${itemUrlPath}`} params={{ scope }} />, dependencies);
       });
     }
 
@@ -96,9 +89,7 @@ export function createConfigCommand(dependencies: AppDependencies = createAppDep
     })
     .action(async (options: ConfigCommandOptions) => {
       const scope = resolveScope(options);
-      await runTuiWithRedux(<AppRouter initialPath="/config" params={{ scope }} />, {
-        dependencies,
-      });
+      await runFullScreenTui(<AppRouter initialPath="/config" params={{ scope }} />, dependencies);
     });
 
   buildSubcommands(command, flatSchema(ConfigSchema), dependencies);

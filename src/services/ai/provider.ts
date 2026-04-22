@@ -41,5 +41,7 @@ export function createLanguageModel(
       });
       return google(model);
     }
+    default:
+      throw new Error(`Unsupported AI provider: ${runtimeProvider as string}`);
   }
 }

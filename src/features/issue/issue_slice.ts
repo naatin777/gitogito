@@ -2,15 +2,9 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { errAsync, okAsync } from "neverthrow";
 import type z from "zod";
 import { createAppAsyncThunk } from "../../app/hooks.ts";
-import {
-  parseMarkdownIssueTemplate,
-  stringifyMarkdownIssue,
-} from "../../features/issue/domain/parser.ts";
+import { parseMarkdownIssueTemplate, stringifyMarkdownIssue } from "../../features/issue/domain/parser.ts";
 import { getIssueTemplatePath } from "../../features/issue/domain/template_paths.ts";
-import {
-  fromPromiseWithMessage,
-  fromThrowableWithMessage,
-} from "../../helpers/error/neverthrow.ts";
+import { fromPromiseWithMessage, fromThrowableWithMessage } from "../../helpers/error/neverthrow.ts";
 import type { IssueSchema } from "../../schema.ts";
 import { editText } from "../../services/editor/edit_text.ts";
 import { createIssue as createIssueService } from "../../services/github/issue.ts";
@@ -153,7 +147,6 @@ const issueSlice = createSlice({
   },
 });
 
-export const { selectTemplate, submitOverview, setGeneratedIssues, selectIssue, setError, reset } =
-  issueSlice.actions;
+export const { selectTemplate, submitOverview, setGeneratedIssues, selectIssue, setError, reset } = issueSlice.actions;
 
 export const issueReducer = issueSlice.reducer;

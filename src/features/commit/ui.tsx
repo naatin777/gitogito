@@ -6,8 +6,7 @@ import { useCommitFlow } from "./hook.ts";
 
 export function CommitUI() {
   const themeColors = useThemeColors();
-  const { state, generateCommitMessages, selectCommitMessage, commitMessage, editCommitMessage } =
-    useCommitFlow();
+  const { state, generateCommitMessages, selectCommitMessage, commitMessage, editCommitMessage } = useCommitFlow();
 
   return (
     <Box>

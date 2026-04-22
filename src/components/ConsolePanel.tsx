@@ -69,14 +69,7 @@ export const ConsolePanel = ({ maxLines = 5, height = 7, width = "100%" }: Conso
   }, [visible.length]);
 
   return (
-    <Box
-      height={height}
-      width={width}
-      flexDirection="column"
-      border
-      borderStyle="rounded"
-      borderColor={theme.border}
-    >
+    <Box height={height} width={width} flexDirection="column" border borderStyle="rounded" borderColor={theme.border}>
       <Text attributes={TextAttributes.DIM}>console</Text>
       <ScrollBox ref={scrollboxRef} scrollY flexGrow={1}>
         {visible.map((entry, i) => (

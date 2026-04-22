@@ -19,24 +19,20 @@ export const COMMIT_MESSAGE_PREFIX: Suggestion[] = [
   },
   {
     value: "chore",
-    description:
-      "Changes to the build process or auxiliary tools and libraries such as documentation generation",
+    description: "Changes to the build process or auxiliary tools and libraries such as documentation generation",
   },
   { value: "perf", description: "A code change that improves performance" },
   {
     value: "ci",
-    description:
-      "Changes to the build process or auxiliary tools and libraries such as documentation generation",
+    description: "Changes to the build process or auxiliary tools and libraries such as documentation generation",
   },
   {
     value: "build",
-    description:
-      "Changes to the build process or auxiliary tools and libraries such as documentation generation",
+    description: "Changes to the build process or auxiliary tools and libraries such as documentation generation",
   },
   {
     value: "release",
-    description:
-      "Changes to the build process or auxiliary tools and libraries such as documentation generation",
+    description: "Changes to the build process or auxiliary tools and libraries such as documentation generation",
   },
 ] as const satisfies Suggestion[];
 

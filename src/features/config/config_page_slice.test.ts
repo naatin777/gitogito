@@ -29,12 +29,7 @@ test("toggleItem shows children only while the parent path is open", () => {
   const opened = configUiReducer(initialized, toggleItem("ai"));
   const closed = configUiReducer(opened, toggleItem("ai"));
 
-  expect(selectConfigFilteredItems.resultFunc(opened)).toEqual([
-    items[0],
-    items[1],
-    items[2],
-    items[3],
-  ]);
+  expect(selectConfigFilteredItems.resultFunc(opened)).toEqual([items[0], items[1], items[2], items[3]]);
   expect(selectConfigFilteredItems.resultFunc(closed)).toEqual([items[0], items[3]]);
 });
 

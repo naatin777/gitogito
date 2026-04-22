@@ -1,7 +1,7 @@
 import type { z } from "zod";
 import { ConfigSchema } from "./config_schema.ts";
 
-export const GlobalConfigSchema = ConfigSchema.omit({ commit: true }).describe(
+export const GlobalConfigSchema = ConfigSchema.omit({ ai: true }).describe(
   "Global config schema. Stored in ~/.config/gitogito/config.yml.",
 );
 

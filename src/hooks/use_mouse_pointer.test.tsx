@@ -34,13 +34,10 @@ function MousePointerProbe({ styles }: { styles: string[] }) {
 test("useMousePointer writes OSC 22 sequences only when the style changes", async () => {
   pointerWrites.length = 0;
 
-  const tui = await testRender(
-    <MousePointerProbe styles={["ew-resize", "ew-resize", "default"]} />,
-    {
-      width: 40,
-      height: 8,
-    },
-  );
+  const tui = await testRender(<MousePointerProbe styles={["ew-resize", "ew-resize", "default"]} />, {
+    width: 40,
+    height: 8,
+  });
 
   await tui.renderOnce();
 

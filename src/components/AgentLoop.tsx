@@ -27,12 +27,7 @@ export function AgentLoop({
   const performStep = async () => {
     try {
       const aiService = await AIService.create(dependencies.config, dependencies.credentials);
-      const completion = await aiService.generateStructuredOutput(
-        history,
-        "issueAgent",
-        IssueAgentSchema,
-        onUsage,
-      );
+      const completion = await aiService.generateStructuredOutput(history, "issueAgent", IssueAgentSchema, onUsage);
 
       if (!completion) {
         throw new Error("Failed to parse completion");
