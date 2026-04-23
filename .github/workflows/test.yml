@@ -15,27 +15,37 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: "1.3.13"
 
       - name: Install Dependencies
-        run: bun install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
-      - name: Typecheck & Biome
-        run: bun check
+      - name: Typecheck
+        run: pnpm check
 
-      - name: Run bun test
-        run: bun test
+      - name: Run Tests
+        run: pnpm test
 
       - name: Test with Coverage
-        run: bun run test:coverage
+        run: pnpm test:coverage
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
-          files: ./coverage/lcov.info
+          files: ./apps/tui/.coverage/lcov.info,./apps/vscode/.coverage/lcov.info,./packages/shared/.coverage/lcov.info
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: ${{ github.repository }}
