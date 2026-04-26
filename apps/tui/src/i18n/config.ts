@@ -5,7 +5,7 @@ import { initReactI18next } from "react-i18next";
 import type { TargetLanguage } from "../types/i18next";
 
 export const initI18n = async (targetLanguage: TargetLanguage) => {
-  const localesPath = path.join(import.meta.dir, "../locales/{{lng}}/{{ns}}.json");
+  const localesPath = path.join(import.meta.dir, "../../locales/{{lng}}/{{ns}}.json");
 
   await i18n
     .use(initReactI18next)
