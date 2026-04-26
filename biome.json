@@ -35,9 +35,75 @@
   "linter": {
     "rules": {
       "recommended": true,
+      "a11y": {
+        "recommended": true,
+        "noDistractingElements": "error",
+        "noHeaderScope": "error",
+        "noPositiveTabindex": "error",
+        "useAltText": "error",
+        "useAnchorContent": "error",
+        "useButtonType": "error",
+        "useValidAnchor": "error",
+        "useKeyWithClickEvents": "error",
+        "useKeyWithMouseEvents": "error",
+        "useSemanticElements": "error"
+      },
+      "complexity": {
+        "recommended": true,
+        "noExcessiveCognitiveComplexity": "error",
+        "noForEach": "error",
+        "noStaticOnlyClass": "error",
+        "noUselessFragments": "error",
+        "useFlatMap": "error",
+        "useLiteralKeys": "error",
+        "useOptionalChain": "error",
+        "useArrowFunction": "error",
+        "noUselessTernary": "error"
+      },
+      "correctness": {
+        "recommended": true,
+        "noConstantCondition": "error",
+        "noEmptyPattern": "error",
+        "noUnsafeOptionalChaining": "error",
+        "noUnusedImports": "error",
+        "noUnusedVariables": "error",
+        "useExhaustiveDependencies": "error",
+        "useHookAtTopLevel": "error",
+        "useIsNan": "error",
+        "noChildrenProp": "error"
+      },
+      "performance": {
+        "recommended": true,
+        "noAccumulatingSpread": "error",
+        "noDelete": "error",
+        "noReExportAll": "error",
+        "useTopLevelRegex": "error"
+      },
+      "security": {
+        "recommended": true,
+        "noDangerouslySetInnerHtml": "error",
+        "noDangerouslySetInnerHtmlWithChildren": "error",
+        "noGlobalEval": "error"
+      },
       "suspicious": {
-        "noExplicitAny": "warn",
-        "noConsole": "warn"
+        "recommended": true,
+        "noExplicitAny": "error",
+        "noConsole": "warn",
+        "noArrayIndexKey": "error",
+        "noAssignInExpressions": "error",
+        "useAwait": "error",
+        "noDoubleEquals": "error"
+      },
+      "style": {
+        "recommended": true,
+        "noParameterAssign": "error",
+        "useBlockStatements": "error",
+        "useConst": "error",
+        "useImportType": "error",
+        "useTemplate": "error",
+        "noNonNullAssertion": "error",
+        "useConsistentArrayType": "error",
+        "useNodejsImportProtocol": "error"
       }
     }
   },
