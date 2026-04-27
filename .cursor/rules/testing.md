@@ -24,6 +24,12 @@
 - Do not stop at a single happy path; add an error or boundary case.
 - For bugs, add a regression test that would have failed before the fix.
 
+## Thin fakes and test doubles
+
+- **Do not** add unit tests that only assert that trivial forwarders (e.g. getters returning constructor-injected strings) match what you passed in. That restates the implementation and does not protect against real regressions.
+- Prefer **behavior-level** coverage: an integration or higher-level test that uses the double (e.g. `MemoryRuntimeEnv` in a `config global set` path) proves the double is wired correctly and exercises real code paths.
+- If a fake later gains nontrivial behavior (parsing, defaults, invariants), **then** add targeted tests for that behavior.
+
 ## Execution notes
 
 - Record commands in a reproducible way.

@@ -12,7 +12,7 @@ Source of truth: `apps/tui/package.json`. When dependencies change, update this 
 - **Git / GitHub**: [Octokit](https://github.com/octokit/octokit.js), [isomorphic-git](https://isomorphic-git.org), [simple-git](https://github.com/steveukx/git-js)
 - **i18n**: [i18next](https://www.i18next.com), `i18next-fs-backend`, `react-i18next`
 - **Data / types**: [Zod](https://zod.dev), [YAML](https://github.com/eemeli/yaml) package, [neverthrow](https://github.com/supermacro/neverthrow) (`catalog`)
-- **Other**: `diff`, `lodash`
+- **Other**: `diff`
 - **Workspace**: `@gitogito/shared` (`workspace:*`)
 - **Lint / format (this app)**: Biome (`lint` / `format` in `package.json`)
 
@@ -27,11 +27,13 @@ Source of truth: `apps/tui/package.json`. When dependencies change, update this 
 - Branch on user input with early returns for readability.
 - Move reusable logic to `packages/shared` when it fits the boundaries there.
 - Build the dependency graph with concrete `new` only at the entrypoint (e.g. `main` or `make_deps`) or dedicated wiring; elsewhere use constructor injection and `interface`-shaped types (see root `.cursor/rules/dependency-injection.md`).
+- **CLI:** Cliffy subcommand trees live under `src/commands/`. Each `create*Command` receives the full `AppDeps` from `make_deps` (or `makeTestDeps` in tests) so new dependencies do not require changing the whole call stack—pull what you need from `deps` inside the command.
 
 ## Testing
 
 - TDD by default: follow the repo `AGENTS.md` and `.cursor/rules/testing.md`.
 - Prefer running tests under `apps/tui` first.
+- **Layout:** put **unit tests** next to the code they cover (`src/**/*.test.ts`). Put **app-level or cross-cutting checks** (e.g. OpenTUI render smoke, workspace `@gitogito/shared` wiring) under **`tests/`** at the app root.
 - If you update snapshots, explain why in the change description.
 
 ## Output

@@ -9,6 +9,10 @@
       {
         "command": "pnpm check",
         "matcher": "apps/.*\\.(ts|tsx|js|jsx)$|packages/.*\\.(ts|tsx|js|jsx)$"
+      },
+      {
+        "command": "pnpm lint",
+        "matcher": "apps/.*\\.(ts|tsx|js|jsx|json)$|packages/.*\\.(ts|tsx|js|jsx|json)$"
       }
     ],
     "stop": [
