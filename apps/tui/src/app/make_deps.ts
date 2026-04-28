@@ -1,9 +1,8 @@
-import type { ConfigService } from "@gitogito/core";
+import { type ConfigService, ConfigServiceImpl } from "@gitogito/core";
 import packageJson from "../../package.json" with { type: "json" };
-import { FsConfigFile } from "../features/config/config_file.js";
-import { GitogitoConfigPathResolver } from "../features/config/config_paths.js";
-import { ConfigServiceImpl } from "../features/config/config_service_impl.js";
-import { ProcessRuntimeEnv } from "../features/infrastructure/env/process_runtime_env.js";
+import { GitogitoConfigPathResolver } from "../entities/config/api/config_paths.js";
+import { FsConfigFile } from "../entities/config/api/fs_config_file.js";
+import { ProcessRuntimeEnv } from "../shared/api/env/process_runtime_env.js";
 
 export interface AppDeps {
   configService: ConfigService;

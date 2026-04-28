@@ -4,8 +4,11 @@ import { CompletionsCommand } from "@cliffy/command/completions";
 import { UpgradeCommand } from "@cliffy/command/upgrade";
 import { NpmProvider } from "@cliffy/command/upgrade/provider/npm";
 import packageJson from "../package.json" with { type: "json" };
+import { createConfigCommand } from "./app/commands/config_command.js";
+import type { AppDeps } from "./app/make_deps.js";
+import { makeDeps } from "./app/make_deps.js";
 
-export function createAppCommand() {
+export function createAppCommand(deps: AppDeps) {
   return new Command()
     .name(packageJson.displayName)
     .version(packageJson.version)
@@ -19,7 +22,7 @@ export function createAppCommand() {
     .globalOption("-d, --dry-run", "Dry run mode")
     .globalOption("-v, --verbose", "Verbose mode")
     .command("init", new Command())
-    .command("config", new Command())
+    .command("config", createConfigCommand(deps))
     .command("add", new Command())
     .command("commit", new Command())
     .command("branch", new Command())
@@ -33,5 +36,5 @@ export function createAppCommand() {
 }
 
 if (import.meta.main) {
-  await createAppCommand().parse(Bun.argv.slice(2));
+  await createAppCommand(makeDeps()).parse(Bun.argv.slice(2));
 }
