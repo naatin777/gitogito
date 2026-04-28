@@ -155,6 +155,28 @@ importers:
         specifier: ^2.5.2
         version: 2.5.2
 
+  packages/core:
+    dependencies:
+      es-toolkit:
+        specifier: 'catalog:'
+        version: 1.46.0
+      neverthrow:
+        specifier: 'catalog:'
+        version: 8.2.0
+      yaml:
+        specifier: 'catalog:'
+        version: 2.8.3
+      zod:
+        specifier: 'catalog:'
+        version: 4.3.6
+    devDependencies:
+      '@vitest/coverage-v8':
+        specifier: ^4.1.5
+        version: 4.1.5(vitest@4.1.5)
+      vitest:
+        specifier: ^4.1.5
+        version: 4.1.5(@opentelemetry/api@1.9.0)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.5)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.27.7)(jiti@2.6.1)(yaml@2.8.3))
+
   packages/shared:
     dependencies:
       es-toolkit:

@@ -1,0 +1,30 @@
+{
+  "name": "@gitogito/core",
+  "displayName": "gitogito",
+  "description": "Core utilities for the gitogito project.",
+  "version": "0.0.1",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./utils/zod": "./src/utils/zod.ts"
+  },
+  "scripts": {
+    "format": "biome format --write src",
+    "lint": "biome check src",
+    "test": "vitest run",
+    "test:watch": "vitest run --watch",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "es-toolkit": "catalog:",
+    "neverthrow": "catalog:",
+    "yaml": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.1.5",
+    "vitest": "^4.1.5"
+  }
+}

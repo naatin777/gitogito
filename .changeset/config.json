@@ -6,7 +6,8 @@
     [
       "@gitogito/shared",
       "@gitogito/tui",
-      "@gitogito/vscode"
+      "@gitogito/vscode",
+      "@gitogito/core"
     ]
   ],
   "linked": [],

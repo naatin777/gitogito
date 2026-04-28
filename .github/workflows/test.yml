@@ -40,11 +40,17 @@ jobs:
       - name: Run shared package tests
         run: pnpm --filter @gitogito/shared test
 
+      - name: Run core tests
+        run: pnpm --filter @gitogito/core test
+
       - name: Run TUI coverage
         run: pnpm --filter @gitogito/tui test:coverage
 
       - name: Run shared coverage
         run: pnpm --filter @gitogito/shared test:coverage
+
+      - name: Run core coverage
+        run: pnpm --filter @gitogito/core test:coverage
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v6

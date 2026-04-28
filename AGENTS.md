@@ -18,6 +18,7 @@ apps/
   vscode/   # VS Code extension
 
 packages/
+  core/     # Core code
   shared/   # Shared code
 ```
 

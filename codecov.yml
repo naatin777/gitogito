@@ -1,7 +1,7 @@
 comment:
   layout: "header, diff, flags, files"
   require_changes: false
-  after_n_builds: 2
+  after_n_builds: 4
 
 coverage:
   status:
@@ -22,6 +22,10 @@ flags:
   vscode:
     paths:
       - apps/vscode/
+    carryforward: true
+  core:
+    paths:
+      - packages/core/
     carryforward: true
   shared:
     paths:
