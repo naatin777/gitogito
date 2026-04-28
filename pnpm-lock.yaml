@@ -129,9 +129,15 @@ importers:
 
   apps/vscode:
     dependencies:
+      '@gitogito/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@gitogito/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      es-toolkit:
+        specifier: 'catalog:'
+        version: 1.46.0
       neverthrow:
         specifier: 'catalog:'
         version: 8.2.0
@@ -160,6 +166,12 @@ importers:
 
   packages/core:
     dependencies:
+      '@gitogito/shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@reduxjs/toolkit':
+        specifier: ^2.11.2
+        version: 2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5)
       es-toolkit:
         specifier: 'catalog:'
         version: 1.46.0

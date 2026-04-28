@@ -32,7 +32,9 @@
     "test:coverage": "vscode-test --coverage --coverage-reporter lcov --coverage-output ./.coverage"
   },
   "dependencies": {
+    "@gitogito/core": "workspace:*",
     "@gitogito/shared": "workspace:*",
+    "es-toolkit": "catalog:",
     "zod": "catalog:",
     "yaml": "catalog:",
     "neverthrow": "catalog:"
