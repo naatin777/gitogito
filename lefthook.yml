@@ -1,5 +1,8 @@
 pre-commit:
   commands:
+    syncpack:
+      run: pnpm syncpack lint --dependency-types prod,dev
+
     biome:
       glob: "*.{ts,tsx,js,jsx,json,cjs,mjs}"
       stage_fixed: true
