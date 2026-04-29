@@ -119,7 +119,9 @@
         "noNonNullAssertion": "error",
         "useConsistentArrayType": "error",
         "useNodejsImportProtocol": "error",
-        "useNamingConvention": "error",
+        "useNamingConvention": {
+          "level": "error"
+        },
         "useFilenamingConvention": {
           "level": "error",
           "options": {
@@ -147,6 +149,31 @@
               "level": "error",
               "options": {
                 "filenameCases": ["PascalCase"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "**/*.d.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useFilenamingConvention": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/i18next.d.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useNamingConvention": {
+              "level": "error",
+              "options": {
+                "strictCase": false
               }
             }
           }

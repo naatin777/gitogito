@@ -21,7 +21,7 @@
     "test:coverage:shared": "turbo run test:coverage --filter @gitogito/shared --log-prefix=none",
     "check": "turbo run check",
     "lint": "syncpack lint --dependency-types prod,dev && biome check .",
-    "format": "  format && biome check --write .",
+    "format": "syncpack format && biome format --write .",
     "change": "changeset",
     "dep:graph": "depcruise packages apps --output-type dot | dot -T svg > dep-graph.svg",
     "dep:check": "depcruise packages apps --config .dependency-cruiser.js",
