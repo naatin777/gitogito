@@ -1,4 +1,3 @@
-import { EOL } from "node:os";
 import { Command } from "@cliffy/command";
 import { type ConfigScope, formatConfigSetParseError, parseConfigSetArgs } from "@gitogito/core";
 import type { AppDeps } from "../make-deps.js";
@@ -27,21 +26,55 @@ interface SetConfigResult {
 
 function fail(message: string, json: boolean): never {
   if (json) {
-    process.stdout.write(`${JSON.stringify({ ok: false, error: message })}${EOL}`);
+    console.log(JSON.stringify({ ok: false, error: message }));
   } else {
-    process.stderr.write(`${message}${EOL}`);
+    console.error(message);
   }
   process.exit(1);
 }
 
 function printResult(r: SetConfigResult, json: boolean) {
   if (json) {
-    process.stdout.write(`${JSON.stringify({ ok: true, ...r })}${EOL}`);
+    console.log(JSON.stringify({ ok: true, ...r }));
   } else if (r.dryRun) {
-    process.stdout.write(`[dry-run] would set ${r.key}=${JSON.stringify(r.value)} in ${r.path}${EOL}`);
+    console.log(`[dry-run] would set ${r.key}=${JSON.stringify(r.value)} in ${r.path}`);
   } else {
-    process.stdout.write(`set ${r.key}=${JSON.stringify(r.value)} (${r.scope} → ${r.path})${EOL}`);
+    console.log(`set ${r.key}=${JSON.stringify(r.value)} (${r.scope} → ${r.path})`);
   }
+}
+
+function messageFromSetScalarError(error: { code: string; message: string }): string {
+  return error.code === "invalid_yaml" ? `Invalid YAML: ${error.message}` : `${error.code}: ${error.message}`;
+}
+
+function createSetAction(deps: AppDeps, scope: ConfigScope) {
+  return async (opt: unknown, key: string, value: string) => {
+    const { configService } = deps;
+    const flags = configCliOptionsFromActionOptions(opt);
+    const args = parseConfigSetArgs({ key, value });
+    const json = Boolean(flags.json);
+    if (!args.success) {
+      fail(formatConfigSetParseError(args.error), json);
+    }
+    const { key: keyTrimmed, value: valueParsed } = args.data;
+    const dryRun = Boolean(flags.dryRun);
+    const writeResult = await configService.setScalar(scope, keyTrimmed, valueParsed, { dryRun });
+    if (writeResult.isErr()) {
+      fail(messageFromSetScalarError(writeResult.error), json);
+    }
+
+    const { path, scope: outScope } = writeResult.value;
+    printResult(
+      {
+        scope: outScope,
+        path,
+        key: keyTrimmed,
+        value: valueParsed,
+        dryRun,
+      },
+      json,
+    );
+  };
 }
 
 const SCOPE_CONFIG = [
@@ -60,7 +93,6 @@ const SCOPE_CONFIG = [
 ] as const;
 
 export function createConfigCommand(deps: AppDeps) {
-  const { configService } = deps;
   const config = new Command().description("Manage configuration").action(function () {
     this.showHelp();
   });
@@ -79,32 +111,7 @@ export function createConfigCommand(deps: AppDeps) {
           new Command()
             .description("Set a configuration value in YAML for this scope")
             .arguments("<key:string> <value:string>")
-            .action(async (opt: unknown, key: string, value: string) => {
-              const flags = configCliOptionsFromActionOptions(opt);
-              const args = parseConfigSetArgs({ key, value });
-              if (!args.success) {
-                fail(formatConfigSetParseError(args.error), Boolean(flags.json));
-              }
-              const { key: keyTrimmed, value: valueParsed } = args.data;
-              const dryRun = Boolean(flags.dryRun);
-              const writeResult = await configService.setScalar(scope, keyTrimmed, valueParsed, { dryRun });
-              if (writeResult.isErr()) {
-                const e = writeResult.error;
-                const msg = e.code === "invalid_yaml" ? `Invalid YAML: ${e.message}` : `${e.code}: ${e.message}`;
-                fail(msg, Boolean(flags.json));
-              }
-              const { path, scope: outScope } = writeResult.value;
-              printResult(
-                {
-                  scope: outScope,
-                  path,
-                  key: keyTrimmed,
-                  value: valueParsed,
-                  dryRun,
-                },
-                Boolean(flags.json),
-              );
-            }),
+            .action(createSetAction(deps, scope)),
         ),
     );
   }

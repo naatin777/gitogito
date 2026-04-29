@@ -179,6 +179,16 @@
           }
         }
       }
+    },
+    {
+      "includes": ["apps/tui/src/app/**"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noConsole": "off"
+          }
+        }
+      }
     }
   ]
 }
