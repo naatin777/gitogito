@@ -13,6 +13,7 @@ function setScalarInDocument(
 	dottedKey: string,
 	value: string,
 ): Result<void, { code: "invalid_yaml"; message: string }> {
+	const invalidPath = () => err({ code: "invalid_yaml" as const, message: "Invalid key path." });
 	const path = dottedKey.split(".").filter((p) => p.length > 0);
 	if (path.length === 0) {
 		return err({ code: "invalid_yaml", message: "Key must not be empty." });
@@ -24,17 +25,16 @@ function setScalarInDocument(
 		return err({ code: "invalid_yaml", message: "Config root must be a mapping (object)." });
 	}
 	let cursor = doc.contents as YAMLMap;
-	for (let i = 0; i < path.length - 1; i++) {
-		const k = path[i];
-		if (k === undefined) {
-			return err({ code: "invalid_yaml", message: "Invalid key path." });
+	for (const k of path.slice(0, -1)) {
+		if (!k) {
+			return invalidPath();
 		}
 		const existing = cursor.get(k, true);
-		if (existing !== undefined && isMap(existing)) {
+		if (isMap(existing)) {
 			cursor = existing as YAMLMap;
 			continue;
 		}
-		if (existing !== undefined && !isMap(existing)) {
+		if (existing !== undefined) {
 			return err({ code: "invalid_yaml", message: `Cannot set nested key under non-map at "${k}".` });
 		}
 		const next = doc.createNode({}) as YAMLMap;
@@ -42,8 +42,8 @@ function setScalarInDocument(
 		cursor = next;
 	}
 	const last = path[path.length - 1];
-	if (last === undefined) {
-		return err({ code: "invalid_yaml", message: "Invalid key path." });
+	if (!last) {
+		return invalidPath();
 	}
 	cursor.set(last, doc.createNode(value));
 	return ok(undefined);
