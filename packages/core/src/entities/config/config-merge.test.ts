@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
-import { mergeConfigLayers } from "./config_merge.js";
-import { DEFAULT_CONFIG } from "./schema/config_schema.js";
+import { mergeConfigLayers } from "./config-merge.js";
+import { DEFAULT_CONFIG } from "./schema/config-schema.js";
 
 test("merge order: local overrides project overrides global over defaults", () => {
   const m = mergeConfigLayers({

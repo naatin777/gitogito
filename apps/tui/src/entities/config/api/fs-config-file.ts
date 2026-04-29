@@ -1,7 +1,7 @@
 import { chmod, mkdir } from "node:fs/promises";
 import { dirname } from "node:path";
 import type { ConfigFile, ConfigScope } from "@gitogito/core";
-import type { ConfigPathResolver } from "./config_paths.js";
+import type { ConfigPathResolver } from "./config-paths.js";
 
 export class FsConfigFile implements ConfigFile {
   constructor(private readonly paths: ConfigPathResolver) {}

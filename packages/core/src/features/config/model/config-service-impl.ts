@@ -1,8 +1,8 @@
 import { err, ok, type Result } from "neverthrow";
 import { type Document, isMap, parseDocument, type YAMLMap } from "yaml";
-import type { ConfigFile } from "../../../entities/config/config_file.js";
-import type { ConfigScope } from "../../../entities/config/config_scope.js";
-import type { ConfigService, SetScalarError, SetScalarResult } from "../../../entities/config/config_service.js";
+import type { ConfigFile } from "../../../entities/config/config-file.js";
+import type { ConfigScope } from "../../../entities/config/config-scope.js";
+import type { ConfigService, SetScalarError, SetScalarResult } from "../../../entities/config/config-service.js";
 
 function setScalarInDocument(
   doc: Document,

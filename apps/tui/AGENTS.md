@@ -26,8 +26,8 @@ Source of truth: `apps/tui/package.json`. When dependencies change, update this 
 - Small steps; keep UI separate from business logic.
 - Branch on user input with early returns for readability.
 - Move reusable logic to `packages/shared` when it fits the boundaries there.
-- Build the dependency graph with concrete `new` only at the entrypoint (e.g. `main` or `make_deps`) or dedicated wiring; elsewhere use constructor injection and `interface`-shaped types (see root `.cursor/rules/dependency-injection.md`).
-- **CLI:** Cliffy subcommand trees live under `src/commands/`. Each `create*Command` receives the full `AppDeps` from `make_deps` (or `makeTestDeps` in tests) so new dependencies do not require changing the whole call stack—pull what you need from `deps` inside the command.
+- Build the dependency graph with concrete `new` only at the entrypoint (e.g. `main` or `make-deps`) or dedicated wiring; elsewhere use constructor injection and `interface`-shaped types (see root `.cursor/rules/dependency-injection.md`).
+- **CLI:** Cliffy subcommand trees live under `src/commands/`. Each `create*Command` receives the full `AppDeps` from `make-deps` (or `makeTestDeps` in tests) so new dependencies do not require changing the whole call stack—pull what you need from `deps` inside the command.
 
 ## Testing
 

@@ -1,5 +1,5 @@
 import type z from "zod";
-import { ConfigSchema } from "./config_schema.js";
+import { ConfigSchema } from "./config-schema.js";
 
 /**
  * Project / team config: e.g. `.gitogito.yaml` in the working tree.

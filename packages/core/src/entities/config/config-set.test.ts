@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { formatConfigSetParseError, parseConfigSetArgs } from "./config_set.js";
+import { formatConfigSetParseError, parseConfigSetArgs } from "./config-set.js";
 
 test("parseConfigSetArgs accepts non-empty key and one segment", () => {
   const r = parseConfigSetArgs({ key: "foo", value: "v" });

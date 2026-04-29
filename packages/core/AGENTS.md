@@ -12,7 +12,7 @@ Source of truth: `packages/core/package.json`. When dependencies change, update 
 ## Layout
 
 - `src/index.ts` — re-exports the public API (consumers import via `@gitogito/core`).
-- `src/config/` — product-specific configuration logic and ports (`config_file`, `config_service`, `runtime_env`, `config_set`, `config_scope`, `config_merge`).
+- `src/config/` — product-specific configuration logic and ports (`config-file`, `config-service`, `runtime-env`, `config-set`, `config-scope`, `config-merge`).
 - `src/schema/` — gitogito-specific Zod schemas (`ConfigSchema`, `Global` / `Project` / `Local` configs and defaults).
 
 ## Scope

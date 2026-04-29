@@ -1,7 +1,7 @@
 import { EOL } from "node:os";
 import { Command } from "@cliffy/command";
 import { type ConfigScope, formatConfigSetParseError, parseConfigSetArgs } from "@gitogito/core";
-import type { AppDeps } from "../make_deps.js";
+import type { AppDeps } from "../make-deps.js";
 
 /** Merged globals from the app root (`--json`, `--dry-run`, etc.). */
 type ConfigCommandCliOptions = {

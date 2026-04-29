@@ -4,8 +4,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { Command } from "@cliffy/command";
 import { ConfigServiceImpl, MemoryRuntimeEnv } from "@gitogito/core";
-import { GitogitoConfigPathResolver } from "./entities/config/api/config_paths";
-import { FsConfigFile } from "./entities/config/api/fs_config_file";
+import { GitogitoConfigPathResolver } from "./entities/config/api/config-paths";
+import { FsConfigFile } from "./entities/config/api/fs-config-file";
 import { createAppCommand } from "./main";
 
 test("createAppCommand showHelp if args is empty", async () => {

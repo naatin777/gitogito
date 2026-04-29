@@ -4,9 +4,9 @@ import { CompletionsCommand } from "@cliffy/command/completions";
 import { UpgradeCommand } from "@cliffy/command/upgrade";
 import { NpmProvider } from "@cliffy/command/upgrade/provider/npm";
 import packageJson from "../package.json" with { type: "json" };
-import { createConfigCommand } from "./app/commands/config_command.js";
-import type { AppDeps } from "./app/make_deps.js";
-import { makeDeps } from "./app/make_deps.js";
+import { createConfigCommand } from "./app/commands/config-command.js";
+import type { AppDeps } from "./app/make-deps.js";
+import { makeDeps } from "./app/make-deps.js";
 
 export function createAppCommand(deps: AppDeps) {
   return new Command()

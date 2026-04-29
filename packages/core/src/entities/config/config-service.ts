@@ -1,5 +1,5 @@
 import type { Result } from "neverthrow";
-import type { ConfigScope } from "./config_scope.js";
+import type { ConfigScope } from "./config-scope.js";
 
 export type SetScalarError =
   | { code: "invalid_yaml"; message: string }

@@ -1,5 +1,5 @@
 import type z from "zod";
-import { ConfigSchema } from "./config_schema.js";
+import { ConfigSchema } from "./config-schema.js";
 
 /**
  * Local overrides: e.g. `.gitogito.local.yaml` (often git-ignored).

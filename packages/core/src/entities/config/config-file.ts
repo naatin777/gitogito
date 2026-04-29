@@ -1,4 +1,4 @@
-import type { ConfigScope } from "./config_scope.js";
+import type { ConfigScope } from "./config-scope.js";
 
 /** Port: raw YAML text per config scope (no parse policy). Implementations live in apps. */
 export interface ConfigFile {

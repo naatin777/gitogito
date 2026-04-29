@@ -1,5 +1,5 @@
 import type { z } from "zod";
-import { ConfigSchema } from "./config_schema.js";
+import { ConfigSchema } from "./config-schema.js";
 
 /**
  * User-wide config: paths like `~/.config/<app>/config.yaml`.
