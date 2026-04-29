@@ -1,23 +1,19 @@
 {
   "version": 1,
   "hooks": {
-    "afterFileEdit": [
-      {
-        "command": "pnpm format",
-        "matcher": "apps/.*\\.(ts|tsx|js|jsx|json)$|packages/.*\\.(ts|tsx|js|jsx|json)$"
-      },
-      {
-        "command": "pnpm check",
-        "matcher": "apps/.*\\.(ts|tsx|js|jsx)$|packages/.*\\.(ts|tsx|js|jsx)$"
-      },
-      {
-        "command": "pnpm lint",
-        "matcher": "apps/.*\\.(ts|tsx|js|jsx|json)$|packages/.*\\.(ts|tsx|js|jsx|json)$"
-      }
-    ],
+    "afterFileEdit": [],
     "stop": [
+           {
+        "command": "pnpm format"
+      },
+      {
+        "command": "pnpm lint"
+      },
       {
         "command": "pnpm test"
+      },
+      {
+        "command": "pnpm check"
       },
       {
         "command": "pnpm dep:check"

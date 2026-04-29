@@ -37,6 +37,9 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      - name: Dependency Check
+        run: pnpm dep:check
+
       - name: Run TUI tests
         run: pnpm --filter @gitogito/tui test
 

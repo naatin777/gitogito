@@ -9,7 +9,10 @@ pre-commit:
       run: pnpm exec biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
 
     check:
-      run: pnpm turbo run check
+      run: pnpm check
+
+    # arch-check:
+    #   run: pnpm dep:check
 
     gitleaks:
       run: gitleaks protect --staged --verbose

@@ -179,6 +179,74 @@ module.exports = {
         dependencyTypes: ["npm-peer"],
       },
     },
+    // Original rules
+    {
+      name: "fsd-app-boundaries",
+      comment: "The app layer may depend on other layers, but other layers must not depend on the app layer.",
+      severity: "error",
+      from: { pathNot: "^apps/[^/]+/src/app" },
+      to: { path: "^apps/[^/]+/src/app" },
+    },
+    {
+      name: "fsd-pages-boundaries",
+      comment: "The pages layer must not depend on the app layer.",
+      severity: "error",
+      from: { path: "^apps/[^/]+/src/pages" },
+      to: { path: "^apps/[^/]+/src/app" },
+    },
+    {
+      name: "fsd-widgets-boundaries",
+      comment: "The widgets layer must not depend on the app or pages layers.",
+      severity: "error",
+      from: { path: "^apps/[^/]+/src/widgets" },
+      to: { path: "^apps/[^/]+/src/(app|pages)" },
+    },
+    {
+      name: "fsd-features-boundaries",
+      comment: "The features layer must not depend on the app, pages, or widgets layers.",
+      severity: "error",
+      from: { path: "^apps/[^/]+/src/features" },
+      to: { path: "^apps/[^/]+/src/(app|pages|widgets)" },
+    },
+    {
+      name: "fsd-entities-boundaries",
+      comment: "The entities layer must not depend on anything other than the shared layer.",
+      severity: "error",
+      from: { path: "^apps/[^/]+/src/entities" },
+      to: { pathNot: "^apps/[^/]+/src/(entities|shared)" },
+    },
+    {
+      name: "fsd-shared-boundaries",
+      comment: "The shared layer must not depend on other FSD layers.",
+      severity: "error",
+      from: { path: "^apps/[^/]+/src/shared" },
+      to: { path: "^apps/[^/]+/src/(app|pages|widgets|features|entities)" },
+    },
+    {
+      name: "fsd-cross-slice-import",
+      comment:
+        "Dependencies to other slices within the same layer are prohibited. If necessary, compose them in a higher layer.",
+      severity: "error",
+      from: {
+        path: "^apps/[^/]+/src/(pages|widgets|features|entities)/([^/]+)/",
+      },
+      to: {
+        path: "^apps/[^/]+/src/$1/([^/]+)/",
+        pathNot: "^apps/[^/]+/src/$1/$2/",
+      },
+    },
+    {
+      name: "fsd-enforce-public-api",
+      comment: "You must not access a slice's internal modules directly. Please use its Public API (via index.ts).",
+      severity: "error",
+      from: {
+        path: "^apps/[^/]+/src/",
+      },
+      to: {
+        path: "^apps/[^/]+/src/(pages|widgets|features|entities)/([^/]+)/(.+)",
+        pathNot: ["^apps/[^/]+/src/$1/$2/", "^apps/[^/]+/src/$1/$2/index\\.(ts|tsx|js|jsx)$"],
+      },
+    },
   ],
   options: {
     // Which modules not to follow further when encountered
