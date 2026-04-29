@@ -11,8 +11,8 @@ pre-commit:
     check:
       run: pnpm check
 
-    # arch-check:
-    #   run: pnpm dep:check
+    arch-check:
+      run: pnpm dep:check
 
     gitleaks:
       run: gitleaks protect --staged --verbose
