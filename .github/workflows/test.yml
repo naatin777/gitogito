@@ -34,6 +34,9 @@ jobs:
       - name: Typecheck
         run: pnpm check
 
+      - name: Lint
+        run: pnpm lint
+
       - name: Run TUI tests
         run: pnpm --filter @gitogito/tui test
 

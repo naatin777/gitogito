@@ -17,7 +17,17 @@
       "packages/**/*.tsx",
       "packages/**/*.js",
       "packages/**/*.jsx",
-      "packages/**/*.json"
+      "packages/**/*.json",
+      "package.json",
+      "pnpm-workspace.yaml",
+      "biome.json",
+      "turbo.json",
+      "lefthook.yml",
+      "tsconfig.base.json",
+      "renovate.json",
+      "codecov.yml",
+      ".dependency-cruiser.js",
+      ".coderabbit.yaml"
     ]
   },
   "formatter": {
@@ -30,6 +40,11 @@
       "quoteStyle": "double",
       "semicolons": "always",
       "trailingCommas": "all"
+    }
+  },
+  "json": {
+    "formatter": {
+      "enabled": true
     }
   },
   "linter": {

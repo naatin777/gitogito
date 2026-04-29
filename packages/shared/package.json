@@ -1,14 +1,9 @@
 {
   "name": "@gitogito/shared",
-  "displayName": "gitogito",
-  "description": "Shared utilities for the gitogito project.",
   "version": "0.0.1",
-  "license": "MIT",
   "private": true,
-  "type": "module",
-  "exports": {
-    "./utils/zod": "./src/utils/zod.ts"
-  },
+  "description": "Shared utilities for the gitogito project.",
+  "license": "MIT",
   "scripts": {
     "format": "biome format --write src",
     "lint": "biome check src",
@@ -25,5 +20,10 @@
   "devDependencies": {
     "@vitest/coverage-v8": "^4.1.5",
     "vitest": "^4.1.5"
-  }
+  },
+  "displayName": "gitogito",
+  "exports": {
+    "./utils/zod": "./src/utils/zod.ts"
+  },
+  "type": "module"
 }

@@ -1,26 +1,9 @@
 {
   "name": "@gitogito/vscode",
-  "displayName": "gitogito",
-  "description": "AI-powered VS Code extension for generating smart commit messages and GitHub issues.",
   "version": "0.0.1",
-  "license": "MIT",
   "private": true,
-  "engines": {
-    "vscode": "^1.110.0"
-  },
-  "categories": [
-    "Other"
-  ],
-  "activationEvents": [],
-  "main": "./out/extension.js",
-  "contributes": {
-    "commands": [
-      {
-        "command": "gitogito.helloWorld",
-        "title": "Hello World"
-      }
-    ]
-  },
+  "description": "AI-powered VS Code extension for generating smart commit messages and GitHub issues.",
+  "license": "MIT",
   "scripts": {
     "vscode:prepublish": "pnpm run build",
     "build": "tsc -p ./",
@@ -35,15 +18,32 @@
     "@gitogito/core": "workspace:*",
     "@gitogito/shared": "workspace:*",
     "es-toolkit": "catalog:",
-    "zod": "catalog:",
+    "neverthrow": "catalog:",
     "yaml": "catalog:",
-    "neverthrow": "catalog:"
+    "zod": "catalog:"
   },
   "devDependencies": {
-    "@types/vscode": "^1.110.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
+    "@types/vscode": "^1.110.0",
     "@vscode/test-cli": "^0.0.12",
     "@vscode/test-electron": "^2.5.2"
-  }
+  },
+  "activationEvents": [],
+  "categories": [
+    "Other"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "gitogito.helloWorld",
+        "title": "Hello World"
+      }
+    ]
+  },
+  "displayName": "gitogito",
+  "engines": {
+    "vscode": "^1.110.0"
+  },
+  "main": "./out/extension.js"
 }

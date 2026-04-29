@@ -1,15 +1,9 @@
 {
   "name": "@gitogito/core",
-  "displayName": "gitogito",
-  "description": "Core utilities for the gitogito project.",
   "version": "0.0.1",
-  "license": "MIT",
   "private": true,
-  "type": "module",
-  "exports": {
-    ".": "./src/index.ts",
-    "./utils/zod": "./src/utils/zod.ts"
-  },
+  "description": "Core utilities for the gitogito project.",
+  "license": "MIT",
   "scripts": {
     "format": "biome format --write src",
     "lint": "biome check src",
@@ -19,14 +13,20 @@
   },
   "dependencies": {
     "@gitogito/shared": "workspace:*",
+    "@reduxjs/toolkit": "^2.11.2",
     "es-toolkit": "catalog:",
     "neverthrow": "catalog:",
     "yaml": "catalog:",
-    "zod": "catalog:",
-    "@reduxjs/toolkit": "^2.11.2"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^4.1.5",
     "vitest": "^4.1.5"
-  }
+  },
+  "displayName": "gitogito",
+  "exports": {
+    ".": "./src/index.ts",
+    "./utils/zod": "./src/utils/zod.ts"
+  },
+  "type": "module"
 }
