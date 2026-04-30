@@ -1,11 +1,10 @@
 import path from "node:path";
+import { type ConfigService, DEFAULT_CONFIG } from "@gitogito/core";
 import i18n from "i18next";
 import Backend from "i18next-fs-backend";
 import { initReactI18next } from "react-i18next";
 
-type TargetLanguage = "en" | "ja";
-
-export const initI18n = async (targetLanguage: TargetLanguage) => {
+export const initI18n = async (targetLanguage: string) => {
   const localesPath = path.join(import.meta.dir, "../../locales/{{lng}}/{{ns}}.json");
   await i18n
     .use(initReactI18next)
@@ -17,6 +16,14 @@ export const initI18n = async (targetLanguage: TargetLanguage) => {
         loadPath: localesPath,
       },
     });
+};
+
+export const resolveDialogueLanguage = async (configService: ConfigService): Promise<string> => {
+  const merged = await configService.getMergedConfig();
+  if (merged.isErr()) {
+    return DEFAULT_CONFIG.language.dialogue;
+  }
+  return merged.value.language.dialogue;
 };
 
 export default i18n;

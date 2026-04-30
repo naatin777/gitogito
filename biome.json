@@ -118,16 +118,7 @@
         "useTemplate": "error",
         "noNonNullAssertion": "error",
         "useConsistentArrayType": "error",
-        "useNodejsImportProtocol": "error",
-        "useNamingConvention": {
-          "level": "error"
-        },
-        "useFilenamingConvention": {
-          "level": "error",
-          "options": {
-            "filenameCases": ["kebab-case"]
-          }
-        }
+        "useNodejsImportProtocol": "error"
       }
     }
   },
@@ -140,31 +131,6 @@
     }
   },
   "overrides": [
-    {
-      "includes": ["**/*.tsx", "**/*.jsx"],
-      "linter": {
-        "rules": {
-          "style": {
-            "useFilenamingConvention": {
-              "level": "error",
-              "options": {
-                "filenameCases": ["PascalCase"]
-              }
-            }
-          }
-        }
-      }
-    },
-    {
-      "includes": ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "**/*.d.ts"],
-      "linter": {
-        "rules": {
-          "style": {
-            "useFilenamingConvention": "off"
-          }
-        }
-      }
-    },
     {
       "includes": ["**/i18next.d.ts"],
       "linter": {

@@ -1,12 +1,15 @@
 import { err, ok, type Result } from "neverthrow";
-import { type Document, isMap, parseDocument, type YAMLMap } from "yaml";
+import { type Document, isMap, parse, parseDocument, type YAMLMap } from "yaml";
 import type {
+  Config,
   ConfigFile,
   ConfigScope,
   ConfigService,
+  GetMergedConfigError,
   SetScalarError,
   SetScalarResult,
 } from "../../../entities/config/index.js";
+import { mergeConfigLayers } from "../../../entities/config/index.js";
 
 function setScalarInDocument(
   doc: Document,
@@ -51,6 +54,32 @@ function setScalarInDocument(
 
 export class ConfigServiceImpl implements ConfigService {
   constructor(private readonly file: ConfigFile) {}
+
+  async getMergedConfig(): Promise<Result<Config, GetMergedConfigError>> {
+    let globalText: string;
+    let projectText: string;
+    let localText: string;
+    try {
+      [globalText, projectText, localText] = await Promise.all([
+        this.file.load("global"),
+        this.file.load("project"),
+        this.file.load("local"),
+      ]);
+    } catch (e) {
+      return err({ code: "read_failed", message: e instanceof Error ? e.message : String(e) });
+    }
+
+    try {
+      const merged = mergeConfigLayers({
+        global: (parse(globalText) ?? {}) as Record<string, unknown>,
+        project: (parse(projectText) ?? {}) as Record<string, unknown>,
+        local: (parse(localText) ?? {}) as Record<string, unknown>,
+      });
+      return ok(merged);
+    } catch (e) {
+      return err({ code: "invalid_yaml", message: e instanceof Error ? e.message : String(e) });
+    }
+  }
 
   async setScalar(
     scope: ConfigScope,

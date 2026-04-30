@@ -1,3 +1,8 @@
 {
-  "language": "English"
+  "language": "English",
+  "cli.config.manageDescription": "Manage configuration",
+  "cli.config.projectDescription": "Project config: `.gitogito.yaml` in cwd.",
+  "cli.config.localDescription": "Local overrides: `.gitogito.local.yaml` in cwd.",
+  "cli.config.globalDescription": "User config under XDG config home.",
+  "cli.config.setDescription": "Set a configuration value in YAML for this scope"
 }

@@ -3,6 +3,7 @@ import { Command } from "@cliffy/command";
 import { CompletionsCommand } from "@cliffy/command/completions";
 import packageJson from "../package.json" with { type: "json" };
 import { createConfigCommand } from "./app/commands/config-command.js";
+import { initI18n, resolveDialogueLanguage } from "./app/i18n.js";
 import type { AppDeps } from "./app/make-deps.js";
 import { makeDeps } from "./app/make-deps.js";
 
@@ -34,5 +35,7 @@ export function createAppCommand(deps: AppDeps) {
 }
 
 if (import.meta.main) {
-  await createAppCommand(makeDeps()).parse(Bun.argv.slice(2));
+  const deps = makeDeps();
+  await initI18n(await resolveDialogueLanguage(deps.configService));
+  await createAppCommand(deps).parse(Bun.argv.slice(2));
 }

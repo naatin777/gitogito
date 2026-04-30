@@ -12,6 +12,7 @@ codecov.yml
 .syncpackrc
 .gitignore
 .gitattributes
+.ls-lint.yml
 knip.json
 tsconfig.base.json
 tsconfig.json

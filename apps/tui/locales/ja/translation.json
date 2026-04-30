@@ -1,3 +1,8 @@
 {
-  "language": "日本語"
+  "language": "日本語",
+  "cli.config.manageDescription": "設定を管理します",
+  "cli.config.projectDescription": "プロジェクト設定: カレントディレクトリの `.gitogito.yaml`。",
+  "cli.config.localDescription": "ローカル上書き: カレントディレクトリの `.gitogito.local.yaml`。",
+  "cli.config.globalDescription": "XDG config home 配下のユーザー設定。",
+  "cli.config.setDescription": "このスコープの YAML 設定値を更新します"
 }

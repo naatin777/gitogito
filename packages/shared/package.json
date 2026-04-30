@@ -23,7 +23,8 @@
   },
   "displayName": "gitogito",
   "exports": {
-    "./utils/zod": "./src/utils/zod.ts"
+    "./utils/zod": "./src/utils/zod.ts",
+    "./utils/path-types": "./src/utils/path-types.ts"
   },
   "type": "module"
 }

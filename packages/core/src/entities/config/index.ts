@@ -6,7 +6,7 @@ export {
   mergeConfigLayers,
 } from "./model/config-merge.js";
 export type { ConfigScope } from "./model/config-scope.js";
-export type { ConfigService, SetScalarError, SetScalarResult } from "./model/config-service.js";
+export type { ConfigService, GetMergedConfigError, SetScalarError, SetScalarResult } from "./model/config-service.js";
 export type { ConfigSetArgs } from "./model/config-set.js";
 export { configSetValueSchema, formatConfigSetParseError, parseConfigSetArgs } from "./model/config-set.js";
 export type { RuntimeEnv } from "./model/runtime-env.js";

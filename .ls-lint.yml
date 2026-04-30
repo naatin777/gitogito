@@ -1,0 +1,36 @@
+ls:
+  ./{apps,packages}/*/src/**/model:
+    .ts: regex:^(index|[a-z0-9-]+)$
+    .test.ts: regex:^[a-z0-9-]+-[a-z0-9]+$
+  ./{apps,packages}/*/src/**/api:
+    .ts: regex:^(index|[a-z0-9-]+)$
+    .test.ts: regex:^[a-z0-9-]+-[a-z0-9]+$
+  ./{apps,packages}/*/src/**/schema:
+    .ts: regex:^[a-z0-9-]+-schema$
+  ./{apps,packages}/*/tests:
+    .ts: kebab-case
+    .tsx: kebab-case
+  ./{apps,packages}/*/src/**:
+    .ts: kebab-case
+    .d.ts: kebab-case
+
+ignore:
+  - node_modules
+  - packages/core/node_modules
+  - packages/shared/node_modules
+  - apps/vscode/node_modules
+  - apps/tui/node_modules
+  - dist
+  - .turbo
+  - out
+  - .vscode-test
+  - packages/shared/.coverage
+  - apps/vscode/.vscode-test
+  - packages/core/.coverage
+  - apps/vscode/.coverage
+  - .pnpm-store
+  - .changeset
+  - .git
+  - .agents
+  - .cursor
+  - .github

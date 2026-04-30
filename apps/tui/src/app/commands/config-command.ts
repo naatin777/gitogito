@@ -1,5 +1,6 @@
 import { Command } from "@cliffy/command";
 import { type ConfigScope, formatConfigSetParseError, parseConfigSetArgs } from "@gitogito/core";
+import i18n from "../i18n.js";
 import type { AppDeps } from "../make-deps.js";
 
 /** Merged globals from the app root (`--json`, `--dry-run`, etc.). */
@@ -80,36 +81,49 @@ function createSetAction(deps: AppDeps, scope: ConfigScope) {
 const SCOPE_CONFIG = [
   {
     name: "project" as const,
-    description: "Project config: `.gitogito.yaml` in cwd.",
+    descriptionKey: "cli.config.projectDescription",
   },
   {
     name: "local" as const,
-    description: "Local overrides: `.gitogito.local.yaml` in cwd.",
+    descriptionKey: "cli.config.localDescription",
   },
   {
     name: "global" as const,
-    description: "User config under XDG config home.",
+    descriptionKey: "cli.config.globalDescription",
   },
 ] as const;
 
+const CONFIG_I18N_KEYS = {
+  manage: "cli.config.manageDescription",
+  set: "cli.config.setDescription",
+} as const;
+
+type ConfigCommandTranslationKey =
+  | (typeof SCOPE_CONFIG)[number]["descriptionKey"]
+  | (typeof CONFIG_I18N_KEYS)[keyof typeof CONFIG_I18N_KEYS];
+
 export function createConfigCommand(deps: AppDeps) {
-  const config = new Command().description("Manage configuration").action(function () {
+  const t = (key: ConfigCommandTranslationKey): string => {
+    return i18n.t(key) as string;
+  };
+
+  const config = new Command().description(t(CONFIG_I18N_KEYS.manage)).action(function () {
     this.showHelp();
   });
 
-  for (const { name, description } of SCOPE_CONFIG) {
+  for (const { name, descriptionKey } of SCOPE_CONFIG) {
     const scope: ConfigScope = name;
     config.command(
       name,
       new Command()
-        .description(description)
+        .description(t(descriptionKey))
         .action(function () {
           this.showHelp();
         })
         .command(
           "set",
           new Command()
-            .description("Set a configuration value in YAML for this scope")
+            .description(t(CONFIG_I18N_KEYS.set))
             .arguments("<key:string> <value:string>")
             .action(createSetAction(deps, scope)),
         ),

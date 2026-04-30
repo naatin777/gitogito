@@ -81,3 +81,15 @@ test("resolvedPath is returned on success", async () => {
     expect(r.value.path).toBe("/mock/project.yml");
   }
 });
+
+test("getMergedConfig returns merged dialogue language", async () => {
+  const file = new ConfigFileMock();
+  await file.save("global", "language:\n  dialogue: en\n");
+  await file.save("project", "language:\n  dialogue: ja\n");
+  const svc = new ConfigServiceImpl(file);
+  const r = await svc.getMergedConfig();
+  expect(r.isOk()).toBe(true);
+  if (r.isOk()) {
+    expect(r.value.language.dialogue).toBe("ja");
+  }
+});
